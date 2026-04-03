@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elliott Wave + Fibonacci — Refrakt Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f12;
+    --bg2: #131618;
+    --bg3: #1a1d21;
+    --bg4: #21252b;
+    --gold: #e8a838;
+    --gold2: #c4882a;
+    --gold-dim: rgba(232,168,56,0.12);
+    --green: #3dba7a;
+    --green-dim: rgba(61,186,122,0.12);
+    --red: #e05555;
+    --red-dim: rgba(224,85,85,0.12);
+    --blue: #5b9cf6;
+    --blue-dim: rgba(91,156,246,0.12);
+    --text: #e8e6e0;
+    --text2: #9a9690;
+    --text3: #5a5750;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 40px 48px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header-left h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 32px;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+  .header-left h1 span { color: var(--gold); font-style: italic; }
+  .header-left p {
+    font-size: 13px;
+    color: var(--text3);
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .header-badge {
+    background: var(--gold-dim);
+    border: 1px solid rgba(232,168,56,0.25);
+    color: var(--gold);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 5px 12px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* NAV TABS */
+  .nav {
+    display: flex;
+    gap: 2px;
+    padding: 16px 48px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    padding: 8px 18px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--text3);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .18s;
+    font-weight: 400;
+  }
+  .nav-btn:hover { color: var(--text2); background: var(--bg3); }
+  .nav-btn.active { background: var(--bg3); color: var(--gold); border: 1px solid rgba(232,168,56,0.2); }
+
+  /* MAIN LAYOUT */
+  .main { padding: 40px 48px; max-width: 1100px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .card-body { font-size: 14px; color: var(--text2); line-height: 1.75; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* ANALOGY BOX */
+  .analogy {
+    background: var(--gold-dim);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 13px;
+    color: var(--text);
+    font-style: italic;
+  }
+  .analogy strong { color: var(--gold); font-style: normal; font-weight: 500; }
+
+  .rule-box {
+    background: var(--red-dim);
+    border-left: 3px solid var(--red);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .rule-box strong { color: var(--red); }
+
+  .insight-box {
+    background: var(--green-dim);
+    border-left: 3px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .insight-box strong { color: var(--green); }
+
+  /* LABELS */
+  .label {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    margin-right: 6px;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .lbl-impulse { background: rgba(91,156,246,0.15); color: var(--blue); }
+  .lbl-corrective { background: rgba(224,85,85,0.15); color: var(--red); }
+  .lbl-fib { background: var(--gold-dim); color: var(--gold); }
+  .lbl-rule { background: rgba(224,85,85,0.15); color: var(--red); }
+
+  /* WAVE DIAGRAM CANVAS */
+  .diagram-wrap {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+  .diagram-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* FIBONACCI TABLE */
+  .fib-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .fib-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 500;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .fib-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  .fib-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--gold);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .fib-table tr:last-child td { border-bottom: none; }
+  .fib-table tr:hover td { background: var(--bg3); }
+
+  /* WAVE RULES TABLE */
+  .rules-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .rules-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+  .rules-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--red);
+    white-space: nowrap;
+    width: 90px;
+  }
+  .rules-table tr:last-child td { border-bottom: none; }
+
+  /* INTERACTIVE FIB VISUALISER */
+  .fib-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .ctrl-group { display: flex; flex-direction: column; gap: 4px; }
+  .ctrl-label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+  .ctrl-input {
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    color: var(--text);
+    padding: 6px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    width: 100px;
+  }
+  .ctrl-input:focus { outline: none; border-color: var(--gold); }
+  .calc-btn {
+    background: var(--gold-dim);
+    border: 1px solid rgba(232,168,56,0.3);
+    color: var(--gold);
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all .15s;
+    margin-top: 16px;
+  }
+  .calc-btn:hover { background: rgba(232,168,56,0.2); }
+
+  .fib-result-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .fib-result-row:last-child { border-bottom: none; }
+  .fib-pct {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--gold);
+    width: 55px;
+    font-size: 13px;
+  }
+  .fib-bar-wrap {
+    flex: 1;
+    height: 4px;
+    background: var(--bg4);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .fib-bar { height: 100%; border-radius: 2px; background: var(--gold); transition: width .4s ease; }
+  .fib-price {
+    font-family: 'DM Mono', monospace;
+    color: var(--text);
+    width: 70px;
+    text-align: right;
+    font-size: 13px;
+  }
+  .fib-desc { color: var(--text3); font-size: 11px; width: 130px; }
+
+  /* WAVE COUNTER INTERACTIVE */
+  .wave-step-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .wave-step-btn {
+    padding: 6px 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .wave-step-btn.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+  .wave-desc-box {
+    background: var(--bg3);
+    border-radius: 6px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+    min-height: 80px;
+  }
+  .wave-desc-box strong { color: var(--text); font-weight: 500; }
+
+  /* CHEAT SHEET */
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .cheat-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .cheat-card-title {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .cheat-card ul { list-style: none; }
+  .cheat-card ul li {
+    font-size: 12px;
+    color: var(--text2);
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.55;
+  }
+  .cheat-card ul li:last-child { border-bottom: none; }
+  .cheat-card ul li span { color: var(--gold); font-family: 'DM Mono', monospace; font-weight: 500; }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* FOOTER */
+  .footer {
+    padding: 20px 48px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .header, .nav, .main, .footer { padding-left: 20px; padding-right: 20px; }
+    .two-col, .cheat-grid { grid-template-columns: 1fr; }
+    .header-left h1 { font-size: 24px; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes drawLine {
+    from { stroke-dashoffset: 1000; }
+    to { stroke-dashoffset: 0; }
+  }
+  .wave-path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLine 2.5s ease forwards;
+  }
+  .wave-path-2 {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLine 2s ease 0.5s forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeUp 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Elliott Wave Theory<br>& <span>Fibonacci Retracement</span></h1>
+    <p>REFRAKT TRADING PROGRAMME · MODULE B3/B10 · MURPHY REFERENCE</p>
+  </div>
+  <div class="header-badge">Reference v1.0</div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
+  <button class="nav-btn" onclick="showTab('elliott')">Elliott Wave</button>
+  <button class="nav-btn" onclick="showTab('rules')">Wave Rules</button>
+  <button class="nav-btn" onclick="showTab('fibonacci')">Fibonacci</button>
+  <button class="nav-btn" onclick="showTab('combined')">How They Combine</button>
+  <button class="nav-btn" onclick="showTab('calculator')">Fib Calculator</button>
+  <button class="nav-btn" onclick="showTab('cheatsheet')">Cheat Sheet</button>
+</nav>
+
+<div class="main">
+
+  <!-- ═══════════════════════════════════ OVERVIEW ═══════════════ -->
+  <div class="section active" id="tab-overview">
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">What is Elliott Wave Theory?</div>
+        <div class="card-body">
+          Discovered by Ralph Nelson Elliott in the 1930s. He noticed that stock markets don't move randomly — they move in <strong>predictable, repeating wave patterns</strong> driven by collective human psychology.
+          <div class="analogy">
+            <strong>The Ocean Analogy:</strong> Think of the market like the sea. Tides come in (bull market), tides go out (bear market). But within every tide, individual waves rise and fall in a pattern. Elliott said: the pattern of those individual waves is NOT random — it follows the same structure every single time.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">What is Fibonacci Retracement?</div>
+        <div class="card-body">
+          A tool to predict how far a market will "pull back" before continuing its original direction. Based on the Fibonacci number sequence (1,1,2,3,5,8,13...) discovered in nature.
+          <div class="analogy">
+            <strong>The Rubber Band Analogy:</strong> Price moves like a stretched rubber band. It can only stretch so far before snapping back. Fibonacci levels tell you exactly <em>where</em> that snap-back is likely to stop — so you can position your entry there.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Why do these two work together?</div>
+      <div class="card-body">
+        Elliott tells you <strong>where you are in the wave structure</strong>. Fibonacci tells you <strong>exactly how deep that wave goes</strong>. Together they give you both the map and the mileage markers. Murphy calls this confluence — when structure + ratio agree on the same price level, that level has real weight.
+        <div class="insight-box">
+          <strong>Real example:</strong> If Elliott says "Wave 4 correction in progress" and Fibonacci says "61.8% retracement sits at ₹2,400" — and price reaches ₹2,400 — that's a high-confidence entry point for Wave 5 upside. Structure confirmed it. Math confirmed it.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Mental model to lock it in</div>
+      <div class="card-body">
+        Imagine you're watching a cricket match. Elliott Wave is the <strong>session structure</strong> — you know there are innings, overs, breaks. Fibonacci is the <strong>DRS system</strong> — it tells you precisely whether a decision holds or gets overturned at a specific margin. You need both to make the right call.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════ ELLIOTT WAVE ═══════════ -->
+  <div class="section" id="tab-elliott">
+
+    <div class="card">
+      <div class="card-title">The Core Structure: 5-3 Pattern</div>
+      <div class="card-body">
+        Every complete market cycle has <strong>8 waves total</strong>: a 5-wave impulse (going with the trend) followed by a 3-wave correction (going against it). This is the heartbeat of all market movement — from a 5-minute chart to a 50-year chart.
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <div class="diagram-label">Complete Elliott Wave Cycle — 5-3 Structure</div>
+      <svg width="100%" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid lines -->
+        <line x1="40" y1="260" x2="720" y2="260" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <line x1="40" y1="200" x2="720" y2="200" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="40" y1="140" x2="720" y2="140" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="40" y1="80" x2="720" y2="80" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- IMPULSE WAVES (1-5) in blue -->
+        <!-- W1: 60,240 → 160,120 -->
+        <line x1="60" y1="240" x2="160" y2="120" stroke="#5b9cf6" stroke-width="2.5" class="wave-path"/>
+        <!-- W2: 160,120 → 220,180 -->
+        <line x1="160" y1="120" x2="220" y2="180" stroke="#e05555" stroke-width="2" class="wave-path"/>
+        <!-- W3: 220,180 → 380,70 -->
+        <line x1="220" y1="180" x2="380" y2="70" stroke="#5b9cf6" stroke-width="2.5" class="wave-path"/>
+        <!-- W4: 380,70 → 440,120 -->
+        <line x1="380" y1="70" x2="440" y2="120" stroke="#e05555" stroke-width="2" class="wave-path"/>
+        <!-- W5: 440,120 → 530,85 -->
+        <line x1="440" y1="120" x2="530" y2="85" stroke="#5b9cf6" stroke-width="2.5" class="wave-path"/>
+
+        <!-- CORRECTIVE WAVES (A-B-C) in red/dim -->
+        <!-- WA: 530,85 → 590,165 -->
+        <line x1="530" y1="85" x2="590" y2="165" stroke="#e05555" stroke-width="2.5" class="wave-path-2"/>
+        <!-- WB: 590,165 → 640,130 -->
+        <line x1="590" y1="165" x2="640" y2="130" stroke="#5b9cf6" stroke-width="1.5" stroke-dasharray="5,3" class="wave-path-2"/>
+        <!-- WC: 640,130 → 700,200 -->
+        <line x1="640" y1="130" x2="700" y2="200" stroke="#e05555" stroke-width="2.5" class="wave-path-2"/>
+
+        <!-- DOT MARKERS -->
+        <circle cx="60" cy="240" r="4" fill="#21252b" stroke="#5b9cf6" stroke-width="2"/>
+        <circle cx="160" cy="120" r="4" fill="#5b9cf6"/>
+        <circle cx="220" cy="180" r="4" fill="#21252b" stroke="#e05555" stroke-width="2"/>
+        <circle cx="380" cy="70" r="4" fill="#5b9cf6"/>
+        <circle cx="440" cy="120" r="4" fill="#21252b" stroke="#e05555" stroke-width="2"/>
+        <circle cx="530" cy="85" r="5" fill="#e8a838"/>
+        <circle cx="590" cy="165" r="4" fill="#e05555"/>
+        <circle cx="640" cy="130" r="4" fill="#21252b" stroke="#5b9cf6" stroke-width="2"/>
+        <circle cx="700" cy="200" r="5" fill="#21252b" stroke="#e05555" stroke-width="2"/>
+
+        <!-- WAVE LABELS -->
+        <text x="100" y="148" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="14" font-weight="500" text-anchor="middle">1</text>
+        <text x="192" y="162" fill="#e05555" font-family="'DM Mono', monospace" font-size="14" font-weight="500" text-anchor="middle">2</text>
+        <text x="295" y="108" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="14" font-weight="500" text-anchor="middle">3</text>
+        <text x="414" y="102" fill="#e05555" font-family="'DM Mono', monospace" font-size="14" font-weight="500" text-anchor="middle">4</text>
+        <text x="492" y="90" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="14" font-weight="500" text-anchor="middle">5</text>
+        <text x="556" y="118" fill="#e05555" font-family="'DM Mono', monospace" font-size="14" font-weight="500" text-anchor="middle">A</text>
+        <text x="618" y="140" fill="#9a9690" font-family="'DM Mono', monospace" font-size="14" font-weight="500" text-anchor="middle">B</text>
+        <text x="672" y="158" fill="#e05555" font-family="'DM Mono', monospace" font-size="14" font-weight="500" text-anchor="middle">C</text>
+
+        <!-- ZONE LABELS -->
+        <rect x="40" y="270" width="510" height="20" rx="2" fill="rgba(91,156,246,0.08)"/>
+        <text x="295" y="283" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle" letter-spacing="1">IMPULSE PHASE (5 WAVES)</text>
+        <rect x="555" y="270" width="160" height="20" rx="2" fill="rgba(224,85,85,0.08)"/>
+        <text x="635" y="283" fill="#e05555" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle" letter-spacing="1">CORRECTIVE (ABC)</text>
+
+        <!-- Vertical separator -->
+        <line x1="545" y1="60" x2="545" y2="265" stroke="rgba(232,168,56,0.3)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="545" y="55" fill="#e8a838" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle">PEAK</text>
+      </svg>
+    </div>
+
+    <!-- Wave-by-wave explorer -->
+    <div class="card">
+      <div class="card-title">Wave-by-Wave Explorer</div>
+      <div class="card-body" style="margin-bottom:12px;">Click each wave to understand its character and what it means psychologically.</div>
+      <div class="wave-step-nav">
+        <button class="wave-step-btn active" onclick="showWave(0, this)">Wave 1</button>
+        <button class="wave-step-btn" onclick="showWave(1, this)">Wave 2</button>
+        <button class="wave-step-btn" onclick="showWave(2, this)">Wave 3</button>
+        <button class="wave-step-btn" onclick="showWave(3, this)">Wave 4</button>
+        <button class="wave-step-btn" onclick="showWave(4, this)">Wave 5</button>
+        <button class="wave-step-btn" onclick="showWave(5, this)">Wave A</button>
+        <button class="wave-step-btn" onclick="showWave(6, this)">Wave B</button>
+        <button class="wave-step-btn" onclick="showWave(7, this)">Wave C</button>
+      </div>
+      <div class="wave-desc-box fade-in" id="wave-desc"></div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════ WAVE RULES ═══════════════ -->
+  <div class="section" id="tab-rules">
+
+    <div class="card">
+      <div class="card-title">The 3 Iron Rules — Never Broken, Ever</div>
+      <div class="card-body">
+        These are not guidelines. If ANY of these are violated, your wave count is wrong. Go back and recount.
+        <div class="rule-box">
+          <strong>RULE 1:</strong> Wave 2 can NEVER retrace more than 100% of Wave 1. If it does, Wave 1 hasn't started yet.
+        </div>
+        <div class="rule-box">
+          <strong>RULE 2:</strong> Wave 3 can NEVER be the shortest impulse wave among Waves 1, 3, and 5. (It's usually the longest.)
+        </div>
+        <div class="rule-box">
+          <strong>RULE 3:</strong> Wave 4 can NEVER overlap the price territory of Wave 1. (In stocks. Forex has exceptions.)
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">The 3 Iron Rules — Visual Memory Aid</div>
+      <div class="card-body" style="margin-bottom:12px;">Think of it as the 3 fences a wave CANNOT cross.</div>
+      <div class="diagram-wrap">
+        <svg width="100%" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+          <!-- Rule 1 diagram -->
+          <text x="110" y="22" fill="#9a9690" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle" letter-spacing="1">RULE 1</text>
+          <line x1="40" y1="180" x2="110" y2="100" stroke="#5b9cf6" stroke-width="2"/>
+          <line x1="110" y1="100" x2="160" y2="155" stroke="#e05555" stroke-width="2"/>
+          <text x="68" y="142" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="12">W1</text>
+          <text x="128" y="138" fill="#e05555" font-family="'DM Mono', monospace" font-size="12">W2</text>
+          <line x1="40" y1="180" x2="180" y2="180" stroke="rgba(224,85,85,0.4)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="110" y="198" fill="#e05555" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle">W2 never below W1 start</text>
+          <circle cx="40" cy="180" r="3" fill="#5b9cf6"/>
+          <circle cx="110" cy="100" r="3" fill="#5b9cf6"/>
+          <circle cx="160" cy="155" r="3" fill="#e05555"/>
+
+          <!-- Rule 2 diagram -->
+          <text x="370" y="22" fill="#9a9690" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle" letter-spacing="1">RULE 2</text>
+          <line x1="250" y1="180" x2="320" y2="100" stroke="#5b9cf6" stroke-width="2"/>
+          <line x1="320" y1="100" x2="360" y2="135" stroke="#e05555" stroke-width="2"/>
+          <line x1="360" y1="135" x2="430" y2="40" stroke="#5b9cf6" stroke-width="3"/>
+          <line x1="430" y1="40" x2="460" y2="65" stroke="#e05555" stroke-width="2"/>
+          <line x1="460" y1="65" x2="500" y2="30" stroke="#5b9cf6" stroke-width="2"/>
+          <text x="278" y="145" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="12">W1</text>
+          <text x="390" y="84" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="12">W3</text>
+          <text x="484" y="45" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="12">W5</text>
+          <text x="370" y="198" fill="#e05555" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle">W3 is longest (most powerful)</text>
+          <circle cx="250" cy="180" r="3" fill="#5b9cf6"/><circle cx="320" cy="100" r="3" fill="#5b9cf6"/>
+          <circle cx="360" cy="135" r="3" fill="#e05555"/><circle cx="430" cy="40" r="3" fill="#5b9cf6"/>
+          <circle cx="460" cy="65" r="3" fill="#e05555"/><circle cx="500" cy="30" r="3" fill="#5b9cf6"/>
+
+          <!-- Rule 3 diagram - just text block-->
+          <rect x="570" y="30" width="110" height="150" rx="6" fill="rgba(224,85,85,0.06)" stroke="rgba(224,85,85,0.2)" stroke-width="1"/>
+          <text x="625" y="22" fill="#9a9690" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle" letter-spacing="1">RULE 3</text>
+          <text x="625" y="65" fill="#e05555" font-family="'DM Mono', monospace" font-size="11" text-anchor="middle">W4</text>
+          <text x="625" y="85" fill="#9a9690" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle">cannot enter</text>
+          <text x="625" y="102" fill="#9a9690" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle">W1's price</text>
+          <text x="625" y="119" fill="#9a9690" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle">territory</text>
+          <text x="625" y="148" fill="#e8a838" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle">Violation =</text>
+          <text x="625" y="164" fill="#e8a838" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle">wrong count</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Guidelines (highly probable, not absolute)</div>
+      <div class="card-body">
+        <table class="rules-table">
+          <tr><td>GUIDELINE 1</td><td>Wave 3 is the longest and most powerful wave most of the time. Strong volume, strong momentum, weakest hands get steamrolled.</td></tr>
+          <tr><td>GUIDELINE 2</td><td>Waves 2 and 4 alternate in form. If Wave 2 is a sharp correction, Wave 4 is a flat/complex one. (Alternation Rule)</td></tr>
+          <tr><td>GUIDELINE 3</td><td>Wave 5 often ends near the upper channel line drawn from the tops of Waves 1 and 3.</td></tr>
+          <tr><td>GUIDELINE 4</td><td>Corrective waves (2, 4, A, C) often retrace to Fibonacci levels — 38.2%, 50%, or 61.8%.</td></tr>
+          <tr><td>GUIDELINE 5</td><td>The ABC correction often ends near the prior Wave 4 low. This is your re-entry zone.</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════ FIBONACCI ═══════════════ -->
+  <div class="section" id="tab-fibonacci">
+
+    <div class="card">
+      <div class="card-title">Where Fibonacci Comes From</div>
+      <div class="card-body">
+        The sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89... Each number is the sum of the two before it. Divide any number by the next one → you get <strong>0.618</strong>. Divide by the one after → <strong>0.382</strong>. These ratios appear in sunflower spirals, nautilus shells, DNA structure — and market corrections.
+        <div class="analogy">
+          <strong>The Staircase Analogy:</strong> Markets go up like someone taking stairs two at a time. When they get tired, they step back — but not to the bottom. They rest on a specific stair. Fibonacci levels are those specific resting stairs. 38.2% is the first landing, 61.8% is the deepest before a new flight of stairs begins.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">The Key Fibonacci Levels</div>
+      <div class="card-body">
+        <table class="fib-table">
+          <thead>
+            <tr><th>Level</th><th>Significance</th><th>What it means practically</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>23.6%</td>
+              <td>Shallow retracement</td>
+              <td>Barely pulled back — extremely strong trend. Aggressive bulls stepping in early. Often seen in Wave 4 of a powerful Wave 3 trend.</td>
+            </tr>
+            <tr>
+              <td>38.2%</td>
+              <td>Moderate retracement</td>
+              <td>First major support level. A healthy pause in a strong trend. Often where corrective Wave 2 ends in a strong market.</td>
+            </tr>
+            <tr>
+              <td>50%</td>
+              <td>Psychological midpoint</td>
+              <td>Not technically Fibonacci (it's Dow Theory) but universally respected. Exactly halfway back = balanced market, strong institutional watch level.</td>
+            </tr>
+            <tr>
+              <td>61.8%</td>
+              <td>The Golden Ratio ⭐</td>
+              <td>The most powerful level. "The Golden Ratio." 1/1.618. If price holds here, the original trend is still intact. If it breaks this, the trend is likely over.</td>
+            </tr>
+            <tr>
+              <td>78.6%</td>
+              <td>Deep retracement</td>
+              <td>Last line of defence. Often the Wave 2 or Wave 4 maximum in volatile/weak trends. Break below here typically signals trend reversal.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">How to Draw Fibonacci Retracement</div>
+      <div class="card-body">
+        <strong>In an uptrend:</strong> Click from the swing LOW → drag to the swing HIGH. The tool auto-plots levels between them.
+        <br><br>
+        <strong>In a downtrend:</strong> Click from the swing HIGH → drag to the swing LOW.
+        <br><br>
+        <strong>Rule of thumb:</strong> Use the most recent significant swing — not the all-time high. The more recent the swing, the more relevant the retracement levels.
+        <div class="insight-box">
+          <strong>TradingView tip:</strong> Use the Fib Retracement tool (shortcut: Alt+F on Kite/TV). Enable the 23.6%, 38.2%, 50%, 61.8%, 78.6% levels. Hide 0% and 100% for cleaner charts.
+        </div>
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <div class="diagram-label">Fibonacci Retracement — Uptrend Example</div>
+      <svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background fib bands -->
+        <rect x="60" y="66" width="560" height="20" fill="rgba(232,168,56,0.06)"/>
+        <rect x="60" y="106" width="560" height="20" fill="rgba(232,168,56,0.04)"/>
+        <rect x="60" y="136" width="560" height="20" fill="rgba(232,168,56,0.04)"/>
+        <rect x="60" y="166" width="560" height="20" fill="rgba(232,168,56,0.06)"/>
+
+        <!-- Price path - up then retrace -->
+        <polyline points="60,240 150,200 210,210 290,150 370,100 420,80" fill="none" stroke="#5b9cf6" stroke-width="2.5" class="wave-path"/>
+        <!-- Correction -->
+        <polyline points="420,80 480,125 520,110 560,155" fill="none" stroke="#e05555" stroke-width="2" class="wave-path-2"/>
+
+        <!-- Fib level lines (horizontal) -->
+        <!-- 0% = top = y:80 -->
+        <!-- 100% = bottom = y:240 -->
+        <!-- Range = 160px -->
+        <!-- 23.6% = 80 + 160*0.236 = 117.76 ≈ 118 -->
+        <!-- 38.2% = 80 + 160*0.382 = 141.12 ≈ 141 -->
+        <!-- 50%   = 80 + 160*0.5   = 160 -->
+        <!-- 61.8% = 80 + 160*0.618 = 178.88 ≈ 179 -->
+        <!-- 78.6% = 80 + 160*0.786 = 205.76 ≈ 206 -->
+
+        <line x1="60" y1="118" x2="620" y2="118" stroke="rgba(232,168,56,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="60" y1="141" x2="620" y2="141" stroke="rgba(232,168,56,0.5)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="60" y1="160" x2="620" y2="160" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="60" y1="179" x2="620" y2="179" stroke="rgba(232,168,56,0.7)" stroke-width="1.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="206" x2="620" y2="206" stroke="rgba(232,168,56,0.4)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- Labels on right -->
+        <text x="626" y="122" fill="#e8a838" font-family="'DM Mono', monospace" font-size="11">23.6%</text>
+        <text x="626" y="145" fill="#e8a838" font-family="'DM Mono', monospace" font-size="11">38.2%</text>
+        <text x="626" y="164" fill="#9a9690" font-family="'DM Mono', monospace" font-size="11">50.0%</text>
+        <text x="626" y="183" fill="#e8a838" font-family="'DM Mono', monospace" font-size="12" font-weight="500">61.8%★</text>
+        <text x="626" y="210" fill="#e8a838" font-family="'DM Mono', monospace" font-size="11">78.6%</text>
+
+        <!-- Swing labels -->
+        <text x="420" y="72" fill="#5b9cf6" font-family="'DM Mono', monospace" font-size="11" text-anchor="middle">SWING HIGH (0%)</text>
+        <text x="60" y="255" fill="#9a9690" font-family="'DM Mono', monospace" font-size="11">SWING LOW (100%)</text>
+
+        <!-- Bounce indicator at 61.8% -->
+        <circle cx="520" cy="110" r="5" fill="#3dba7a"/>
+        <text x="520" y="100" fill="#3dba7a" font-family="'DM Mono', monospace" font-size="10" text-anchor="middle">↑ BOUNCE</text>
+
+        <!-- Arrow down showing retracement -->
+        <line x1="420" y1="80" x2="420" y2="206" stroke="rgba(224,85,85,0.4)" stroke-width="1" stroke-dasharray="3,3"/>
+      </svg>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════ COMBINED ═══════════════ -->
+  <div class="section" id="tab-combined">
+
+    <div class="card">
+      <div class="card-title">Where Elliott Tells You WHAT, Fibonacci Tells You WHERE</div>
+      <div class="card-body">
+        <table class="fib-table">
+          <thead><tr><th>Elliott Wave Position</th><th>Fibonacci Expectation</th><th>Trading Implication</th></tr></thead>
+          <tbody>
+            <tr><td>Wave 2 correction</td><td>Retraces 50%–61.8% of Wave 1</td><td>Buy zone. High-probability entry for Wave 3 (the big one)</td></tr>
+            <tr><td>Wave 3 target</td><td>1.618x or 2.618x the length of Wave 1</td><td>Extension target for profit booking</td></tr>
+            <tr><td>Wave 4 correction</td><td>Retraces 38.2% of Wave 3</td><td>Shallower than Wave 2. Buy zone for Wave 5</td></tr>
+            <tr><td>Wave 5 target</td><td>Often equal to Wave 1 in length</td><td>Final push — tighten stops, watch for divergence</td></tr>
+            <tr><td>Wave C (correction end)</td><td>Often 61.8% or 100% of Wave A</td><td>Major re-entry zone into new impulse</td></tr>
+          </tbody>
+        </table>
+        <div class="analogy">
+          <strong>The GPS Analogy:</strong> Elliott is your Google Maps telling you "turn right in 400 metres — you're entering Wave 3." Fibonacci is the milestone stone on the road saying "you're exactly 61.8 km from destination." Use both, not one.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">The Highest-Probability Trade Setup</div>
+      <div class="card-body">
+        <strong>Step 1:</strong> Identify Wave 1 (first impulse leg up after a bottom)<br>
+        <strong>Step 2:</strong> Draw Fibonacci from the base of Wave 1 to its top<br>
+        <strong>Step 3:</strong> Wait for Wave 2 to retrace to the 50%–61.8% zone<br>
+        <strong>Step 4:</strong> Look for bullish candlestick reversal at that level (your Filter 5)<br>
+        <strong>Step 5:</strong> Confirm with RSI (Filter 4) and volume (Filter 3)<br>
+        <strong>Step 6:</strong> Enter. Stop loss below the 78.6% level. Target = 1.618x Wave 1 extension
+        <div class="insight-box">
+          <strong>This is the setup.</strong> Wave 2 ending at the 61.8% level with RSI turning up and a hammer candle. This is what Murphy calls "multiple technical factors converging at one price level." It's the closest thing to a high-conviction entry in TA.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Applying to Indian Markets (Nifty context)</div>
+      <div class="card-body">
+        On Nifty/Sensex, Fibonacci levels are widely respected — institutional desks run algo orders at exactly these levels. This creates self-fulfilling precision.
+        <br><br>
+        <strong>Practical tip:</strong> On the daily chart, draw Fib from the last major swing low to the most recent high. The 61.8% level will almost always mark a major institutional support zone. Cross-reference with the Donchian 4-week rule for additional confirmation.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════ CALCULATOR ═══════════════ -->
+  <div class="section" id="tab-calculator">
+    <div class="card">
+      <div class="card-title">Fibonacci Retracement Calculator</div>
+      <div class="card-body">
+        Enter the swing low and swing high of any move to instantly get all Fibonacci retracement levels in price terms.
+      </div>
+      <div class="fib-controls" style="margin-top:16px;">
+        <div class="ctrl-group">
+          <span class="ctrl-label">SWING LOW (₹)</span>
+          <input class="ctrl-input" id="swing-low" type="number" value="1800" placeholder="e.g. 1800"/>
+        </div>
+        <div class="ctrl-group">
+          <span class="ctrl-label">SWING HIGH (₹)</span>
+          <input class="ctrl-input" id="swing-high" type="number" value="2400" placeholder="e.g. 2400"/>
+        </div>
+        <div class="ctrl-group">
+          <span class="ctrl-label">DIRECTION</span>
+          <select class="ctrl-input" id="direction" style="width:auto;">
+            <option value="up">Uptrend (retracing down)</option>
+            <option value="down">Downtrend (retracing up)</option>
+          </select>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calcFib()">Calculate Levels</button>
+
+      <div id="fib-results" style="margin-top:20px; display:none;">
+        <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--text3); letter-spacing:1px; margin-bottom:12px;">RETRACEMENT LEVELS</div>
+        <div id="fib-result-rows"></div>
+        <div style="margin-top:16px; padding:12px 14px; background:var(--bg3); border-radius:6px; font-size:12px; color:var(--text3);">
+          <span style="color:var(--gold); font-family:'DM Mono',monospace;">★ 61.8%</span> is the Golden Ratio — the most watched level by institutional traders. If price bounces here with confluence signals, it's your highest-probability entry.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Fibonacci Extension Calculator</div>
+      <div class="card-body" style="margin-bottom:16px;">
+        Used to project where Wave 3 (or a new impulse) will end. Enter Wave 1 start, end, and the Wave 2 low.
+      </div>
+      <div class="fib-controls">
+        <div class="ctrl-group">
+          <span class="ctrl-label">WAVE 1 START (₹)</span>
+          <input class="ctrl-input" id="w1-start" type="number" value="1800"/>
+        </div>
+        <div class="ctrl-group">
+          <span class="ctrl-label">WAVE 1 END (₹)</span>
+          <input class="ctrl-input" id="w1-end" type="number" value="2400"/>
+        </div>
+        <div class="ctrl-group">
+          <span class="ctrl-label">WAVE 2 LOW (₹)</span>
+          <input class="ctrl-input" id="w2-low" type="number" value="2060"/>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calcExtension()">Calculate Targets</button>
+      <div id="ext-results" style="margin-top:20px; display:none;">
+        <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--text3); letter-spacing:1px; margin-bottom:12px;">WAVE 3 EXTENSION TARGETS</div>
+        <div id="ext-result-rows"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ CHEAT SHEET ═══════════════ -->
+  <div class="section" id="tab-cheatsheet">
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title">Quick Reference — Print or Screenshot This</div>
+      <div class="card-body">Everything you need on one page. Wave rules, Fib levels, entry logic.</div>
+    </div>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-title">3 Iron Rules</div>
+        <ul>
+          <li><span>R1</span> W2 never goes below W1 start</li>
+          <li><span>R2</span> W3 is never the shortest wave</li>
+          <li><span>R3</span> W4 never enters W1 territory</li>
+        </ul>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-title">Fibonacci Levels</div>
+        <ul>
+          <li><span>23.6%</span> Shallow, strong trend</li>
+          <li><span>38.2%</span> Moderate, W2 end</li>
+          <li><span>50.0%</span> Psychological mid</li>
+          <li><span>61.8%</span> ★ Golden Ratio</li>
+          <li><span>78.6%</span> Deep, last defence</li>
+        </ul>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-title">Wave Character</div>
+        <ul>
+          <li><span>W1</span> Quiet start, few notice</li>
+          <li><span>W2</span> Scary pullback, holds</li>
+          <li><span>W3</span> Longest, most powerful</li>
+          <li><span>W4</span> Choppy, shallow</li>
+          <li><span>W5</span> Final push, weak vol</li>
+        </ul>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-title">Correction (ABC)</div>
+        <ul>
+          <li><span>A</span> First drop — looks like W4</li>
+          <li><span>B</span> Fake bounce, traps bulls</li>
+          <li><span>C</span> Painful final drop</li>
+          <li><span>End</span> Near prior W4 low</li>
+        </ul>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-title">Best Entry Setup</div>
+        <ul>
+          <li>Identify W1 end</li>
+          <li>Draw Fib W1 base→top</li>
+          <li>Wait for W2 at 50–61.8%</li>
+          <li>Bullish candle + RSI turn</li>
+          <li>SL below 78.6%</li>
+          <li>Target: 1.618× W1</li>
+        </ul>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-title">Murphy References</div>
+        <ul>
+          <li>Ch.13 — Elliott Wave</li>
+          <li>Ch.9 — Fibonacci tools</li>
+          <li>Rule of Alternation</li>
+          <li>Wave extensions</li>
+          <li>Fibonacci time zones</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title">The One-Liner to Remember Each Concept</div>
+      <div class="card-body">
+        <div class="rule-row" style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--gold);font-family:'DM Mono',monospace;font-size:13px;min-width:120px;">Elliott Wave</span>
+          <span style="color:var(--text2);font-size:13px;">"Markets breathe in 5 steps forward, 3 steps back — always, at every scale."</span>
+        </div>
+        <div class="rule-row" style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--gold);font-family:'DM Mono',monospace;font-size:13px;min-width:120px;">Wave 3</span>
+          <span style="color:var(--text2);font-size:13px;">"The wave where the crowd finally believes. The longest. The loudest. Never miss it."</span>
+        </div>
+        <div class="rule-row" style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--gold);font-family:'DM Mono',monospace;font-size:13px;min-width:120px;">61.8%</span>
+          <span style="color:var(--text2);font-size:13px;">"Nature's favourite number. Markets respect it because everything in the universe does."</span>
+        </div>
+        <div class="rule-row" style="display:flex;gap:12px;padding:8px 0;">
+          <span style="color:var(--gold);font-family:'DM Mono',monospace;font-size:13px;min-width:120px;">Combined</span>
+          <span style="color:var(--text2);font-size:13px;">"Elliott tells you the song. Fibonacci tells you exactly which bar you're on."</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  <span>REFRAKT TRADING PROGRAMME · MURPHY REFERENCE MODULE</span>
+  <span>Elliott Wave + Fibonacci · Built April 2026</span>
+</div>
+
+<script>
+// === TAB NAVIGATION ===
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// === WAVE DESCRIPTIONS ===
+const waveData = [
+  {
+    name: 'Wave 1',
+    type: 'IMPULSE',
+    color: '#5b9cf6',
+    desc: `<strong>The Quiet Start.</strong><br><br>
+    Wave 1 begins when a new uptrend is born. But almost nobody believes it yet — the previous downtrend is too fresh in memory. Volume is moderate, news is still negative, and most market participants think this is just another "dead cat bounce."<br><br>
+    <strong>Psychology:</strong> A few early contrarians and smart money begin accumulating. The majority ignore it.<br><br>
+    <strong>Fibonacci:</strong> Hard to measure in real-time because you don't know it's Wave 1 until Wave 2 starts correcting.`
+  },
+  {
+    name: 'Wave 2',
+    type: 'CORRECTION',
+    color: '#e05555',
+    desc: `<strong>The Scary Pullback.</strong><br><br>
+    Wave 2 retraces a large portion of Wave 1 — sometimes up to 61.8%. People who bought Wave 1 are now nervous. Late bears who missed the top are shorting aggressively, convinced the downtrend has resumed.<br><br>
+    <strong>Psychology:</strong> Fear, doubt, capitulation. But volume is lower than Wave 1's decline. That's the tell.<br><br>
+    <strong>Iron Rule:</strong> Wave 2 NEVER goes below Wave 1's starting point. If it does, Wave 1 wasn't Wave 1.`
+  },
+  {
+    name: 'Wave 3',
+    type: 'IMPULSE',
+    color: '#5b9cf6',
+    desc: `<strong>The Big One. Never miss this.</strong><br><br>
+    Wave 3 is where the crowd finally recognises the trend. Volume explodes. News turns positive. FOMO kicks in. This is usually the longest and most powerful wave — the one that creates the biggest price moves and the best risk/reward setups.<br><br>
+    <strong>Psychology:</strong> Mass participation. Institutions loading, retail catching on. Breakouts on high volume.<br><br>
+    <strong>Iron Rule:</strong> Wave 3 is NEVER the shortest impulse wave. If it looks shorter than Wave 1 — your count is wrong.<br><br>
+    <strong>Fibonacci target:</strong> 1.618× or 2.618× the length of Wave 1.`
+  },
+  {
+    name: 'Wave 4',
+    type: 'CORRECTION',
+    color: '#e05555',
+    desc: `<strong>The Choppy Consolidation.</strong><br><br>
+    Wave 4 is messy. It can be a flat, triangle, or complex zigzag. It doesn't fall as sharply as Wave 2 — the trend is still healthy. Many traders get chopped up trying to trade it.<br><br>
+    <strong>Psychology:</strong> Profit-taking. Some fear. But underlying strength remains. Sidelines money waiting to buy Wave 5.<br><br>
+    <strong>Alternation Rule:</strong> If Wave 2 was a sharp correction, Wave 4 tends to be flat/sideways. And vice versa.<br><br>
+    <strong>Fibonacci:</strong> Often finds support at 38.2% of Wave 3.`
+  },
+  {
+    name: 'Wave 5',
+    type: 'IMPULSE',
+    color: '#5b9cf6',
+    desc: `<strong>The Final Push. Watch for weakness.</strong><br><br>
+    Wave 5 makes new highs, but with less force than Wave 3. Volume often fails to confirm the new high. RSI divergence is classic here — price makes new high but RSI doesn't. The crowd is fully bullish, which is the danger sign.<br><br>
+    <strong>Psychology:</strong> Euphoria. Late retail buying at the top. Smart money distributing.<br><br>
+    <strong>Warning signals:</strong> RSI bearish divergence, volume declining on the push higher, narrowing breadth.<br><br>
+    <strong>Fibonacci:</strong> Often equal to Wave 1 in length.`
+  },
+  {
+    name: 'Wave A',
+    type: 'CORRECTIVE',
+    color: '#e05555',
+    desc: `<strong>The first drop. Often mistaken for a normal pullback.</strong><br><br>
+    Wave A is the beginning of the full correction after the 5-wave impulse. Many participants buy this dip thinking it's a Wave 4 type correction and the 5th wave hasn't come yet.<br><br>
+    <strong>Psychology:</strong> Denial. "It's just a pullback." Late bulls buying.<br><br>
+    <strong>Tip:</strong> Hard to distinguish from a genuine correction in real-time. Volume can help — if it's impulsive (3 sub-waves), it's likely Wave A of a bigger correction.`
+  },
+  {
+    name: 'Wave B',
+    type: 'CORRECTIVE',
+    color: '#9a9690',
+    desc: `<strong>The Bull Trap. The cruelest wave.</strong><br><br>
+    Wave B bounces back — sometimes recovering most of Wave A. This is where late bulls who missed the top finally get in, believing the uptrend has resumed. They're wrong.<br><br>
+    <strong>Psychology:</strong> False hope. The market looks like it's going back up. High sentiment, but weak internals.<br><br>
+    <strong>Recognition:</strong> Lower volume than Wave A. Weak breadth. Often doesn't reach Wave 5's high. Overlapping waves are common.`
+  },
+  {
+    name: 'Wave C',
+    type: 'CORRECTIVE',
+    color: '#e05555',
+    desc: `<strong>The Painful Final Leg. Everyone suffers.</strong><br><br>
+    Wave C is impulsive — it has 5 sub-waves and falls hard. The bulls who bought Wave B get destroyed. Sentiment turns decisively negative. This is where panic selling happens.<br><br>
+    <strong>Psychology:</strong> Capitulation, despair. Newspapers print bear market headlines. Maximum fear.<br><br>
+    <strong>Opportunity:</strong> This is where the NEXT Wave 1 begins. The end of Wave C = the highest-conviction buying opportunity in Elliott Wave analysis.<br><br>
+    <strong>Fibonacci:</strong> Wave C often equals Wave A in length.`
+  }
+];
+
+function showWave(index, btn) {
+  document.querySelectorAll('.wave-step-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const wave = waveData[index];
+  const box = document.getElementById('wave-desc');
+  box.style.opacity = 0;
+  setTimeout(() => {
+    box.innerHTML = `
+      <div style="margin-bottom:8px;">
+        <span style="font-family:'DM Mono',monospace; font-size:12px; color:${wave.color}; letter-spacing:1px;">${wave.type}</span>
+      </div>
+      ${wave.desc}
+    `;
+    box.style.opacity = 1;
+    box.style.transition = 'opacity 0.2s';
+  }, 100);
+}
+// Init
+showWave(0, document.querySelectorAll('.wave-step-btn')[0]);
+
+// === FIBONACCI CALCULATOR ===
+const FIB_LEVELS = [
+  { pct: 0.236, label: '23.6%', desc: 'Shallow, strong trend', barW: 30 },
+  { pct: 0.382, label: '38.2%', desc: 'Moderate, W2 end zone', barW: 50 },
+  { pct: 0.500, label: '50.0%', desc: 'Psychological mid-point', barW: 65 },
+  { pct: 0.618, label: '61.8%', desc: '★ Golden Ratio', barW: 80 },
+  { pct: 0.786, label: '78.6%', desc: 'Deep retracement', barW: 100 },
+];
+
+function calcFib() {
+  const lo = parseFloat(document.getElementById('swing-low').value);
+  const hi = parseFloat(document.getElementById('swing-high').value);
+  const dir = document.getElementById('direction').value;
+  if (isNaN(lo) || isNaN(hi) || hi <= lo) { alert('Enter valid swing low < swing high'); return; }
+  const range = hi - lo;
+  let html = '';
+  FIB_LEVELS.forEach(lv => {
+    const price = dir === 'up'
+      ? (hi - range * lv.pct).toFixed(2)
+      : (lo + range * lv.pct).toFixed(2);
+    const isGolden = lv.label === '61.8%';
+    html += `
+      <div class="fib-result-row" style="${isGolden ? 'background:rgba(232,168,56,0.05);border-radius:4px;padding:9px 6px;' : ''}">
+        <span class="fib-pct" style="${isGolden ? 'color:#e8a838;' : ''}">${lv.label}</span>
+        <div class="fib-bar-wrap">
+          <div class="fib-bar" style="width:${lv.barW}%; background:${isGolden ? '#e8a838' : 'rgba(232,168,56,0.5)'};"></div>
+        </div>
+        <span class="fib-desc">${lv.desc}</span>
+        <span class="fib-price">₹${price}</span>
+      </div>`;
+  });
+  document.getElementById('fib-result-rows').innerHTML = html;
+  document.getElementById('fib-results').style.display = 'block';
+}
+
+// === EXTENSION CALCULATOR ===
+function calcExtension() {
+  const w1s = parseFloat(document.getElementById('w1-start').value);
+  const w1e = parseFloat(document.getElementById('w1-end').value);
+  const w2l = parseFloat(document.getElementById('w2-low').value);
+  if (isNaN(w1s) || isNaN(w1e) || isNaN(w2l)) { alert('Enter valid values'); return; }
+  const w1len = Math.abs(w1e - w1s);
+  const extLevels = [
+    { mult: 1.000, label: '1.000×', desc: 'Equal to Wave 1' },
+    { mult: 1.272, label: '1.272×', desc: 'Common W3 target' },
+    { mult: 1.618, label: '1.618×', desc: '★ Golden extension — most common W3' },
+    { mult: 2.000, label: '2.000×', desc: 'Strong W3 extension' },
+    { mult: 2.618, label: '2.618×', desc: 'Powerful W3, strong trend' },
+  ];
+  let html = '';
+  extLevels.forEach(lv => {
+    const target = (w2l + w1len * lv.mult).toFixed(2);
+    const isGolden = lv.mult === 1.618;
+    html += `
+      <div class="fib-result-row" style="${isGolden ? 'background:rgba(232,168,56,0.05);border-radius:4px;padding:9px 6px;' : ''}">
+        <span class="fib-pct" style="${isGolden ? 'color:#e8a838;' : ''}">${lv.label}</span>
+        <div class="fib-bar-wrap">
+          <div class="fib-bar" style="width:${Math.min(lv.mult/2.618*100, 100).toFixed(0)}%; background:${isGolden ? '#e8a838' : '#3dba7a'};"></div>
+        </div>
+        <span class="fib-desc">${lv.desc}</span>
+        <span class="fib-price">₹${target}</span>
+      </div>`;
+  });
+  document.getElementById('ext-result-rows').innerHTML = html;
+  document.getElementById('ext-results').style.display = 'block';
+}
+</script>
+</body>
+</html>
