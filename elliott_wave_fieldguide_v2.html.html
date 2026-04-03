@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elliott Wave + Fibonacci — Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080C14;--bg2:#0E1420;--bg3:#151C2E;--bg4:#1C2438;
+  --gold:#F0A030;--gold2:#C07820;--gold-dim:#F0A03030;
+  --green:#1DB884;--green-dim:#1DB88420;
+  --red:#E8453C;--red-dim:#E8453C20;
+  --purple:#8B7FE8;--purple-dim:#8B7FE820;
+  --blue:#3A8FE0;
+  --text:#E8E4D8;--text2:#9A9690;--text3:#5A5650;
+  --border:#1E2535;--border2:#2A3348;
+  --amber-text:#F0A030;
+  --r:8px;--r2:12px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;line-height:1.6;display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:220px;min-width:220px;background:var(--bg2);border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;padding:24px 0;display:flex;flex-direction:column;gap:4px}
+.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.sidebar-logo .mark{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase}
+.sidebar-logo h1{font-size:16px;font-weight:600;color:var(--text);line-height:1.3;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 20px;cursor:pointer;transition:all .18s;color:var(--text2);font-size:13px;font-weight:400;text-decoration:none;border-left:2px solid transparent}
+.nav-item:hover{color:var(--text);background:var(--bg3)}
+.nav-item.active{color:var(--gold);border-left-color:var(--gold);background:var(--gold-dim)}
+.nav-num{font-family:'JetBrains Mono',monospace;font-size:10px;opacity:.5;min-width:18px}
+.nav-section{padding:16px 20px 4px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);font-weight:500}
+
+/* MAIN */
+.main{flex:1;overflow-x:hidden}
+.section{padding:48px 40px;border-bottom:1px solid var(--border);max-width:900px}
+.section:last-child{border-bottom:none}
+
+/* HEADERS */
+.section-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.section-title{font-size:28px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.25}
+.section-sub{font-size:14px;color:var(--text2);margin-bottom:28px;max-width:620px;line-height:1.6}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px 24px;margin-bottom:16px}
+.card-gold{border-left:3px solid var(--gold)}
+.card-green{border-left:3px solid var(--green)}
+.card-red{border-left:3px solid var(--red)}
+.card-purple{border-left:3px solid var(--purple)}
+
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;font-family:'JetBrains Mono',monospace}
+.pill-wait{background:#F0A03018;color:var(--gold);border:1px solid var(--gold2)}
+.pill-draw{background:#1DB88418;color:var(--green);border:1px solid #0F7850}
+.pill-entry{background:#1DB88418;color:var(--green);border:1px solid #0F7850}
+.pill-warn{background:#E8453C18;color:var(--red);border:1px solid #A03030}
+.pill-time{background:#8B7FE818;color:var(--purple);border:1px solid #5548A8}
+
+/* STEPPER NAV */
+.step-nav{display:flex;align-items:center;gap:5px;margin-bottom:16px;flex-wrap:wrap}
+.step-dot{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;transition:all .2s;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.step-dot:hover{border-color:var(--gold);color:var(--gold)}
+.step-dot.active{background:var(--gold);border-color:var(--gold);color:#000}
+.step-dot.done{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+.step-line{flex:1;height:1px;background:var(--border);min-width:4px}
+
+/* CHART PANELS */
+.chart-stack{border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:16px;background:var(--bg3)}
+.chart-label{background:var(--bg4);padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border)}
+.chart-panel{padding:0}
+
+/* CHECKLIST GRID */
+.cl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.cl-col{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+.cl-head{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px;font-family:'JetBrains Mono',monospace}
+.cl-item{display:flex;align-items:flex-start;gap:7px;margin-bottom:6px;font-size:12px;color:var(--text2);line-height:1.4}
+.cl-item.ok-item{color:var(--text)}
+.cl-item.no-item{color:var(--text3)}
+.chk-box{width:14px;height:14px;border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.chk-ok{background:var(--green);color:#fff}
+.chk-no{background:var(--bg4);border:1px solid var(--border2);color:transparent}
+.chk-warn{background:var(--red);color:#fff}
+
+/* RULE BAR */
+.rule-bar{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--text2);line-height:1.6}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px}
+.btn{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:8px 18px;border-radius:var(--r);font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;transition:all .18s}
+.btn:hover{border-color:var(--gold);color:var(--gold)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.35;cursor:default}
+.btn-primary{background:var(--gold);border-color:var(--gold);color:#000;font-weight:600}
+.btn-primary:hover{background:var(--gold2);border-color:var(--gold2);color:#000}
+
+/* FIB TABLE */
+.fib-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+.fib-table th{text-align:left;padding:8px 12px;background:var(--bg3);color:var(--text2);font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;border-bottom:1px solid var(--border)}
+.fib-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+.fib-table tr:last-child td{border-bottom:none}
+.fib-table tr:hover td{background:var(--bg3)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+.tag-gold{color:var(--gold);font-weight:600}
+.tag-green{color:var(--green);font-weight:600}
+.tag-red{color:var(--red);font-weight:600}
+.tag-purple{color:var(--purple)}
+
+/* TIME SECTION SPECIFIC */
+.time-zone-demo{border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;background:var(--bg3);margin-bottom:16px}
+.tz-header{background:var(--bg4);padding:8px 16px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+.confluence-box{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
+.conf-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
+.conf-icon{font-size:22px;margin-bottom:6px;font-family:'JetBrains Mono',monospace;font-weight:700}
+.conf-title{font-size:12px;font-weight:600;margin-bottom:4px}
+.conf-body{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* ANATOMY */
+.wave-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.wleg{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2)}
+.wleg-dot{width:10px;height:10px;border-radius:50%}
+
+/* CHEAT SHEET */
+.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cs-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px}
+.cs-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.cs-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.cs-row:last-child{border-bottom:none}
+.cs-key{color:var(--text2)}
+.cs-val{font-family:'JetBrains Mono',monospace;font-size:11px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border2)}
+
+@media(max-width:700px){
+  .sidebar{display:none}
+  .section{padding:32px 20px}
+  .cl-grid{grid-template-columns:1fr}
+  .confluence-box{grid-template-columns:1fr}
+  .cs-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="mark">Field Guide</div>
+    <h1>Elliott Wave + Fibonacci</h1>
+  </div>
+  <div class="nav-section">Chapters</div>
+  <a class="nav-item active" href="#anatomy" onclick="setActive(this)">
+    <span class="nav-num">01</span>Wave anatomy
+  </a>
+  <a class="nav-item" href="#realtime" onclick="setActive(this)">
+    <span class="nav-num">02</span>Real-time placement
+  </a>
+  <a class="nav-item" href="#rsi-vol" onclick="setActive(this)">
+    <span class="nav-num">03</span>RSI + Volume guide
+  </a>
+  <a class="nav-item" href="#time" onclick="setActive(this)">
+    <span class="nav-num">04</span>Murphy's time factor
+  </a>
+  <a class="nav-item" href="#cheatsheet" onclick="setActive(this)">
+    <span class="nav-num">05</span>Master cheat sheet
+  </a>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 1 — WAVE ANATOMY
+══════════════════════════════════════════════════════ -->
+<section class="section" id="anatomy">
+  <div class="section-tag">Chapter 01</div>
+  <h2 class="section-title">The wave anatomy</h2>
+  <p class="section-sub">A perfect 5-wave impulse followed by a 3-wave ABC correction. Every wave has a Fibonacci relationship to the others. These are not suggestions — they are the rules.</p>
+
+  <svg width="100%" viewBox="0 0 840 380" style="display:block;margin-bottom:20px">
+    <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+    <!-- Fib bands -->
+    <rect x="60" y="40"  width="780" height="55"  fill="#F0A030" fill-opacity=".04"/>
+    <rect x="60" y="95"  width="780" height="50"  fill="#F0A030" fill-opacity=".06"/>
+    <rect x="60" y="145" width="780" height="55"  fill="#1E2535" fill-opacity=".5"/>
+    <rect x="60" y="200" width="780" height="50"  fill="#1DB884" fill-opacity=".05"/>
+    <rect x="60" y="250" width="780" height="55"  fill="#1DB884" fill-opacity=".09"/>
+    <rect x="60" y="305" width="780" height="50"  fill="#E8453C" fill-opacity=".06"/>
+    <!-- Fib level lines -->
+    <line x1="60" y1="40"  x2="840" y2="40"  stroke="#F0A030" stroke-width=".6" opacity=".4"/>
+    <line x1="60" y1="95"  x2="840" y2="95"  stroke="#F0A030" stroke-width=".5" opacity=".3"/>
+    <line x1="60" y1="145" x2="840" y2="145" stroke="#9A9690" stroke-width=".4" opacity=".3"/>
+    <line x1="60" y1="200" x2="840" y2="200" stroke="#1DB884" stroke-width=".5" opacity=".35"/>
+    <line x1="60" y1="250" x2="840" y2="250" stroke="#1DB884" stroke-width=".8" opacity=".5"/>
+    <line x1="60" y1="305" x2="840" y2="305" stroke="#E8453C" stroke-width=".5" opacity=".3"/>
+    <line x1="60" y1="355" x2="840" y2="355" stroke="#9A9690" stroke-width=".4" opacity=".2"/>
+    <!-- Fib labels left -->
+    <text x="55" y="44"  text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="#F0A030" opacity=".8">0%</text>
+    <text x="55" y="99"  text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="#F0A030" opacity=".7">23.6%</text>
+    <text x="55" y="149" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="#9A9690" opacity=".7">38.2%</text>
+    <text x="55" y="204" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="#1DB884" opacity=".8">50%</text>
+    <text x="55" y="254" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="#1DB884">61.8% ★</text>
+    <text x="55" y="309" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="#E8453C" opacity=".8">78.6%</text>
+    <text x="55" y="359" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="#9A9690" opacity=".5">100%</text>
+    <!-- Wave path — impulse -->
+    <polyline points="100,355 220,145 290,250 480,40 560,145 680,40" fill="none" stroke="#F0A030" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- Wave path — ABC -->
+    <polyline points="680,40 740,200 780,120 820,305" fill="none" stroke="#E8453C" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6 3"/>
+    <!-- Wave dots -->
+    <circle cx="100" cy="355" r="5" fill="#F0A030"/>
+    <circle cx="220" cy="145" r="5" fill="#F0A030"/>
+    <circle cx="290" cy="250" r="5" fill="#F0A030"/>
+    <circle cx="480" cy="40"  r="5" fill="#F0A030"/>
+    <circle cx="560" cy="145" r="5" fill="#F0A030"/>
+    <circle cx="680" cy="40"  r="6" fill="#F0A030" stroke="#C07820" stroke-width="2"/>
+    <circle cx="740" cy="200" r="5" fill="#E8453C"/>
+    <circle cx="780" cy="120" r="5" fill="#E8453C"/>
+    <circle cx="820" cy="305" r="5" fill="#E8453C"/>
+    <!-- Wave labels -->
+    <rect x="84"  y="363" width="22" height="22" rx="11" fill="#C07820"/>
+    <text x="95"  y="378" text-anchor="middle" font-family="Outfit,sans-serif" font-size="12" font-weight="600" fill="#000">0</text>
+    <rect x="204" y="123" width="22" height="22" rx="11" fill="#C07820"/>
+    <text x="215" y="138" text-anchor="middle" font-family="Outfit,sans-serif" font-size="12" font-weight="600" fill="#000">1</text>
+    <rect x="274" y="258" width="22" height="22" rx="11" fill="#C07820"/>
+    <text x="285" y="273" text-anchor="middle" font-family="Outfit,sans-serif" font-size="12" font-weight="600" fill="#000">2</text>
+    <rect x="464" y="18"  width="22" height="22" rx="11" fill="#C07820"/>
+    <text x="475" y="33"  text-anchor="middle" font-family="Outfit,sans-serif" font-size="12" font-weight="600" fill="#000">3</text>
+    <rect x="544" y="123" width="22" height="22" rx="11" fill="#C07820"/>
+    <text x="555" y="138" text-anchor="middle" font-family="Outfit,sans-serif" font-size="12" font-weight="600" fill="#000">4</text>
+    <rect x="664" y="18"  width="22" height="22" rx="11" fill="#C07820"/>
+    <text x="675" y="33"  text-anchor="middle" font-family="Outfit,sans-serif" font-size="12" font-weight="600" fill="#000">5</text>
+    <rect x="724" y="208" width="22" height="22" rx="11" fill="#7A2C1D"/>
+    <text x="735" y="223" text-anchor="middle" font-family="Outfit,sans-serif" font-size="12" font-weight="600" fill="#fff">A</text>
+    <rect x="764" y="98"  width="22" height="22" rx="11" fill="#7A2C1D"/>
+    <text x="775" y="113" text-anchor="middle" font-family="Outfit,sans-serif" font-size="12" font-weight="600" fill="#fff">B</text>
+    <rect x="804" y="313" width="22" height="22" rx="11" fill="#7A2C1D"/>
+    <text x="815" y="328" text-anchor="middle" font-family="Outfit,sans-serif" font-size="12" font-weight="600" fill="#fff">C</text>
+    <!-- Fib annotation arrows -->
+    <line x1="290" y1="250" x2="290" y2="145" stroke="#1DB884" stroke-width="1" stroke-dasharray="3 2"/>
+    <text x="295" y="205" font-family="Outfit,sans-serif" font-size="11" fill="#1DB884">W2 = 61.8% of W1</text>
+    <line x1="560" y1="145" x2="560" y2="40"  stroke="#1DB884" stroke-width="1" stroke-dasharray="3 2"/>
+    <text x="565" y="100" font-family="Outfit,sans-serif" font-size="11" fill="#1DB884">W4 = 38.2% of W3</text>
+    <text x="370" y="30"  font-family="Outfit,sans-serif" font-size="11" fill="#F0A030">W3 = 1.618× W1</text>
+    <line x1="360" y1="34" x2="310" y2="90" stroke="#F0A030" stroke-width=".8" stroke-dasharray="3 2" fill="none"/>
+    <text x="700" y="370" font-family="Outfit,sans-serif" font-size="11" fill="#E8453C">C ≈ 78.6% danger zone</text>
+  </svg>
+
+  <div class="wave-legend">
+    <div class="wleg"><div class="wleg-dot" style="background:#F0A030"></div>5-wave impulse (direction of trend)</div>
+    <div class="wleg"><div class="wleg-dot" style="background:#E8453C"></div>ABC correction (against trend)</div>
+    <div class="wleg"><div class="wleg-dot" style="background:#1DB884"></div>Key Fib support zones</div>
+    <div class="wleg"><div class="wleg-dot" style="background:#E8453C;opacity:.5"></div>Danger: below 78.6%</div>
+  </div>
+
+  <table class="fib-table">
+    <thead>
+      <tr>
+        <th>Wave</th><th>Fibonacci rule</th><th>Typical level</th><th>Cardinal rule</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="mono tag-gold">W1</span></td><td>Base impulse, no rule vs previous</td><td>—</td><td>Sets the anchor for everything</td></tr>
+      <tr><td><span class="mono tag-gold">W2</span></td><td>Retraces W1 — usually deep</td><td class="tag-green">61.8%</td><td>Must NEVER go below W0 start</td></tr>
+      <tr><td><span class="mono tag-gold">W3</span></td><td>Extension of W1</td><td class="tag-gold">1.618× W1</td><td>NEVER the shortest impulse wave</td></tr>
+      <tr><td><span class="mono tag-gold">W4</span></td><td>Retraces W3 — usually shallow</td><td class="tag-green">38.2%</td><td>Must NEVER overlap W1 price zone</td></tr>
+      <tr><td><span class="mono tag-gold">W5</span></td><td>Final impulse, often equals W1</td><td class="tag-gold">= W1 or 0.618×W3</td><td>RSI divergence = exhaustion signal</td></tr>
+      <tr><td><span class="mono" style="color:#E8453C">A</span></td><td>First corrective leg down</td><td>—</td><td>Sharp, high volume decline</td></tr>
+      <tr><td><span class="mono" style="color:#E8453C">B</span></td><td>Bounce against correction</td><td class="tag-purple">38–61.8% of A</td><td>Usually low volume, trap rally</td></tr>
+      <tr><td><span class="mono" style="color:#E8453C">C</span></td><td>Final corrective leg</td><td class="tag-red">= A or 1.618×A</td><td>Below 78.6% of full impulse = danger</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 2 — REAL-TIME FIB PLACEMENT
+══════════════════════════════════════════════════════ -->
+<section class="section" id="realtime">
+  <div class="section-tag">Chapter 02</div>
+  <h2 class="section-title">Real-time placement guide</h2>
+  <p class="section-sub">You never draw Fib on a wave that is still moving. You draw it on the previous confirmed wave to predict where the current wave will stop. Step through each stage below.</p>
+
+  <div class="step-nav" id="step-nav-rt"></div>
+  <div class="rule-bar" id="rt-rule"></div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+    <span class="pill" id="rt-pill"></span>
+    <span style="font-size:14px;font-weight:600;color:var(--text)" id="rt-title"></span>
+  </div>
+
+  <div class="chart-stack">
+    <div class="chart-label">Price + Fibonacci</div>
+    <svg width="100%" viewBox="0 0 800 180" id="rt-price" style="display:block">
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <line x1="50" y1="10" x2="50" y2="170" stroke="#1E2535" stroke-width="1"/>
+      <line x1="50" y1="170" x2="780" y2="170" stroke="#1E2535" stroke-width="1"/>
+      <!-- Fib zones for W1 -->
+      <g id="rfib1" opacity="0">
+        <rect x="70" y="22"  width="235" height="1" fill="#1DB884" opacity=".3"/>
+        <rect x="70" y="58"  width="235" height="1" fill="#1DB884" opacity=".35"/>
+        <rect x="70" y="88"  width="235" height="1" fill="#1DB884" opacity=".55"/>
+        <rect x="70" y="110" width="235" height="1" fill="#E8453C" opacity=".35"/>
+        <text x="312" y="26"  font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884" opacity=".8">38.2%</text>
+        <text x="312" y="62"  font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884">61.8%★</text>
+        <text x="312" y="92"  font-family="JetBrains Mono,monospace" font-size="9" fill="#E8453C">78.6%</text>
+        <text x="130" y="12"  font-family="Outfit,sans-serif" font-size="10" fill="#1DB884">Fib drawn: W1 low → W1 high</text>
+      </g>
+      <!-- Fib zones for W3 -->
+      <g id="rfib3" opacity="0">
+        <rect x="410" y="18"  width="185" height="1" fill="#1DB884" opacity=".3"/>
+        <rect x="410" y="48"  width="185" height="1" fill="#1DB884" opacity=".55"/>
+        <rect x="410" y="72"  width="185" height="1" fill="#1DB884" opacity=".3"/>
+        <text x="602" y="22"  font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884" opacity=".8">23.6%</text>
+        <text x="602" y="52"  font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884">38.2%★</text>
+        <text x="602" y="76"  font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884" opacity=".7">50%</text>
+        <text x="435" y="10"  font-family="Outfit,sans-serif" font-size="10" fill="#1DB884">Fib drawn: W3 low → W3 high</text>
+      </g>
+      <!-- Fib full -->
+      <g id="rfibfull" opacity="0">
+        <rect x="640" y="14"  width="130" height="1" fill="#F0A030" opacity=".3"/>
+        <rect x="640" y="58"  width="130" height="1" fill="#1DB884" opacity=".4"/>
+        <rect x="640" y="86"  width="130" height="1" fill="#1DB884" opacity=".6"/>
+        <rect x="640" y="120" width="130" height="1" fill="#E8453C" opacity=".5"/>
+        <text x="774" y="18"  font-family="JetBrains Mono,monospace" font-size="9" fill="#F0A030">0%</text>
+        <text x="774" y="62"  font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884">50%</text>
+        <text x="774" y="90"  font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884">61.8%</text>
+        <text x="774" y="124" font-family="JetBrains Mono,monospace" font-size="9" fill="#E8453C">78.6%</text>
+      </g>
+      <!-- Price line -->
+      <polyline id="rpp" points="" fill="none" stroke="#F0A030" stroke-width="2.2" stroke-linejoin="round"/>
+      <polyline id="rppabc" points="" fill="none" stroke="#E8453C" stroke-width="2" stroke-linejoin="round" stroke-dasharray="5 3"/>
+      <!-- Dots + labels -->
+      <g id="rpd0"  opacity="0"><circle cx="70"  cy="155" r="4" fill="#F0A030"/><rect x="55"  y="160" width="20" height="20" rx="10" fill="#C07820"/><text x="65"  y="174" text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#000">0</text></g>
+      <g id="rpd1"  opacity="0"><circle cx="200" cy="22"  r="4" fill="#F0A030"/><rect x="185" y="2"   width="20" height="20" rx="10" fill="#C07820"/><text x="195" y="16"  text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#000">1</text></g>
+      <g id="rpd2"  opacity="0"><circle cx="275" cy="88"  r="4" fill="#F0A030"/><rect x="260" y="94"  width="20" height="20" rx="10" fill="#C07820"/><text x="270" y="108" text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#000">2</text></g>
+      <g id="rpd3"  opacity="0"><circle cx="460" cy="14"  r="4" fill="#F0A030"/><rect x="445" y="0"   width="20" height="18" rx="9" fill="#C07820"/><text x="455" y="12"  text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#000">3</text></g>
+      <g id="rpd4"  opacity="0"><circle cx="530" cy="48"  r="4" fill="#F0A030"/><rect x="515" y="54"  width="20" height="20" rx="10" fill="#C07820"/><text x="525" y="68"  text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#000">4</text></g>
+      <g id="rpd5"  opacity="0"><circle cx="640" cy="14"  r="5" fill="#F0A030" stroke="#C07820" stroke-width="1.5"/><rect x="625" y="0"   width="20" height="18" rx="9" fill="#C07820"/><text x="635" y="12"  text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#000">5</text></g>
+      <g id="rpdA"  opacity="0"><circle cx="690" cy="58"  r="4" fill="#E8453C"/><rect x="675" y="64"  width="20" height="20" rx="10" fill="#7A2C1D"/><text x="685" y="78"  text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#fff">A</text></g>
+      <g id="rpdB"  opacity="0"><circle cx="730" cy="32"  r="4" fill="#E8453C"/><rect x="715" y="12"  width="20" height="20" rx="10" fill="#7A2C1D"/><text x="725" y="26"  text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#fff">B</text></g>
+      <g id="rpdC"  opacity="0"><circle cx="765" cy="120" r="4" fill="#E8453C"/><rect x="750" y="126" width="20" height="20" rx="10" fill="#7A2C1D"/><text x="760" y="140" text-anchor="middle" font-family="Outfit" font-size="11" font-weight="600" fill="#fff">C</text></g>
+      <!-- Signals -->
+      <g id="rsig1" opacity="0">
+        <circle cx="275" cy="88" r="18" fill="none" stroke="#1DB884" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="275" y="72" text-anchor="middle" font-family="Outfit,sans-serif" font-size="10" fill="#1DB884" font-weight="600">Entry</text>
+      </g>
+      <g id="rsig2" opacity="0">
+        <circle cx="530" cy="48" r="18" fill="none" stroke="#1DB884" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="530" y="32" text-anchor="middle" font-family="Outfit,sans-serif" font-size="10" fill="#1DB884" font-weight="600">Entry</text>
+      </g>
+      <g id="rsigdiv" opacity="0">
+        <line x1="580" y1="42" x2="640" y2="14" stroke="#E8453C" stroke-width="1" stroke-dasharray="3 2"/>
+        <text x="598" y="36" font-family="Outfit,sans-serif" font-size="10" fill="#E8453C">Diverge</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="chart-stack">
+    <div class="chart-label">RSI (14)</div>
+    <svg width="100%" viewBox="0 0 800 70" id="rt-rsi" style="display:block">
+      <line x1="50" y1="5" x2="50" y2="65" stroke="#1E2535" stroke-width="1"/>
+      <rect x="50" y="5"  width="730" height="14" fill="#E8453C" fill-opacity=".07"/>
+      <rect x="50" y="46" width="730" height="14" fill="#1DB884" fill-opacity=".07"/>
+      <line x1="50" y1="19" x2="780" y2="19" stroke="#E8453C" stroke-width=".5" stroke-dasharray="3 2" opacity=".4"/>
+      <line x1="50" y1="46" x2="780" y2="46" stroke="#1DB884" stroke-width=".5" stroke-dasharray="3 2" opacity=".4"/>
+      <text x="44" y="19" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="9" fill="#E8453C" dominant-baseline="central">70</text>
+      <text x="44" y="46" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884" dominant-baseline="central">30</text>
+      <polyline id="rrsi" points="" fill="none" stroke="#8B7FE8" stroke-width="1.8" stroke-linejoin="round"/>
+      <g id="rrsi-div" opacity="0">
+        <line x1="580" y1="26" x2="640" y2="30" stroke="#E8453C" stroke-width="1" stroke-dasharray="3 2"/>
+        <circle cx="580" cy="26" r="3" fill="#E8453C"/>
+        <circle cx="640" cy="30" r="3" fill="#E8453C"/>
+        <text x="608" y="18" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" fill="#E8453C">Lower high</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="chart-stack">
+    <div class="chart-label">Volume</div>
+    <svg width="100%" viewBox="0 0 800 60" id="rt-vol" style="display:block">
+      <line x1="50" y1="5" x2="50" y2="55" stroke="#1E2535" stroke-width="1"/>
+      <line x1="50" y1="55" x2="780" y2="55" stroke="#1E2535" stroke-width="1"/>
+      <g id="rvol-bars"></g>
+    </svg>
+  </div>
+
+  <div class="cl-grid" id="rt-checklist"></div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="rtPrev()" id="rt-prev">Back</button>
+    <button class="btn btn-primary" onclick="rtNext()" id="rt-next">Next step</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 3 — RSI + VOLUME DEEP DIVE
+══════════════════════════════════════════════════════ -->
+<section class="section" id="rsi-vol">
+  <div class="section-tag">Chapter 03</div>
+  <h2 class="section-title">RSI + Volume at each wave</h2>
+  <p class="section-sub">Price waves leave fingerprints on RSI and volume. Learn to read them — they tell you what wave you're in before the price confirms it.</p>
+
+  <table class="fib-table">
+    <thead>
+      <tr><th>Wave</th><th>RSI behaviour</th><th>Volume signature</th><th>Signal to act on</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="mono tag-gold">W1 up</span></td>
+        <td>Rises from 30–40 zone. Rarely overbought.</td>
+        <td>Expanding but not extreme. First real buying.</td>
+        <td class="tag-green">Watch for RSI cross above 50</td>
+      </tr>
+      <tr>
+        <td><span class="mono tag-gold">W2 down</span></td>
+        <td>Pulls back to 40–50. Bullish divergence sometimes visible.</td>
+        <td>Low volume. Sellers dry up. <em>This is the tell.</em></td>
+        <td class="tag-green">Dry volume + RSI bounce = W2 low confirmed</td>
+      </tr>
+      <tr>
+        <td><span class="mono tag-gold">W3 up</span></td>
+        <td>Strongest RSI slope. Goes overbought (70+). Stays there.</td>
+        <td>Heaviest of entire cycle. Multiple expansion bars.</td>
+        <td class="tag-gold">RSI 70+ + highest volume = confirm you're in W3</td>
+      </tr>
+      <tr>
+        <td><span class="mono tag-gold">W4 down</span></td>
+        <td>Drops to 50–55 area. Shallower than W2 RSI drop.</td>
+        <td>Lower than W3. Mild pullback selling.</td>
+        <td class="tag-green">RSI near 50 + low volume = W4 low signal</td>
+      </tr>
+      <tr>
+        <td><span class="mono tag-gold">W5 up</span></td>
+        <td>Makes new price high but RSI makes LOWER high than W3. <strong>Divergence.</strong></td>
+        <td>Lower than W3. Buyers running out of conviction.</td>
+        <td class="tag-red">Divergence + lower volume = W5 exhaustion. Get out.</td>
+      </tr>
+      <tr>
+        <td><span class="mono" style="color:#E8453C">A down</span></td>
+        <td>RSI drops sharply below 50. Trend breaks.</td>
+        <td>High volume. Real distribution.</td>
+        <td class="tag-red">Strong A-wave volume = correction is real, not a dip</td>
+      </tr>
+      <tr>
+        <td><span class="mono" style="color:#E8453C">B up</span></td>
+        <td>Tepid RSI bounce. Doesn't recover above 50.</td>
+        <td>Low volume. The trap rally.</td>
+        <td class="tag-red">Low B-wave volume = don't be fooled. C-wave coming.</td>
+      </tr>
+      <tr>
+        <td><span class="mono" style="color:#E8453C">C down</span></td>
+        <td>RSI reaches 30 or below. Bullish divergence at C low.</td>
+        <td>Climax volume spike at C bottom = seller exhaustion.</td>
+        <td class="tag-green">RSI 30 + volume spike + bullish candle = C low confirmed</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card card-gold">
+    <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:8px">The divergence rule — memorise this</div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7">When price makes a <strong style="color:var(--text)">higher high</strong> but RSI makes a <strong style="color:var(--red)">lower high</strong>, the wave is running on fumes. This is bearish divergence. It almost always precedes W5 completion. Similarly, price making a <strong style="color:var(--text)">lower low</strong> with RSI making a <strong style="color:var(--green)">higher low</strong> = bullish divergence at C-wave lows. These are your highest-conviction signals in the entire Elliott cycle.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 4 — MURPHY'S TIME FACTOR
+══════════════════════════════════════════════════════ -->
+<section class="section" id="time">
+  <div class="section-tag">Chapter 04 — Murphy's Time Factor</div>
+  <h2 class="section-title">Time is as important as price</h2>
+  <p class="section-sub">John Murphy's core insight: Fibonacci doesn't just apply to price levels. It applies to time intervals. A retracement that hits both a Fibonacci price level AND a Fibonacci time zone simultaneously is a dramatically higher-probability setup.</p>
+
+  <div class="confluence-box">
+    <div class="conf-item">
+      <div class="conf-icon" style="color:var(--gold)">$</div>
+      <div class="conf-title" style="color:var(--gold)">Price Fibonacci</div>
+      <div class="conf-body">Horizontal levels at 38.2%, 50%, 61.8% of a wave range. What most traders only use.</div>
+    </div>
+    <div class="conf-item">
+      <div class="conf-icon" style="color:var(--purple)">T</div>
+      <div class="conf-title" style="color:var(--purple)">Time Fibonacci</div>
+      <div class="conf-body">Vertical lines at 1, 2, 3, 5, 8, 13, 21, 34... bars from a turning point. Reversal clusters here.</div>
+    </div>
+    <div class="conf-item" style="border:1px solid var(--gold);background:var(--gold-dim)">
+      <div class="conf-icon" style="color:var(--gold)">⚡</div>
+      <div class="conf-title" style="color:var(--gold)">Confluence = Edge</div>
+      <div class="conf-body">When price Fib level + time zone + RSI signal all align — this is the trade. Murphy calls this the cluster.</div>
+    </div>
+  </div>
+
+  <!-- TIME ZONES DIAGRAM -->
+  <div class="time-zone-demo">
+    <div class="tz-header">
+      <span>Fibonacci time zones — placed from a major low</span>
+      <span class="pill pill-time">Fib sequence: 1 · 2 · 3 · 5 · 8 · 13 · 21 · 34</span>
+    </div>
+    <svg width="100%" viewBox="0 0 800 220" style="display:block;padding:0">
+      <!-- background grid -->
+      <rect x="0" y="0" width="800" height="220" fill="#0E1420"/>
+      <line x1="0" y1="200" x2="800" y2="200" stroke="#1E2535" stroke-width="1"/>
+      <!-- Horizontal fib price levels -->
+      <rect x="0" y="45"  width="800" height="40" fill="#1DB884" fill-opacity=".04"/>
+      <rect x="0" y="100" width="800" height="30" fill="#1DB884" fill-opacity=".06"/>
+      <rect x="0" y="145" width="800" height="30" fill="#F0A030" fill-opacity=".05"/>
+      <line x1="0" y1="45"  x2="800" y2="45"  stroke="#1DB884" stroke-width=".5" stroke-dasharray="3 3" opacity=".4"/>
+      <line x1="0" y1="100" x2="800" y2="100" stroke="#1DB884" stroke-width=".5" stroke-dasharray="3 3" opacity=".5"/>
+      <line x1="0" y1="145" x2="800" y2="145" stroke="#F0A030" stroke-width=".5" stroke-dasharray="3 3" opacity=".4"/>
+      <!-- Price level labels -->
+      <text x="4" y="42"  font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884" opacity=".7">61.8% price fib</text>
+      <text x="4" y="97"  font-family="JetBrains Mono,monospace" font-size="9" fill="#1DB884" opacity=".7">38.2% price fib</text>
+      <text x="4" y="142" font-family="JetBrains Mono,monospace" font-size="9" fill="#F0A030" opacity=".7">23.6% price fib</text>
+      <!-- FIBONACCI TIME ZONE VERTICALS -->
+      <!-- Bar 0 = start (the major low) at x=60 -->
+      <!-- Each Fib interval = ~22px per bar unit, so bars: 1=82, 2=104, 3=126, 5=170, 8=236, 13=346, 21=522, 34=808(off screen clipped) -->
+      <!-- Zone 1 -->
+      <line x1="82"  y1="0" x2="82"  y2="210" stroke="#8B7FE8" stroke-width=".8" stroke-dasharray="4 3" opacity=".5"/>
+      <text x="82"  y="215" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8B7FE8" opacity=".7">1</text>
+      <!-- Zone 2 -->
+      <line x1="104" y1="0" x2="104" y2="210" stroke="#8B7FE8" stroke-width=".8" stroke-dasharray="4 3" opacity=".5"/>
+      <text x="104" y="215" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8B7FE8" opacity=".7">2</text>
+      <!-- Zone 3 -->
+      <line x1="126" y1="0" x2="126" y2="210" stroke="#8B7FE8" stroke-width=".8" stroke-dasharray="4 3" opacity=".5"/>
+      <text x="126" y="215" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8B7FE8" opacity=".7">3</text>
+      <!-- Zone 5 -->
+      <line x1="170" y1="0" x2="170" y2="210" stroke="#8B7FE8" stroke-width=".8" stroke-dasharray="4 3" opacity=".55"/>
+      <text x="170" y="215" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8B7FE8" opacity=".7">5</text>
+      <!-- Zone 8 -->
+      <line x1="236" y1="0" x2="236" y2="210" stroke="#8B7FE8" stroke-width="1" stroke-dasharray="4 3" opacity=".65"/>
+      <text x="236" y="215" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8B7FE8">8</text>
+      <!-- Zone 13 -->
+      <line x1="346" y1="0" x2="346" y2="210" stroke="#8B7FE8" stroke-width="1.2" stroke-dasharray="4 3" opacity=".7"/>
+      <text x="346" y="215" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8B7FE8">13</text>
+      <!-- Zone 21 -->
+      <line x1="522" y1="0" x2="522" y2="210" stroke="#8B7FE8" stroke-width="1.4" stroke-dasharray="4 3" opacity=".75"/>
+      <text x="522" y="215" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8B7FE8">21</text>
+      <!-- Zone 34 (partial) -->
+      <line x1="788" y1="0" x2="788" y2="210" stroke="#8B7FE8" stroke-width="1.6" stroke-dasharray="4 3" opacity=".5"/>
+      <text x="788" y="215" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#8B7FE8" opacity=".5">34</text>
+      <!-- PRICE WAVE on top of time zones -->
+      <circle cx="60" cy="190" r="5" fill="#F0A030"/>
+      <rect x="44" y="196" width="20" height="18" rx="9" fill="#C07820"/>
+      <text x="54" y="208" text-anchor="middle" font-family="Outfit" font-size="10" font-weight="600" fill="#000">Low</text>
+      <polyline points="60,190 100,130 160,155 236,62 300,95 410,45 490,80 570,38" fill="none" stroke="#F0A030" stroke-width="2" stroke-linejoin="round"/>
+      <polyline points="570,38 630,115 660,80 720,148" fill="none" stroke="#E8453C" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="5 3"/>
+      <!-- CONFLUENCE HIGHLIGHTS — where time zone + price fib intersect -->
+      <!-- At bar 8 (x=236) price hits 61.8% fib (y=45 area) — major confluence -->
+      <rect x="220" y="38" width="30" height="32" rx="4" fill="#F0A030" fill-opacity=".15" stroke="#F0A030" stroke-width="1" opacity=".8"/>
+      <text x="236" y="28" text-anchor="middle" font-family="Outfit,sans-serif" font-size="10" fill="#F0A030" font-weight="600">Confluence!</text>
+      <text x="236" y="18" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" fill="#F0A030" opacity=".7">Price 61.8% + Time 8</text>
+      <!-- At bar 13 price hits 38.2% fib area on ABC correction -->
+      <rect x="330" y="78" width="30" height="28" rx="4" fill="#1DB884" fill-opacity=".12" stroke="#1DB884" stroke-width="1" opacity=".7"/>
+      <text x="346" y="73" text-anchor="middle" font-family="Outfit,sans-serif" font-size="10" fill="#1DB884" font-weight="600">Confluence</text>
+      <text x="346" y="63" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" fill="#1DB884" opacity=".7">38.2% + Time 13</text>
+      <!-- At bar 21 ABC correction C wave near 78.6% -->
+      <rect x="506" y="62" width="30" height="28" rx="4" fill="#F0A030" fill-opacity=".15" stroke="#F0A030" stroke-width="1" opacity=".8"/>
+      <text x="522" y="57" text-anchor="middle" font-family="Outfit,sans-serif" font-size="10" fill="#F0A030" font-weight="600">Confluence!</text>
+      <text x="522" y="47" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" fill="#F0A030" opacity=".7">W5 top + Time 21</text>
+    </svg>
+  </div>
+
+  <div class="card card-purple" style="margin-bottom:16px">
+    <div style="font-size:13px;font-weight:600;color:var(--purple);margin-bottom:10px">How to place Fibonacci Time Zones in TradingView</div>
+    <ol style="font-size:13px;color:var(--text2);line-height:2;padding-left:18px">
+      <li>Find a <strong style="color:var(--text)">significant turning point</strong> — a major low (for uptrend) or major high (for downtrend)</li>
+      <li>In TradingView: <span class="pill pill-time" style="font-size:10px">Drawing Tools → Fibonacci → Time Zones</span></li>
+      <li>Click on the turning point, then click on the <strong style="color:var(--text)">next candle</strong> to set the 1-bar interval</li>
+      <li>Vertical lines auto-extend at 1, 2, 3, 5, 8, 13, 21, 34... bars forward</li>
+      <li>Now overlay your <strong style="color:var(--gold)">price Fib retracement</strong> on the same chart</li>
+      <li>Where a <strong style="color:var(--gold)">price level</strong> meets a <strong style="color:var(--purple)">time zone line</strong> = your highest-probability reversal zone</li>
+    </ol>
+  </div>
+
+  <table class="fib-table">
+    <thead>
+      <tr><th>Wave duration relationship</th><th>Murphy's Fibonacci time rule</th><th>Implication</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="mono tag-gold">W2 duration</span></td>
+        <td>0.382× or 0.618× of W1 duration</td>
+        <td>Short corrections = shallow W2. Long = deep 61.8% retracement likely.</td>
+      </tr>
+      <tr>
+        <td><span class="mono tag-gold">W3 duration</span></td>
+        <td>1.618× or 2.618× of W1 duration</td>
+        <td>If W1 took 10 bars, expect W3 to run 16–26 bars.</td>
+      </tr>
+      <tr>
+        <td><span class="mono tag-gold">W4 duration</span></td>
+        <td>Alternates with W2 — often equals W2</td>
+        <td>If W2 was short and deep, W4 is long and shallow (alternation).</td>
+      </tr>
+      <tr>
+        <td><span class="mono tag-gold">W5 duration</span></td>
+        <td>Often equals W1 duration</td>
+        <td>Time-equal W5 + price divergence = strongest exhaustion signal.</td>
+      </tr>
+      <tr>
+        <td><span class="mono" style="color:#E8453C">ABC correction</span></td>
+        <td>Often equals W1+W2+W3+W4+W5 total × 0.382 or 0.618</td>
+        <td>Corrections rarely exceed 61.8% of the impulse's time span.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card card-gold">
+    <div style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:8px">Murphy's Triple Confluence Rule</div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px">The highest-probability trade setups occur when three factors align simultaneously:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:20px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace">$</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin:4px 0">Price at Fib level</div>
+        <div style="font-size:11px;color:var(--text2)">38.2%, 50%, 61.8%, 78.6%</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:20px;font-weight:700;color:var(--purple);font-family:'JetBrains Mono',monospace">T</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin:4px 0">Fibonacci time zone</div>
+        <div style="font-size:11px;color:var(--text2)">Bar count at 8, 13, 21, 34...</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:12px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:20px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace">R</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin:4px 0">RSI + Volume confirm</div>
+        <div style="font-size:11px;color:var(--text2)">Divergence, dry-up, reversal candle</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text3);margin-top:10px;font-style:italic">"When all three agree, the odds tilt dramatically in your favour. When only one or two align, it's a watch — not a trade." — Murphy principle</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 5 — MASTER CHEAT SHEET
+══════════════════════════════════════════════════════ -->
+<section class="section" id="cheatsheet">
+  <div class="section-tag">Chapter 05</div>
+  <h2 class="section-title">Master cheat sheet</h2>
+  <p class="section-sub">Everything on one page. Your real-time go/no-go checklist before placing any trade in an Elliott Wave context.</p>
+
+  <div class="cs-grid">
+    <div class="cs-card">
+      <div class="cs-title" style="color:var(--gold)">Fib levels — what each means</div>
+      <div class="cs-row"><span class="cs-key">23.6%</span><span class="cs-val tag-gold">Shallow — strong trend</span></div>
+      <div class="cs-row"><span class="cs-key">38.2%</span><span class="cs-val tag-green">W4 target — buy zone</span></div>
+      <div class="cs-row"><span class="cs-key">50.0%</span><span class="cs-val" style="color:var(--text2)">Mid — watch for reaction</span></div>
+      <div class="cs-row"><span class="cs-key">61.8%</span><span class="cs-val tag-green">W2 target — golden ratio</span></div>
+      <div class="cs-row"><span class="cs-key">78.6%</span><span class="cs-val tag-red">Danger zone — alarm bell</span></div>
+      <div class="cs-row"><span class="cs-key">100%</span><span class="cs-val tag-red">Full retrace — count is wrong</span></div>
+    </div>
+    <div class="cs-card">
+      <div class="cs-title" style="color:var(--purple)">Wave rules — unbreakable</div>
+      <div class="cs-row"><span class="cs-key">W2 rule</span><span class="cs-val tag-red">Never below W0 start</span></div>
+      <div class="cs-row"><span class="cs-key">W3 rule</span><span class="cs-val tag-red">Never shortest wave</span></div>
+      <div class="cs-row"><span class="cs-key">W4 rule</span><span class="cs-val tag-red">Never overlaps W1 zone</span></div>
+      <div class="cs-row"><span class="cs-key">W3 target</span><span class="cs-val tag-gold">1.618× W1 typical</span></div>
+      <div class="cs-row"><span class="cs-key">W5 signal</span><span class="cs-val" style="color:var(--purple)">RSI divergence = exit</span></div>
+      <div class="cs-row"><span class="cs-key">C target</span><span class="cs-val tag-red">= A length or 1.618× A</span></div>
+    </div>
+    <div class="cs-card">
+      <div class="cs-title" style="color:var(--green)">When to draw Fib — timing</div>
+      <div class="cs-row"><span class="cs-key">For W2 entry</span><span class="cs-val tag-gold">After W1 top confirmed</span></div>
+      <div class="cs-row"><span class="cs-key">For W4 entry</span><span class="cs-val tag-gold">After W3 top confirmed</span></div>
+      <div class="cs-row"><span class="cs-key">For correction</span><span class="cs-val tag-gold">After W5 top confirmed</span></div>
+      <div class="cs-row"><span class="cs-key">Confirmation</span><span class="cs-val" style="color:var(--text2)">Reversal candle closed</span></div>
+      <div class="cs-row"><span class="cs-key">Anchor points</span><span class="cs-val" style="color:var(--text2)">Always use wicks, not bodies</span></div>
+      <div class="cs-row"><span class="cs-key">Never draw</span><span class="cs-val tag-red">On a still-moving wave</span></div>
+    </div>
+    <div class="cs-card">
+      <div class="cs-title" style="color:var(--purple)">Murphy's time factor</div>
+      <div class="cs-row"><span class="cs-key">Time sequence</span><span class="cs-val tag-purple">1,2,3,5,8,13,21,34...</span></div>
+      <div class="cs-row"><span class="cs-key">W3 duration</span><span class="cs-val tag-gold">1.618× W1 duration</span></div>
+      <div class="cs-row"><span class="cs-key">W5 duration</span><span class="cs-val" style="color:var(--text2)">Often = W1 duration</span></div>
+      <div class="cs-row"><span class="cs-key">Best setup</span><span class="cs-val tag-gold">Price + Time + RSI align</span></div>
+      <div class="cs-row"><span class="cs-key">In TradingView</span><span class="cs-val" style="color:var(--text2)">Drawing → Fib Time Zones</span></div>
+      <div class="cs-row"><span class="cs-key">Start point</span><span class="cs-val" style="color:var(--text2)">Major high or low</span></div>
+    </div>
+  </div>
+
+  <div class="card" style="background:var(--bg3);border-color:var(--border2);margin-top:4px">
+    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:12px">Pre-trade go/no-go checklist</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">01</span><span style="color:var(--text2)">Wave count confirmed with clear impulse structure visible</span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">02</span><span style="color:var(--text2)">Fib drawn from a COMPLETED, CONFIRMED wave — not a forming one</span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">03</span><span style="color:var(--text2)">Price at a key Fib level (38.2%, 50%, 61.8%) with reversal candle closed</span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">04</span><span style="color:var(--text2)">RSI shows divergence, bounce from support level, or oversold hook</span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">05</span><span style="color:var(--text2)">Volume is drying up at the reversal point (sellers/buyers exhausted)</span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--purple);font-weight:700;flex-shrink:0">06</span><span style="color:var(--text2)">Check Fibonacci time zone — is a zone line nearby? If yes, add conviction</span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">07</span><span style="color:var(--text2)">Stop loss placed just below the Fib level (for buys) or above (for sells)</span></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">08</span><span style="color:var(--text2)">Target set at next wave's Fib extension level (1.618× prior wave)</span></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+function setActive(el){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── REAL-TIME STEPPER DATA ──────────────────────────────────────
+const STEPS=[
+  {title:"Wave 1 forming — stand by",badge:"wait",badgeText:"Stand by",
+   rule:"Price breaking up from a base. Candles are bullish. RSI rising from oversold. Volume expanding. Do NOT draw Fib — W1 has not confirmed.",
+   pp:"70,155",abc:"",fib1:false,fib3:false,fibF:false,
+   show:["rpd0"],sig1:false,sig2:false,sigdiv:false,rsiDiv:false,
+   rsi:"70,55",
+   volH:[2,3,4,5,6],volC:["#1DB884","#1DB884","#1DB884","#1DB884","#1DB884"],
+   checks:[
+    {head:"Price",col:"#3A8FE0",items:[{ok:true,t:"Breaking above base"},{ok:true,t:"Bullish candles forming"},{ok:false,t:"W1 top not yet confirmed"}]},
+    {head:"RSI",col:"#8B7FE8",items:[{ok:true,t:"Rising from 30–40 zone"},{ok:false,t:"Not overbought yet"},{ok:false,t:"Wait for peak + rollover"}]},
+    {head:"Volume",col:"#1DB884",items:[{ok:true,t:"Expanding on up days"},{ok:false,t:"No climax spike yet"},{ok:false,t:"No reversal signal yet"}]}
+   ]},
+  {title:"Wave 1 tops — draw first Fib",badge:"draw",badgeText:"Draw Fib: W1",
+   rule:"Bearish reversal candle closes at W1 high. RSI rolls over from 60–70. Volume spikes then drops. W1 is CONFIRMED. Draw Fib: W1 low → W1 high. Watch 61.8% for W2 bounce.",
+   pp:"70,155 200,22",abc:"",fib1:true,fib3:false,fibF:false,
+   show:["rpd0","rpd1"],sig1:false,sig2:false,sigdiv:false,rsiDiv:false,
+   rsi:"70,55 200,18",
+   volH:[2,3,4,5,8,3,2],volC:["#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C"],
+   checks:[
+    {head:"Price",col:"#3A8FE0",items:[{ok:true,t:"Bearish engulf at W1 high"},{ok:true,t:"Candle close below W1 open"},{ok:true,t:"W1 confirmed — draw Fib now"}]},
+    {head:"RSI",col:"#8B7FE8",items:[{ok:true,t:"Peaked 60–70 range"},{ok:true,t:"Rolling over downward"},{ok:false,t:"Not yet at 50 pullback"}]},
+    {head:"Volume",col:"#1DB884",items:[{ok:true,t:"Climax spike at W1 top"},{ok:true,t:"Drying up on pullback"},{ok:false,t:"Watch for dry-up at 61.8%"}]}
+   ]},
+  {title:"Wave 2 holds 61.8% — entry",badge:"entry",badgeText:"Enter W3",
+   rule:"Price finds support at 61.8% with bullish reversal candle. RSI bounces from ~40. Volume dries up completely — sellers exhausted. W2 low confirmed. This is your entry into Wave 3.",
+   pp:"70,155 200,22 275,88",abc:"",fib1:true,fib3:false,fibF:false,
+   show:["rpd0","rpd1","rpd2","rsig1"],sig1:true,sig2:false,sigdiv:false,rsiDiv:false,
+   rsi:"70,55 200,18 275,42",
+   volH:[2,3,4,5,8,3,2,1,1,4],volC:["#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C","#1DB884"],
+   checks:[
+    {head:"Price",col:"#3A8FE0",items:[{ok:true,t:"Held exactly at 61.8%"},{ok:true,t:"Bullish reversal candle"},{ok:true,t:"Did NOT break below W0"}]},
+    {head:"RSI",col:"#8B7FE8",items:[{ok:true,t:"Touched ~40, now bouncing"},{ok:true,t:"Bullish divergence forming"},{ok:true,t:"Above 30 — not extreme"}]},
+    {head:"Volume",col:"#1DB884",items:[{ok:true,t:"Dry-up confirms seller exit"},{ok:true,t:"New buying volume appears"},{ok:true,t:"W2 confirmed — enter long"}]}
+   ]},
+  {title:"Wave 3 rips — the power wave",badge:"wait",badgeText:"Ride W3",
+   rule:"W3 is the strongest move. RSI goes overbought (70+). Volume is the highest of the cycle. W3 must be longer than W1. Watch for RSI overbought + bearish candle to signal W3 top.",
+   pp:"70,155 200,22 275,88 460,14",abc:"",fib1:false,fib3:false,fibF:false,
+   show:["rpd0","rpd1","rpd2","rpd3"],sig1:false,sig2:false,sigdiv:false,rsiDiv:false,
+   rsi:"70,55 200,18 275,42 460,12",
+   volH:[2,3,4,5,8,3,2,1,1,4,5,7,9,10,8],volC:["#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C","#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#1DB884"],
+   checks:[
+    {head:"Price",col:"#3A8FE0",items:[{ok:true,t:"New high above W1 top"},{ok:true,t:"W3 longer than W1"},{ok:false,t:"Bearish candle to confirm top"}]},
+    {head:"RSI",col:"#8B7FE8",items:[{ok:true,t:"Overbought — above 70"},{ok:true,t:"Steepest slope of cycle"},{ok:false,t:"Watch for rollover"}]},
+    {head:"Volume",col:"#1DB884",items:[{ok:true,t:"Highest volume of all waves"},{ok:true,t:"Consistent green expansion"},{ok:false,t:"Climax spike = W3 ending"}]}
+   ]},
+  {title:"Wave 3 tops — draw second Fib",badge:"draw",badgeText:"Draw Fib: W3",
+   rule:"Bearish candle at W3 high. RSI rolling over from 70+. Volume spikes then drops. Draw NEW Fib from W3 low (=W2 low) to W3 high. Discard W1 Fib. Watch 38.2% for W4.",
+   pp:"70,155 200,22 275,88 460,14 530,48",abc:"",fib1:false,fib3:true,fibF:false,
+   show:["rpd0","rpd1","rpd2","rpd3","rpd4"],sig1:false,sig2:false,sigdiv:false,rsiDiv:false,
+   rsi:"70,55 200,18 275,42 460,12 530,30",
+   volH:[2,3,4,5,8,3,2,1,1,4,5,7,9,10,8,4,2],volC:["#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C","#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C"],
+   checks:[
+    {head:"Price",col:"#3A8FE0",items:[{ok:true,t:"Bearish candle at W3 high"},{ok:true,t:"W3 confirmed > W1 length"},{ok:true,t:"Draw Fib: W3-low → W3-high"}]},
+    {head:"RSI",col:"#8B7FE8",items:[{ok:true,t:"Peaked above 70"},{ok:true,t:"Now falling from peak"},{ok:false,t:"Wait for 50-zone bounce"}]},
+    {head:"Volume",col:"#1DB884",items:[{ok:true,t:"Spike at W3 top"},{ok:true,t:"Declining on pullback"},{ok:false,t:"Watch dry-up at 38.2%"}]}
+   ]},
+  {title:"Wave 4 holds 38.2% — entry",badge:"entry",badgeText:"Enter W5",
+   rule:"Shallow pullback to 38.2% of W3. RSI finds support around 50. Volume dries up. Bullish candle confirms W4 low. Crucial: W4 must NOT overlap W1 price territory.",
+   pp:"70,155 200,22 275,88 460,14 530,48",abc:"",fib1:false,fib3:true,fibF:false,
+   show:["rpd0","rpd1","rpd2","rpd3","rpd4","rsig2"],sig1:false,sig2:true,sigdiv:false,rsiDiv:false,
+   rsi:"70,55 200,18 275,42 460,12 530,30",
+   volH:[2,3,4,5,8,3,2,1,1,4,5,7,9,10,8,4,2,1,1,3],volC:["#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C","#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C","#E8453C","#1DB884"],
+   checks:[
+    {head:"Price",col:"#3A8FE0",items:[{ok:true,t:"Held at 38.2% of W3"},{ok:true,t:"Bullish reversal candle"},{ok:true,t:"No overlap with W1 zone"}]},
+    {head:"RSI",col:"#8B7FE8",items:[{ok:true,t:"Bounced near 50 level"},{ok:true,t:"Shallower than W2 drop"},{ok:true,t:"Alternation confirmed"}]},
+    {head:"Volume",col:"#1DB884",items:[{ok:true,t:"Dry-up = sellers gone"},{ok:true,t:"Fresh buying volume"},{ok:true,t:"W4 confirmed — enter W5"}]}
+   ]},
+  {title:"Wave 5 tops — RSI divergence",badge:"warn",badgeText:"Danger: W5",
+   rule:"Price makes new high BUT RSI makes a LOWER high than W3 — bearish divergence. Volume is less than W3. Classic exhaustion. Wait for bearish reversal candle to confirm W5 complete.",
+   pp:"70,155 200,22 275,88 460,14 530,48 640,14",abc:"",fib1:false,fib3:false,fibF:false,
+   show:["rpd0","rpd1","rpd2","rpd3","rpd4","rpd5","rsigdiv"],sig1:false,sig2:false,sigdiv:true,rsiDiv:true,
+   rsi:"70,55 200,18 275,42 460,12 530,30 640,30",
+   volH:[2,3,4,5,8,3,2,1,1,4,5,7,9,10,8,4,2,1,1,3,4,5,6,7],volC:["#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C","#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C","#E8453C","#1DB884","#1DB884","#1DB884","#1DB884","#1DB884"],
+   checks:[
+    {head:"Price",col:"#3A8FE0",items:[{ok:true,t:"New price high above W3"},{ok:false,t:"Bearish candle not yet closed"},{ok:false,t:"Confirm before drawing Fib"}]},
+    {head:"RSI",col:"#8B7FE8",items:[{ok:true,t:"Price: higher high"},{ok:false,t:"RSI: lower high = DIVERGE"},{ok:false,t:"Classic exhaustion signal"}]},
+    {head:"Volume",col:"#1DB884",items:[{ok:false,t:"Volume < W3 (weakening)"},{ok:false,t:"No climax spike"},{ok:false,t:"Buyers running out of fuel"}]}
+   ]},
+  {title:"W5 confirmed — draw master Fib",badge:"draw",badgeText:"Full Fib: W0→W5",
+   rule:"Bearish candle closes. W5 is CONFIRMED. Discard W1 and W3 Fibs. Draw the master Fib from W0 start to W5 top. This maps the full A-B-C correction targets. 61.8% = first support. 78.6% = danger.",
+   pp:"70,155 200,22 275,88 460,14 530,48 640,14",abc:"640,14 690,58 730,32 765,120",
+   fib1:false,fib3:false,fibF:true,
+   show:["rpd0","rpd1","rpd2","rpd3","rpd4","rpd5","rpdA","rpdB","rpdC"],
+   sig1:false,sig2:false,sigdiv:false,rsiDiv:false,
+   rsi:"70,55 200,18 275,42 460,12 530,30 640,30 690,48 730,40 765,60",
+   volH:[2,3,4,5,8,3,2,1,1,4,5,7,9,10,8,4,2,1,1,3,4,5,6,7,5,3,4,2],
+   volC:["#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C","#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C","#E8453C","#1DB884","#1DB884","#1DB884","#1DB884","#1DB884","#E8453C","#E8453C","#E8453C","#E8453C"],
+   checks:[
+    {head:"Price",col:"#3A8FE0",items:[{ok:true,t:"Bearish candle confirmed"},{ok:true,t:"Draw W0→W5 Fib now"},{ok:true,t:"ABC correction in play"}]},
+    {head:"RSI",col:"#8B7FE8",items:[{ok:true,t:"Below 50 and falling"},{ok:true,t:"Divergence confirmed"},{ok:false,t:"Watch RSI 30 for C-low"}]},
+    {head:"Volume",col:"#1DB884",items:[{ok:true,t:"Increasing on down moves"},{ok:true,t:"A-wave selling confirmed"},{ok:false,t:"Dry-up at C-wave low"}]}
+   ]}
+];
+
+const BC={wait:"pill-wait",draw:"pill-draw",entry:"pill-entry",warn:"pill-warn"};
+const ALL_IDS=["rpd0","rpd1","rpd2","rpd3","rpd4","rpd5","rpdA","rpdB","rpdC","rsig1","rsig2","rsigdiv","rfib1","rfib3","rfibfull"];
+let cur=0;
+
+function buildNav(){
+  const c=document.getElementById('step-nav-rt');c.innerHTML='';
+  STEPS.forEach((s,i)=>{
+    if(i>0){const l=document.createElement('div');l.className='step-line';c.appendChild(l);}
+    const d=document.createElement('div');
+    d.className='step-dot'+(i===cur?' active':i<cur?' done':'');
+    d.textContent=i+1;d.onclick=()=>{cur=i;render();};c.appendChild(d);
+  });
+}
+
+function renderVol(h,c){
+  const g=document.getElementById('rvol-bars');g.innerHTML='';
+  const n=h.length,maxH=Math.max(...h),gap=Math.floor(730/n),bw=Math.min(16,gap-2);
+  h.forEach((v,i)=>{
+    const bh=Math.round((v/maxH)*46);
+    const x=50+i*gap+Math.floor((gap-bw)/2);
+    const r=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    r.setAttribute('x',x);r.setAttribute('y',55-bh);r.setAttribute('width',bw);r.setAttribute('height',bh);
+    r.setAttribute('rx','2');r.setAttribute('fill',c[i]);r.setAttribute('opacity','0.7');
+    g.appendChild(r);
+  });
+}
+
+function renderChecks(checks){
+  const c=document.getElementById('rt-checklist');c.innerHTML='';
+  checks.forEach(col=>{
+    const div=document.createElement('div');div.className='cl-col';
+    const h=document.createElement('div');h.className='cl-head';h.style.color=col.col;h.textContent=col.head;div.appendChild(h);
+    col.items.forEach(item=>{
+      const row=document.createElement('div');row.className='cl-item '+(item.ok?'ok-item':'no-item');
+      const chk=document.createElement('div');chk.className='chk-box '+(item.ok?'chk-ok':'chk-no');chk.textContent=item.ok?'✓':'';
+      row.appendChild(chk);const t=document.createElement('span');t.textContent=item.t;row.appendChild(t);
+      div.appendChild(row);
+    });
+    c.appendChild(div);
+  });
+}
+
+function render(){
+  const s=STEPS[cur];
+  document.getElementById('rt-title').textContent=s.title;
+  document.getElementById('rt-rule').textContent=s.rule;
+  const pb=document.getElementById('rt-pill');pb.className='pill '+BC[s.badge];pb.textContent=s.badgeText;
+  ALL_IDS.forEach(id=>{const el=document.getElementById(id);if(el)el.setAttribute('opacity','0');});
+  s.show.forEach(id=>{const el=document.getElementById(id);if(el)el.setAttribute('opacity','1');});
+  ['rfib1','rfib3','rfibfull'].forEach(id=>document.getElementById(id).setAttribute('opacity','0'));
+  if(s.fib1)document.getElementById('rfib1').setAttribute('opacity','1');
+  if(s.fib3)document.getElementById('rfib3').setAttribute('opacity','1');
+  if(s.fibF)document.getElementById('rfibfull').setAttribute('opacity','1');
+  document.getElementById('rpp').setAttribute('points',s.pp);
+  document.getElementById('rppabc').setAttribute('points',s.abc);
+  document.getElementById('rrsi').setAttribute('points',s.rsi);
+  document.getElementById('rrsi-div').setAttribute('opacity',s.rsiDiv?'1':'0');
+  renderVol(s.volH,s.volC);renderChecks(s.checks);
+  document.getElementById('rt-prev').disabled=cur===0;
+  document.getElementById('rt-next').disabled=cur===STEPS.length-1;
+  buildNav();
+}
+
+function rtNext(){if(cur<STEPS.length-1){cur++;render();}}
+function rtPrev(){if(cur>0){cur--;render();}}
+
+// Intersection observer for sidebar active state
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-item');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(l=>{
+        l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id);
+      });
+    }
+  });
+},{threshold:0.3});
+sections.forEach(s=>observer.observe(s));
+
+render();
+</script>
+</body>
+</html>
