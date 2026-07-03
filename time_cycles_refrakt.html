@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Cycles — Murphy Ch.14 | Refrakt Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#1c2128;--bg4:#21262d;--border:#30363d;--text:#e6edf3;--muted:#7d8590;--gold:#e3b341;--golddim:rgba(227,179,65,.12);--bull:#3fb950;--bear:#f85149;--blue:#388bfd;--purple:#bc8cff;--teal:#39d353;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;line-height:1.6;}
+
+/* NAV */
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100;}
+.logo-text{font-weight:800;font-size:16px;color:var(--gold);letter-spacing:1px;}
+.breadcrumb{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);}
+.breadcrumb a{color:var(--gold);text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+
+/* HERO */
+.hero{padding:48px 40px 36px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;top:0;right:0;bottom:0;width:40%;background:radial-gradient(ellipse at 80% 50%,rgba(227,179,65,.06),transparent 70%);}
+.chapter-tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+.hero h1{font-size:clamp(32px,5vw,54px);font-weight:800;line-height:1.1;margin-bottom:14px;}
+.hero h1 span{color:var(--gold);}
+.hero p{color:var(--muted);font-size:15px;max-width:560px;line-height:1.7;}
+.progress-bar{display:flex;gap:6px;margin-top:28px;flex-wrap:wrap;}
+.prog-dot{width:28px;height:4px;border-radius:2px;background:var(--border);transition:background .3s;}
+.prog-dot.done{background:var(--gold);}
+.prog-dot.active{background:var(--blue);}
+
+/* LESSONS */
+.lessons{max-width:860px;margin:0 auto;padding:40px 24px;}
+.lesson{margin-bottom:64px;}
+.lesson-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.lesson-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);background:var(--golddim);border:1px solid var(--gold);border-radius:4px;padding:3px 10px;letter-spacing:1px;}
+.lesson h2{font-size:22px;font-weight:700;}
+.lesson p{color:var(--muted);font-size:15px;line-height:1.75;margin-bottom:16px;}
+
+/* CANVAS WRAPPER */
+.canvas-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;margin:20px 0;}
+.canvas-wrap canvas{display:block;width:100%;height:auto;}
+.canvas-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;}
+
+/* CALLOUT BOXES */
+.callout{border-left:3px solid var(--gold);background:var(--golddim);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;font-size:14px;color:var(--text);line-height:1.7;}
+.callout strong{color:var(--gold);}
+.callout-bull{border-left-color:var(--bull);background:rgba(63,185,80,.08);}
+.callout-bull strong{color:var(--bull);}
+.callout-bear{border-left-color:var(--bear);background:rgba(248,81,73,.08);}
+.callout-bear strong{color:var(--bear);}
+.callout-blue{border-left-color:var(--blue);background:rgba(56,139,253,.08);}
+.callout-blue strong{color:var(--blue);}
+
+/* TRANSLATION DEMO */
+.translation-demo{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;}
+.slider-row{display:flex;align-items:center;gap:16px;margin:20px 0 8px;}
+.slider-row label{font-size:13px;color:var(--muted);white-space:nowrap;min-width:80px;}
+#trans-slider{flex:1;accent-color:var(--gold);}
+.signal-box{border-radius:8px;padding:14px 20px;margin:16px 0;text-align:center;transition:all .3s;border:1px solid var(--border);}
+.signal-box .sig-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.signal-box .sig-val{font-size:22px;font-weight:800;}
+.signal-box .sig-sub{font-size:13px;color:var(--muted);margin-top:4px;}
+.signal-bull{border-color:var(--bull);background:rgba(63,185,80,.08);}
+.signal-bull .sig-val{color:var(--bull);}
+.signal-bear{border-color:var(--bear);background:rgba(248,81,73,.08);}
+.signal-bear .sig-val{color:var(--bear);}
+.signal-neutral{border-color:var(--blue);background:rgba(56,139,253,.08);}
+.signal-neutral .sig-val{color:var(--blue);}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+.stat-card{background:var(--bg3);border-radius:6px;padding:12px 16px;}
+.stat-card .sc-label{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;}
+.stat-card .sc-val{font-size:18px;font-weight:700;margin-top:4px;}
+
+/* HARMONICS */
+.harmonics-controls{display:flex;gap:16px;margin:16px 0;flex-wrap:wrap;}
+.h-toggle{display:flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid var(--border);border-radius:20px;cursor:pointer;font-size:13px;transition:all .2s;background:var(--bg3);}
+.h-toggle.active-gold{border-color:var(--gold);color:var(--gold);background:var(--golddim);}
+.h-toggle.active-blue{border-color:var(--blue);color:var(--blue);background:rgba(56,139,253,.1);}
+.h-toggle.active-purple{border-color:var(--purple);color:var(--purple);background:rgba(188,140,255,.1);}
+.h-toggle .dot{width:10px;height:10px;border-radius:50%;}
+
+/* SYNC */
+.sync-controls{display:flex;gap:12px;margin:16px 0;}
+.sync-btn{padding:8px 20px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;}
+.sync-btn:hover{border-color:var(--gold);color:var(--gold);}
+.sync-btn.active{border-color:var(--gold);background:var(--golddim);color:var(--gold);}
+
+/* SUMMATION */
+.sum-toggles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:16px 0;}
+.sum-toggle{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;transition:all .2s;}
+.sum-toggle input[type=checkbox]{accent-color:var(--gold);width:14px;height:14px;}
+.sum-toggle.off{opacity:.4;}
+
+/* CYCLES TABLE */
+.cycles-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;}
+.cycles-table th{background:var(--bg3);padding:10px 14px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border);}
+.cycles-table td{padding:10px 14px;border-bottom:1px solid rgba(48,54,61,.5);color:var(--text);}
+.cycles-table tr:last-child td{border-bottom:none;}
+.cycles-table tr:hover td{background:var(--bg3);}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-family:'JetBrains Mono',monospace;}
+.badge-gold{background:var(--golddim);color:var(--gold);border:1px solid var(--gold);}
+.badge-blue{background:rgba(56,139,253,.1);color:var(--blue);border:1px solid var(--blue);}
+.badge-green{background:rgba(63,185,80,.1);color:var(--bull);border:1px solid var(--bull);}
+
+/* QUIZ */
+.quiz-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:20px;}
+.quiz-q{font-size:16px;font-weight:600;margin-bottom:16px;}
+.quiz-options{display:grid;gap:10px;}
+.quiz-opt{padding:12px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;transition:all .2s;background:var(--bg3);}
+.quiz-opt:hover{border-color:var(--gold);color:var(--gold);}
+.quiz-opt.correct{border-color:var(--bull);background:rgba(63,185,80,.1);color:var(--bull);}
+.quiz-opt.wrong{border-color:var(--bear);background:rgba(248,81,73,.1);color:var(--bear);}
+.quiz-explanation{margin-top:14px;padding:14px;background:var(--bg3);border-radius:8px;font-size:13px;color:var(--muted);display:none;}
+.quiz-score{text-align:center;padding:32px;font-size:18px;}
+.quiz-score .score-num{font-size:48px;font-weight:800;color:var(--gold);}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 40px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);}
+footer a{color:var(--gold);text-decoration:none;}
+footer a:hover{text-decoration:underline;}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--border);margin:0;}
+
+@media(max-width:600px){.hero{padding:32px 20px 24px;}.lessons{padding:24px 16px;}.stats-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo-text">REFRAKT</span>
+  <span class="breadcrumb"><a href="master_dashboard.html">← Portal Home</a> › Time Cycles</span>
+</nav>
+
+<div class="hero">
+  <div class="chapter-tag">Murphy · Chapter 14 · Technical Analysis</div>
+  <h1>Time <span>Cycles</span></h1>
+  <p>Markets move in repeating waves. This module teaches you to SEE them — from left/right translation to synchronisation to the harmonic relationships that make cycles predictable. Interactive. Animated. No fluff.</p>
+  <div class="progress-bar" id="prog-bar">
+    <div class="prog-dot active" id="pd0"></div>
+    <div class="prog-dot" id="pd1"></div>
+    <div class="prog-dot" id="pd2"></div>
+    <div class="prog-dot" id="pd3"></div>
+    <div class="prog-dot" id="pd4"></div>
+    <div class="prog-dot" id="pd5"></div>
+    <div class="prog-dot" id="pd6"></div>
+    <div class="prog-dot" id="pd7"></div>
+  </div>
+</div>
+
+<div class="lessons">
+
+<!-- ============ LESSON 1: WHAT IS A CYCLE ============ -->
+<div class="lesson" id="l0">
+  <div class="lesson-header">
+    <span class="lesson-num">LESSON 01</span>
+    <h2>What is a Market Cycle?</h2>
+  </div>
+  <p>Markets don't move randomly. They repeat patterns across time — rising, peaking, falling, bottoming, and rising again. Murphy defines a <strong>cycle</strong> as a time interval between two recurring events in the market — like two successive price lows.</p>
+
+  <div class="callout">
+    <strong>The Tide Analogy.</strong> The sea comes in. The sea goes out. Then it comes in again. You don't know exactly when the high tide will arrive — but you know the <em>rhythm</em>. It won't stay low forever. Market cycles work the same way. You cannot predict the exact turning point, but you can estimate the <em>approximate timing window</em> based on the cycle's historical length.
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Animated cycle — price over time</div>
+    <canvas id="introCanvas" width="760" height="180"></canvas>
+  </div>
+
+  <p>Watch the animated wave above. It shows a simplified price cycle. The price rises (accumulation phase), peaks (distribution), falls (markdown), bottoms (re-accumulation), and rises again. The key insight: <strong>this is not random — it has a rhythm you can measure.</strong></p>
+</div>
+
+<hr class="divider">
+
+<!-- ============ LESSON 2: ANATOMY ============ -->
+<div class="lesson" id="l1">
+  <div class="lesson-header">
+    <span class="lesson-num">LESSON 02</span>
+    <h2>Anatomy of a Cycle — The 5 Core Measurements</h2>
+  </div>
+  <p>Before you can USE cycles, you need to be able to READ them precisely. Murphy identifies five measurements that define any cycle completely.</p>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Anatomy diagram — hover over labels</div>
+    <canvas id="anatomyCanvas" width="760" height="220"></canvas>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0;">
+    <div class="stat-card"><div class="sc-label">Period (Wavelength)</div><div class="sc-val" style="color:var(--gold)">Trough → Trough</div><div style="font-size:12px;color:var(--muted);margin-top:4px;">The time between two consecutive LOW points. How long the cycle takes to complete.</div></div>
+    <div class="stat-card"><div class="sc-label">Amplitude</div><div class="sc-val" style="color:var(--blue)">Height of Wave</div><div style="font-size:12px;color:var(--muted);margin-top:4px;">Distance from the mean (centreline) to the crest. Bigger amplitude = bigger price swing.</div></div>
+    <div class="stat-card"><div class="sc-label">Phase</div><div class="sc-val" style="color:var(--purple)">Current Position</div><div style="font-size:12px;color:var(--muted);margin-top:4px;">WHERE you currently are in the cycle. The angle at the start of the cycle.</div></div>
+    <div class="stat-card"><div class="sc-label">Crest</div><div class="sc-val" style="color:var(--bull)">The Peak</div><div style="font-size:12px;color:var(--muted);margin-top:4px;">The highest point of the cycle. Prices are at their cycle HIGH here.</div></div>
+    <div class="stat-card"><div class="sc-label">Trough</div><div class="sc-val" style="color:var(--bear)">The Low</div><div style="font-size:12px;color:var(--muted);margin-top:4px;">The lowest point. The bottom. This is where you want to BUY.</div></div>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>Murphy's Rule:</strong> Cycles are measured from <em>trough to trough</em>, not peak to peak. Why? Lows are more precise and consistent in markets. Tops are messy (distribution is slow); bottoms are sharp (panic selling creates a clean low).
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ============ LESSON 3: LEFT / RIGHT TRANSLATION ============ -->
+<div class="lesson" id="l2">
+  <div class="lesson-header">
+    <span class="lesson-num">LESSON 03</span>
+    <h2>Left vs Right Translation — The Most Important Concept</h2>
+  </div>
+  <p>This is the concept most traders miss. Translation tells you whether the market's TREND is bullish or bearish just by looking at WHERE the crest falls within a single cycle. Drag the slider below to see it live.</p>
+
+  <div class="callout">
+    <strong>The Seesaw Analogy.</strong> Imagine a child's seesaw that always completes one full up-down in exactly 4 seconds. If the child reaches the TOP at 1 second (1/4 into the cycle) — they're spending 3 seconds coming down. That's <strong>left translation</strong> (bearish). If they reach the top at 3 seconds (3/4 in) — they spent 3 seconds rising. That's <strong>right translation</strong> (bullish). Same total time. The position of the peak tells you where the WEIGHT (momentum) lies.
+  </div>
+
+  <div class="translation-demo">
+    <div class="canvas-label">Drag the slider to move the crest position ←→</div>
+    <canvas id="transCanvas" width="760" height="220"></canvas>
+    <div class="slider-row">
+      <label>Crest Position</label>
+      <input type="range" id="trans-slider" min="10" max="90" value="50" step="1" oninput="updateTranslation()">
+      <span id="trans-pct" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);min-width:36px;">50%</span>
+    </div>
+    <div class="signal-box signal-neutral" id="signal-box">
+      <div class="sig-label">Translation Signal</div>
+      <div class="sig-val" id="sig-val">Symmetric Cycle</div>
+      <div class="sig-sub" id="sig-sub">Crest at midpoint — no directional bias</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="sc-label">Time Spent Rising</div>
+        <div class="sc-val" id="rising-pct" style="color:var(--bull)">50%</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Ascending phase length</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-label">Time Spent Falling</div>
+        <div class="sc-val" id="falling-pct" style="color:var(--bear)">50%</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Descending phase length</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-bull" style="margin-top:20px;">
+    <strong>RIGHT Translation → Bull Market.</strong> When the crest falls in the SECOND HALF of the cycle, prices spend more time rising than falling. Each successive crest is HIGHER than the last (higher highs). The underlying trend is UP. Example: Nifty's 4-year cycle in 2020-2024 was strongly right-translated — crest arrived near the TOP of the cycle, and the lows were higher each cycle.
+  </div>
+  <div class="callout callout-bear">
+    <strong>LEFT Translation → Bear Market.</strong> When the crest falls in the FIRST HALF, prices spend more time falling. Each successive crest is LOWER (lower highs). The underlying trend is DOWN. Murphy: "Left translation in a bull market is a warning sign. Left translation in a bear market confirms the downtrend."
+  </div>
+  <div class="callout">
+    <strong>NIFTY APPLICATION:</strong> When you look at any Nifty weekly chart and identify the cycle lows — draw a vertical line at the midpoint. Is the peak (crest) before or after that midpoint? Consistently RIGHT = you're in a bull market, buy the dips. Consistently LEFT = you're in a bear market, sell the rallies.
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ============ LESSON 4: HARMONICS ============ -->
+<div class="lesson" id="l3">
+  <div class="lesson-header">
+    <span class="lesson-num">LESSON 04</span>
+    <h2>Harmonicity — Cycles Nest Inside Each Other</h2>
+  </div>
+  <p>Murphy's Principle of Harmonicity: neighboring cycles in markets are related by a factor of 2. Every longer cycle contains exactly two shorter cycles inside it. Toggle the waves below to see how a 40-week cycle contains a 20-week cycle, which contains a 10-week cycle.</p>
+
+  <div class="callout callout-blue">
+    <strong>The Guitar String Analogy.</strong> Pluck a guitar string and it vibrates at its fundamental frequency — let's say 80 Hz. But it ALSO vibrates at 160 Hz (2x), 320 Hz (4x), and 640 Hz (8x) simultaneously. These are harmonic overtones. Markets work the same way: if there's a 40-week cycle, there is ALSO a 20-week cycle (2x speed), a 10-week cycle (4x), and a 5-week cycle (8x). They all exist simultaneously, nested inside each other.
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Harmonic cycle layers — toggle each</div>
+    <div class="harmonics-controls">
+      <div class="h-toggle active-gold" id="ht1" onclick="toggleHarmonic(1)">
+        <div class="dot" style="background:var(--gold)"></div>40-week cycle (Long)
+      </div>
+      <div class="h-toggle active-blue" id="ht2" onclick="toggleHarmonic(2)">
+        <div class="dot" style="background:var(--blue)"></div>20-week cycle (Intermediate)
+      </div>
+      <div class="h-toggle active-purple" id="ht3" onclick="toggleHarmonic(3)">
+        <div class="dot" style="background:var(--purple)"></div>10-week cycle (Short)
+      </div>
+    </div>
+    <canvas id="harmonicsCanvas" width="760" height="260"></canvas>
+  </div>
+
+  <p>Notice how the vertical dashed lines (cycle bottoms) of all three waves <em>align</em>. The 40-week trough occurs at the same time as a 20-week trough AND a 10-week trough. This alignment is called <strong>synchronicity</strong> — which we cover next.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0;">
+    <div class="stat-card"><div class="sc-label">Principle of Harmonicity</div><div style="font-size:13px;color:var(--text);margin-top:8px;">Cycles in markets are related by a factor of 2. 40 → 20 → 10 → 5 weeks.</div></div>
+    <div class="stat-card"><div class="sc-label">Why Factor of 2?</div><div style="font-size:13px;color:var(--text);margin-top:8px;">Murphy says this is empirical — markets have consistently shown this 2:1 relationship across all timeframes and all markets studied.</div></div>
+    <div class="stat-card"><div class="sc-label">Proportionality</div><div style="font-size:13px;color:var(--text);margin-top:8px;">Longer cycles have larger amplitude (bigger price swings). The 40-week cycle creates bigger moves than the 10-week.</div></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ============ LESSON 5: SYNCHRONICITY ============ -->
+<div class="lesson" id="l4">
+  <div class="lesson-header">
+    <span class="lesson-num">LESSON 05</span>
+    <h2>Synchronicity — When Cycles Bottom Together</h2>
+  </div>
+  <p>Murphy's Principle of Synchronicity states that cycles of different lengths tend to BOTTOM at the same time. When a 40-week cycle, a 20-week cycle, and a 10-week cycle all hit their trough simultaneously — this creates a very strong buying opportunity. Click the button to animate the synchronicity event.</p>
+
+  <div class="callout callout-blue">
+    <strong>The Train Station Analogy.</strong> Three trains arrive at a station — one every 10 minutes, one every 20 minutes, one every 40 minutes. Most of the time, only one or two trains are at the station. But occasionally — all three arrive at exactly the same time. That moment when ALL three are present = SYNCHRONICITY. In markets, when multiple cycles trough together, the selling from ALL cycles hits simultaneously → maximum fear → maximum buying opportunity.
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Synchronicity — multiple cycles aligning at their lows</div>
+    <div class="sync-controls">
+      <button class="sync-btn active" id="syncPlayBtn" onclick="toggleSync()">&#9654; Animate Sync Event</button>
+      <button class="sync-btn" onclick="resetSync()">&#8635; Reset</button>
+    </div>
+    <canvas id="syncCanvas" width="760" height="280"></canvas>
+  </div>
+
+  <div class="callout callout-bull">
+    <strong>Trading Application:</strong> When you see multiple cycle lows converging — especially in the 4-year (Juglar), 18-month, and 6-month cycles — this is a MAJOR buy signal. Murphy: "The more cycles that are simultaneously bottoming, the more important the low is likely to be." The March 2020 COVID crash and the October 2022 Nifty low were both synchronicity events.
+  </div>
+
+  <p>Notice that synchronicity applies to LOWS more than HIGHS. Tops are messy. Multiple cycles may peak at different times. But bottoms tend to synchronize — the panic selling from multiple cycles hitting at once creates that sharp, definitive V-shaped bottom you see on charts.</p>
+</div>
+
+<hr class="divider">
+
+<!-- ============ LESSON 6: SUMMATION ============ -->
+<div class="lesson" id="l5">
+  <div class="lesson-header">
+    <span class="lesson-num">LESSON 06</span>
+    <h2>Summation — Your Price Chart is a Sum of Cycles</h2>
+  </div>
+  <p>Murphy's Principle of Summation is the most profound one: <strong>the price you see on your chart is the mathematical sum of ALL active cycles plus the dominant trend.</strong> Toggle the cycles below to see how they combine into a composite price line.</p>
+
+  <div class="callout">
+    <strong>The Orchestra Analogy.</strong> A symphony has violins, cellos, trumpets, and drums — all playing different rhythms simultaneously. What you HEAR is the combined sound of all instruments at once. Your Nifty daily chart is the same: a 4-year cycle plays slowly in the background, an 18-month cycle adds its melody, a 40-day cycle plays a faster rhythm. What you SEE on the chart is the sum of all of them combined. Technical analysis is the art of hearing each instrument separately.
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="canvas-label">Summation — toggle each cycle to see its contribution</div>
+    <div class="sum-toggles">
+      <label class="sum-toggle" id="st1" onclick="toggleSum(1)"><input type="checkbox" id="sc1" checked onchange="drawSummation()"> <div style="width:10px;height:10px;border-radius:50%;background:var(--gold);flex-shrink:0"></div> Long cycle (80d)</label>
+      <label class="sum-toggle" id="st2" onclick="toggleSum(2)"><input type="checkbox" id="sc2" checked onchange="drawSummation()"> <div style="width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0"></div> Medium cycle (40d)</label>
+      <label class="sum-toggle" id="st3" onclick="toggleSum(3)"><input type="checkbox" id="sc3" checked onchange="drawSummation()"> <div style="width:10px;height:10px;border-radius:50%;background:var(--purple);flex-shrink:0"></div> Short cycle (20d)</label>
+      <label class="sum-toggle" id="st4" onclick="toggleSum(4)"><input type="checkbox" id="sc4" checked onchange="drawSummation()"> <div style="width:10px;height:10px;border-radius:50%;background:var(--teal);flex-shrink:0"></div> Trend (UP)</label>
+    </div>
+    <canvas id="sumCanvas" width="760" height="260"></canvas>
+  </div>
+
+  <div class="callout callout-bull">
+    <strong>KEY INSIGHT — When ALL cycles crest together:</strong> ALL waves are simultaneously pointing up → Maximum bullish phase → Strongest rally. When ALL cycles trough together: ALL waves pointing down → Maximum bearish phase → Sharpest selloff. This is WHY some rallies are explosive and some are weak — it depends on how many cycles are aligned in the same direction.
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ============ LESSON 7: KEY CYCLES ============ -->
+<div class="lesson" id="l6">
+  <div class="lesson-header">
+    <span class="lesson-num">LESSON 07</span>
+    <h2>Key Market Cycles — Murphy's Reference Framework</h2>
+  </div>
+  <p>Murphy identifies specific cycles that have been observed consistently across markets. These are empirical observations — not theory. They exist because they align with real economic rhythms like inventory restocking, election cycles, and business investment patterns.</p>
+
+  <table class="cycles-table">
+    <thead><tr><th>Cycle Name</th><th>Period</th><th>Driven By</th><th>India Application</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Kondratieff Wave</strong></td>
+        <td>~54 years</td>
+        <td>Technological revolution, debt supercycles, generational shift</td>
+        <td>India entered a new Kondratieff upswing post-2003 liberalisation. Current cycle: digitalisation era.</td>
+        <td><span class="badge badge-gold">Macro</span></td>
+      </tr>
+      <tr>
+        <td><strong>Kuznets Cycle</strong></td>
+        <td>~18 years</td>
+        <td>Real estate and infrastructure investment cycles</td>
+        <td>India's real estate cycles: 2003-2013 up, 2013-2021 down, 2021+ new up cycle.</td>
+        <td><span class="badge badge-gold">Long</span></td>
+      </tr>
+      <tr>
+        <td><strong>Juglar Cycle</strong></td>
+        <td>~9-10 years</td>
+        <td>Business equipment investment, capital expenditure cycles</td>
+        <td>Nifty major lows: 2009, 2020 (~11 years apart). CAPEX-driven recovery follows each.</td>
+        <td><span class="badge badge-blue">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>Kitchin (Presidential) Cycle</strong></td>
+        <td>~4 years</td>
+        <td>Inventory restocking cycles, election cycles</td>
+        <td>Nifty tends to make a significant low every 3-5 years. 2016, 2020, 2023-24 lows.</td>
+        <td><span class="badge badge-blue">Medium</span></td>
+      </tr>
+      <tr>
+        <td><strong>18-Month Cycle</strong></td>
+        <td>~18 months</td>
+        <td>Sub-harmonic of the 4-year cycle. Intermediate swings.</td>
+        <td>Nifty's intermediate cycle lows tend to occur every 15-20 months. Very tradeable.</td>
+        <td><span class="badge badge-green">Tradeable</span></td>
+      </tr>
+      <tr>
+        <td><strong>Seasonal Cycle</strong></td>
+        <td>1 year</td>
+        <td>Agricultural seasons, budget cycles, FII flows</td>
+        <td>India Budget (Feb) and RBI policy (June/Oct) create recurring seasonal patterns in Nifty.</td>
+        <td><span class="badge badge-green">Tradeable</span></td>
+      </tr>
+      <tr>
+        <td><strong>28-Day Cycle</strong></td>
+        <td>~28 days</td>
+        <td>Lunar cycle, options expiry (last Thursday), monthly flows</td>
+        <td>Nifty F&O expiry every last Thursday creates a 28-day gamma/theta cycle. VERY observable.</td>
+        <td><span class="badge badge-green">Tradeable</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Principle of Variation:</strong> Murphy warns that cycle periods, amplitudes, and phases all VARY in practice. A 40-week cycle might show up as 36 weeks or 44 weeks in real data. Use cycles as a PROBABILITY WINDOW, not an exact clock. "The cycle tells you approximately WHEN to look for a turning point. Price action tells you exactly WHEN it has turned."
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ============ LESSON 8: QUIZ ============ -->
+<div class="lesson" id="l7">
+  <div class="lesson-header">
+    <span class="lesson-num">QUIZ</span>
+    <h2>Test Yourself — 5 Questions</h2>
+  </div>
+  <p>Let's see if the concepts have landed. Answer each question, then read the explanation.</p>
+
+  <div class="quiz-card" id="q0">
+    <div class="quiz-q">Q1. Nifty completes a cycle in 20 weeks. The crest (peak) occurred at week 7. This is:</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(0,0,false,'The crest at week 7 is in the FIRST HALF of a 20-week cycle (midpoint = week 10). First half = LEFT TRANSLATION = bearish signal.')">A) Right translation — bullish</div>
+      <div class="quiz-opt" onclick="answerQ(0,1,true,'CORRECT. Week 7 out of 20 is before the midpoint (week 10). Crest in first half = LEFT TRANSLATION = bearish. Market will spend more time falling than rising in this cycle.')">B) Left translation — bearish</div>
+      <div class="quiz-opt" onclick="answerQ(0,2,false,'Symmetric would be if the crest were exactly at week 10 (midpoint). Week 7 is before midpoint.')">C) Symmetric — no bias</div>
+    </div>
+    <div class="quiz-explanation" id="qe0"></div>
+  </div>
+
+  <div class="quiz-card" id="q1">
+    <div class="quiz-q">Q2. You observe a 40-week cycle in Nifty. According to Murphy's principle of harmonicity, what shorter cycle should ALSO exist?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(1,0,false,'Murphy\'s harmonicity says cycles are related by a FACTOR OF 2, not by addition. 40 - 10 = 30, which is not the right relationship.')">A) 30-week cycle</div>
+      <div class="quiz-opt" onclick="answerQ(1,1,true,'CORRECT. Harmonicity says neighboring cycles are related by a factor of 2. Half of 40 weeks = 20 weeks. So a 40-week cycle contains two 20-week cycles inside it. And the 20-week contains two 10-week cycles.')">B) 20-week cycle</div>
+      <div class="quiz-opt" onclick="answerQ(1,2,false,'There is no factor-of-3 relationship in Murphy\'s harmonicity principle. The factor is always 2.')">C) 13-week cycle</div>
+    </div>
+    <div class="quiz-explanation" id="qe1"></div>
+  </div>
+
+  <div class="quiz-card" id="q2">
+    <div class="quiz-q">Q3. According to Murphy's principle of synchronicity, cycles of different lengths tend to align at their:</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(2,0,false,'Murphy explicitly says synchronicity applies more to LOWS than highs. Tops are messy and distributed. Bottoms are sharp and tend to synchronize.')">A) Crests (price highs)</div>
+      <div class="quiz-opt" onclick="answerQ(2,1,true,'CORRECT. Murphy\'s synchronicity principle: cycles tend to bottom at the same time. This creates the sharp V-shaped lows you see on charts when multiple cycles trough simultaneously. More cycles syncing = more important the low.')">B) Troughs (price lows)</div>
+      <div class="quiz-opt" onclick="answerQ(2,2,false,'Synchronicity is about turning points, not midpoints. The midpoints have no special synchronicity tendency.')">C) Midpoints</div>
+    </div>
+    <div class="quiz-explanation" id="qe2"></div>
+  </div>
+
+  <div class="quiz-card" id="q3">
+    <div class="quiz-q">Q4. Murphy's Principle of Summation states that the price you see on a chart is:</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(3,0,false,'Summation is about the COMBINATION of cycles, not just the dominant one. All cycles contribute to the price.')">A) The dominant cycle only</div>
+      <div class="quiz-opt" onclick="answerQ(3,1,true,'CORRECT. Summation: price = trend + sum of ALL active cycles. This is why a simple trend line never captures the full picture. Multiple overlapping cycles of different lengths combine to create the complex price movements you observe.')">B) The sum of all active cycles plus the trend</div>
+      <div class="quiz-opt" onclick="answerQ(3,2,false,'While volume can confirm cycle turns, summation is specifically about how multiple cycles COMBINE mathematically to create price.')">C) The product of price and volume cycles</div>
+    </div>
+    <div class="quiz-explanation" id="qe3"></div>
+  </div>
+
+  <div class="quiz-card" id="q4">
+    <div class="quiz-q">Q5. Nifty's 18-month cycle shows the crest arriving consistently in the LAST QUARTER (final 25%) of each cycle. What does Murphy's translation principle tell you about the market's trend?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(4,0,false,'If crest is consistently in the LAST quarter, that is extreme RIGHT translation — indicating the MOST bullish environment, not a moderate one.')">A) Moderate bull trend</div>
+      <div class="quiz-opt" onclick="answerQ(4,1,false,'A bear market would show LEFT translation (crest in first half). The last quarter is the OPPOSITE of bearish.')">B) Bear trend</div>
+      <div class="quiz-opt" onclick="answerQ(4,2,true,'CORRECT. Crest in the last quarter = EXTREME RIGHT TRANSLATION. Murphy says this indicates the strongest bull trend. Market spends 75% of the cycle rising and only 25% falling. Maximum bullish bias. This is the condition you want to see before committing to long positions.')">C) Strong bull trend — extreme right translation</div>
+    </div>
+    <div class="quiz-explanation" id="qe4"></div>
+  </div>
+
+  <div class="quiz-score" id="quiz-final" style="display:none;">
+    <div class="score-num" id="final-score">0/5</div>
+    <p style="color:var(--muted);margin-top:12px;" id="score-msg"></p>
+  </div>
+</div>
+
+</div><!-- /lessons -->
+
+<footer>
+  <a href="master_dashboard.html">← Back to Portal Home</a>
+  &nbsp;·&nbsp; Refrakt Studios · Murphy Chapter 14 · Time Cycles · 2026 Edition
+</footer>
+
+<script>
+// =========================================
+// CANVAS 1: Animated intro wave
+// =========================================
+(function(){
+  const c = document.getElementById('introCanvas');
+  const ctx = c.getContext('2d');
+  let t = 0;
+  const W = 760, H = 180;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // Grid
+    ctx.strokeStyle = 'rgba(48,54,61,0.6)';
+    ctx.lineWidth = 0.5;
+    for(let gx=0;gx<=W;gx+=76){
+      ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke();
+    }
+    for(let gy=0;gy<=H;gy+=36){
+      ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke();
+    }
+    // Centreline
+    ctx.strokeStyle='rgba(125,133,144,0.4)';
+    ctx.lineWidth=1;
+    ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Wave
+    const period = 180;
+    const amp = 60;
+    ctx.beginPath();
+    let prevY = H/2;
+    for(let x=0;x<=W;x++){
+      const y = H/2 - amp * Math.sin(2*Math.PI*(x/period) + t*0.02);
+      if(x===0) ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
+      prevY=y;
+    }
+    ctx.strokeStyle='#e3b341';
+    ctx.lineWidth=2.5;
+    ctx.stroke();
+
+    // Fill
+    ctx.beginPath();
+    for(let x=0;x<=W;x++){
+      const y = H/2 - amp * Math.sin(2*Math.PI*(x/period) + t*0.02);
+      if(x===0) ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
+    }
+    ctx.lineTo(W,H/2); ctx.lineTo(0,H/2);
+    ctx.fillStyle='rgba(227,179,65,0.07)'; ctx.fill();
+
+    // Moving dot
+    const dotX = (t*2) % W;
+    const dotY = H/2 - amp * Math.sin(2*Math.PI*(dotX/period));
+    ctx.beginPath(); ctx.arc(dotX,dotY,6,0,Math.PI*2);
+    ctx.fillStyle=dotY < H/2 ? '#3fb950' : '#f85149';
+    ctx.fill();
+    ctx.strokeStyle='#0d1117'; ctx.lineWidth=1.5; ctx.stroke();
+
+    // Labels
+    ctx.fillStyle='#7d8590'; ctx.font='11px JetBrains Mono'; ctx.textAlign='left';
+    ctx.fillText('CREST (Buy zones on next bounce →)', 8, 28);
+    ctx.fillText('TROUGH (Buy here)', 8, H-12);
+    ctx.fillText('▲ PRICE AXIS', 8, H/2 - 6);
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// =========================================
+// CANVAS 2: Anatomy
+// =========================================
+(function(){
+  const c = document.getElementById('anatomyCanvas');
+  const ctx = c.getContext('2d');
+  const W=760,H=220;
+  const period=400, amp=70, cy=H*0.5, startX=80;
+
+  ctx.clearRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(48,54,61,0.5)'; ctx.lineWidth=0.5;
+  for(let gx=0;gx<=W;gx+=80){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+  for(let gy=0;gy<=H;gy+=40){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+
+  // Centre line
+  ctx.strokeStyle='rgba(125,133,144,0.3)'; ctx.setLineDash([4,4]); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw wave
+  ctx.beginPath();
+  for(let x=0;x<=W-startX;x++){
+    const y=cy - amp*Math.sin(2*Math.PI*x/period);
+    if(x===0) ctx.moveTo(x+startX,y); else ctx.lineTo(x+startX,y);
+  }
+  ctx.strokeStyle='#e3b341'; ctx.lineWidth=2.5; ctx.stroke();
+
+  // TROUGH points
+  const t1x = startX, t1y = cy; // starts at center, actually trough is at period*3/4
+  const troughX1 = startX + period*3/4; // first trough after start
+  // Actually: sin(2pi * 3/4) = sin(3pi/2) = -1, so y = cy + amp
+  const troughY = cy + amp;
+  const crестX = startX + period/4;
+  const crestY = cy - amp;
+  const trough2X = startX + period + period*3/4;
+  // We only show 1.2 cycles
+  const endX = startX + period;
+
+  // Draw trough markers
+  function drawPoint(x, y, color, label, labelPos){
+    ctx.beginPath(); ctx.arc(x,y,7,0,Math.PI*2);
+    ctx.fillStyle=color; ctx.fill();
+    ctx.strokeStyle='#0d1117'; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle=color; ctx.font='600 12px Syne';
+    ctx.textAlign= labelPos==='left' ? 'right' : (labelPos==='right'?'left':'center');
+    const ox = labelPos==='left'?-14:(labelPos==='right'?14:0);
+    const oy = labelPos==='top'?-14:16;
+    ctx.fillText(label, x+ox, y+oy);
+  }
+
+  // Period arrow
+  const tStart = startX + 0;
+  const tEnd = startX + period;
+  const arrowY = H - 22;
+  ctx.strokeStyle='rgba(56,139,253,0.8)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(tStart,arrowY); ctx.lineTo(tEnd,arrowY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(tStart,arrowY-4); ctx.lineTo(tStart,arrowY+4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(tEnd,arrowY-4); ctx.lineTo(tEnd,arrowY+4); ctx.stroke();
+  ctx.fillStyle='#388bfd'; ctx.font='600 12px Syne'; ctx.textAlign='center';
+  ctx.fillText('PERIOD (trough → trough)', (tStart+tEnd)/2, arrowY-8);
+
+  // Amplitude arrow
+  ctx.strokeStyle='rgba(188,140,255,0.8)'; ctx.lineWidth=1.5;
+  ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(crестX, cy); ctx.lineTo(crестX, crestY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#bc8cff'; ctx.textAlign='right';
+  ctx.fillText('AMPLITUDE', crестX-8, (cy+crestY)/2+4);
+
+  // Labels
+  drawPoint(crестX, crestY, '#3fb950', 'CREST', 'top');
+  drawPoint(troughX1, troughY, '#f85149', 'TROUGH', 'bottom');
+  // Phase label
+  ctx.fillStyle='#7d8590'; ctx.font='11px JetBrains Mono'; ctx.textAlign='left';
+  ctx.fillText('← PHASE: your current position in the cycle →', 10, 20);
+})();
+
+// =========================================
+// CANVAS 3: Translation
+// =========================================
+let transAnim = null;
+function updateTranslation(){
+  const slider = document.getElementById('trans-slider');
+  const v = parseInt(slider.value); // 10-90, percentage into cycle where crest falls
+  document.getElementById('trans-pct').textContent = v + '%';
+  document.getElementById('rising-pct').textContent = v + '%';
+  document.getElementById('falling-pct').textContent = (100-v) + '%';
+
+  const sb = document.getElementById('signal-box');
+  const sv = document.getElementById('sig-val');
+  const ss = document.getElementById('sig-sub');
+  if(v < 45){
+    sb.className='signal-box signal-bear';
+    sv.textContent='LEFT TRANSLATION — BEARISH';
+    ss.textContent=`Crest at ${v}% of cycle. Prices spend ${100-v}% of time falling. BEAR signal.`;
+  } else if(v > 55){
+    sb.className='signal-box signal-bull';
+    sv.textContent='RIGHT TRANSLATION — BULLISH';
+    ss.textContent=`Crest at ${v}% of cycle. Prices spend ${v}% of time rising. BULL signal.`;
+  } else {
+    sb.className='signal-box signal-neutral';
+    sv.textContent='Symmetric Cycle';
+    ss.textContent='Crest near midpoint — no strong directional bias.';
+  }
+  drawTranslation(v/100);
+}
+
+function drawTranslation(creastFrac){
+  const c = document.getElementById('transCanvas');
+  const ctx = c.getContext('2d');
+  const W=760, H=220;
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='rgba(48,54,61,0.5)'; ctx.lineWidth=0.5;
+  for(let gx=0;gx<=W;gx+=76){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+  for(let gy=0;gy<=H;gy+=44){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+
+  const period = 560, amp = 75, cy = H*0.5, startX = 80;
+  const creastX = startX + creastFrac * period;
+  const endX = startX + period;
+  const midX = startX + period/2;
+
+  // Left/right half shading
+  ctx.fillStyle = creastFrac < 0.5 ? 'rgba(248,81,73,0.05)' : 'rgba(63,185,80,0.04)';
+  ctx.fillRect(startX, 0, midX-startX, H);
+  ctx.fillStyle = creastFrac > 0.5 ? 'rgba(63,185,80,0.05)' : 'rgba(248,81,73,0.03)';
+  ctx.fillRect(midX, 0, endX-midX, H);
+
+  // Centre line
+  ctx.strokeStyle='rgba(125,133,144,0.3)'; ctx.setLineDash([4,4]); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Midpoint line
+  ctx.strokeStyle='rgba(125,133,144,0.4)'; ctx.setLineDash([3,3]); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(midX,0); ctx.lineTo(midX,H); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#7d8590'; ctx.font='11px JetBrains Mono'; ctx.textAlign='center';
+  ctx.fillText('50% midpoint', midX, 16);
+
+  // Start/end lines
+  ctx.strokeStyle='rgba(48,54,61,0.8)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(startX,0); ctx.lineTo(startX,H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(endX,0); ctx.lineTo(endX,H); ctx.stroke();
+  ctx.fillStyle='#7d8590'; ctx.font='11px JetBrains Mono';
+  ctx.textAlign='center'; ctx.fillText('START', startX, H-8);
+  ctx.fillText('END', endX, H-8);
+
+  // Draw wave as two colored segments
+  // Ascending (trough to crest) = green, Descending (crest to trough) = red
+  // Wave: y = cy - amp*sin(2pi*(x-creastX)/period * ?) 
+  // We want: sin peaks at creastX, zero at startX (going up) and endX (ending at zero)
+  // Use: y = cy - amp * sin(pi*(x-startX)/(creastFrac*period)) for ascending
+  //      y = cy - amp * sin(pi*(x-creastX)/((1-creastFrac)*period) + pi) for descending... complex
+  // Simpler: use a skewed sine that has its peak at creastFrac
+  // y = cy - amp * sin(x * something) where peak is at creastX
+  // Actually just use: parametric where we compute y based on normalized position
+
+  function waveY(x){
+    const t = (x - startX) / period; // 0 to 1
+    // Skewed sine: peak at creastFrac
+    // use t/(2*creastFrac) * pi for first half, then adjust for second
+    let angle;
+    if(t <= creastFrac) angle = t / creastFrac * Math.PI * 0.5;
+    else angle = Math.PI * 0.5 + (t - creastFrac) / (1 - creastFrac) * Math.PI * 0.5;
+    return cy - amp * Math.sin(angle);
+  }
+
+  // Ascending segment
+  ctx.beginPath();
+  for(let x=startX; x<=creastX; x++){
+    const y = waveY(x);
+    if(x===startX) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle='#3fb950'; ctx.lineWidth=3; ctx.stroke();
+
+  // Descending segment
+  ctx.beginPath();
+  for(let x=creastX; x<=endX; x++){
+    const y = waveY(x);
+    if(x===creastX) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle='#f85149'; ctx.lineWidth=3; ctx.stroke();
+
+  // Crest marker
+  const cY = waveY(creastX);
+  ctx.beginPath(); ctx.arc(creastX, cY, 9, 0, Math.PI*2);
+  ctx.fillStyle='#e3b341'; ctx.fill();
+  ctx.strokeStyle='#0d1117'; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle='#e3b341'; ctx.font='bold 12px Syne'; ctx.textAlign='center';
+  ctx.fillText('CREST', creastX, cY - 16);
+
+  // Trough markers
+  ctx.beginPath(); ctx.arc(startX, cy, 7, 0, Math.PI*2);
+  ctx.fillStyle='#f85149'; ctx.fill(); ctx.strokeStyle='#0d1117'; ctx.lineWidth=2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(endX, cy, 7, 0, Math.PI*2);
+  ctx.fillStyle='#f85149'; ctx.fill(); ctx.strokeStyle='#0d1117'; ctx.lineWidth=2; ctx.stroke();
+
+  // Time annotations
+  const ascWidth = creastX - startX;
+  const descWidth = endX - creastX;
+  if(ascWidth > 60){
+    ctx.fillStyle='rgba(63,185,80,0.7)'; ctx.font='bold 13px Syne'; ctx.textAlign='center';
+    ctx.fillText('↑ RISING', startX + ascWidth/2, cy + 20);
+  }
+  if(descWidth > 60){
+    ctx.fillStyle='rgba(248,81,73,0.7)'; ctx.font='bold 13px Syne'; ctx.textAlign='center';
+    ctx.fillText('↓ FALLING', creastX + descWidth/2, cy + 20);
+  }
+}
+
+updateTranslation();
+
+// =========================================
+// CANVAS 4: Harmonics
+// =========================================
+let hState = {h1:true, h2:true, h3:true};
+
+function toggleHarmonic(n){
+  hState['h'+n] = !hState['h'+n];
+  const el = document.getElementById('ht'+n);
+  const classes = ['active-gold','active-blue','active-purple'];
+  if(hState['h'+n]) el.classList.add(classes[n-1]);
+  else el.classList.remove(classes[n-1]);
+  drawHarmonics();
+}
+
+function drawHarmonics(){
+  const c = document.getElementById('harmonicsCanvas');
+  const ctx = c.getContext('2d');
+  const W=760,H=260;
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='rgba(48,54,61,0.4)'; ctx.lineWidth=0.5;
+  for(let gx=0;gx<=W;gx+=80){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+
+  const configs = [
+    {period:480, amp:40, cy:50, color:'#e3b341', lw:2.5, label:'40-week (Long)', show:hState.h1},
+    {period:240, amp:28, cy:130, color:'#388bfd', lw:2.5, label:'20-week (Intermediate)', show:hState.h2},
+    {period:120, amp:18, cy:210, color:'#bc8cff', lw:2, label:'10-week (Short)', show:hState.h3},
+  ];
+
+  // Horizontal separators
+  ctx.strokeStyle='rgba(48,54,61,0.6)'; ctx.lineWidth=0.5;
+  ctx.beginPath(); ctx.moveTo(0,90); ctx.lineTo(W,90); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,170); ctx.lineTo(W,170); ctx.stroke();
+
+  // Sync lines (bottom of all)
+  const syncPoints = [0, 480, 720];
+  syncPoints.forEach(sx => {
+    if(sx > W) return;
+    ctx.strokeStyle='rgba(227,179,65,0.25)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(sx,0); ctx.lineTo(sx,H); ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  configs.forEach(cfg => {
+    if(!cfg.show) return;
+    // Centre line
+    ctx.strokeStyle='rgba(125,133,144,0.2)'; ctx.setLineDash([3,3]); ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(0,cfg.cy); ctx.lineTo(W,cfg.cy); ctx.stroke();
+    ctx.setLineDash([]);
+    // Wave
+    ctx.beginPath();
+    for(let x=0;x<=W;x++){
+      const y = cfg.cy - cfg.amp * Math.sin(2*Math.PI*x/cfg.period + Math.PI/2 + Math.PI); // starts at trough
+      if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=cfg.color; ctx.lineWidth=cfg.lw; ctx.stroke();
+    // Label
+    ctx.fillStyle=cfg.color; ctx.font='11px JetBrains Mono'; ctx.textAlign='right';
+    ctx.fillText(cfg.label, W-8, cfg.cy - cfg.amp - 6);
+    // Trough dots
+    for(let tx=0; tx<=W; tx+=cfg.period){
+      const ty = cfg.cy + cfg.amp;
+      ctx.beginPath(); ctx.arc(tx, ty, 5, 0, Math.PI*2);
+      ctx.fillStyle=cfg.color; ctx.fill();
+    }
+  });
+
+  // Sync label
+  ctx.fillStyle='rgba(227,179,65,0.6)'; ctx.font='10px JetBrains Mono'; ctx.textAlign='center';
+  ctx.fillText('SYNC', 0, H-6);
+  ctx.fillText('SYNC', 480, H-6);
+}
+drawHarmonics();
+
+// =========================================
+// CANVAS 5: Synchronicity
+// =========================================
+let syncAnimId = null;
+let syncFrame = 0;
+let syncPlaying = false;
+
+function drawSync(progress){
+  const c = document.getElementById('syncCanvas');
+  const ctx = c.getContext('2d');
+  const W=760, H=280;
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='rgba(48,54,61,0.4)'; ctx.lineWidth=0.5;
+  for(let gx=0;gx<=W;gx+=80){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+
+  const syncX = W*0.6; // Where sync happens
+  const configs = [
+    {period:500, amp:45, cy:65, color:'#e3b341', lw:2.5, phaseAdj:0, label:'Long cycle'},
+    {period:250, amp:30, cy:145, color:'#388bfd', lw:2.5, phaseAdj:0, label:'Medium cycle'},
+    {period:125, amp:20, cy:220, color:'#3fb950', lw:2, phaseAdj:0, label:'Short cycle'},
+  ];
+  // Compute phase adjustments so all bottom at syncX
+  configs.forEach(cfg => {
+    // trough at syncX means sin(2pi*syncX/period + phase) = -1
+    // so 2pi*syncX/period + phase = -pi/2 + 2pi*k
+    // phase = -pi/2 - 2pi*syncX/period (mod 2pi)
+    cfg.phaseAdj = -Math.PI/2 - 2*Math.PI*syncX/cfg.period;
+  });
+
+  // Horizontal separators
+  ctx.strokeStyle='rgba(48,54,61,0.6)'; ctx.lineWidth=0.5;
+  ctx.beginPath(); ctx.moveTo(0,105); ctx.lineTo(W,105); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,185); ctx.lineTo(W,185); ctx.stroke();
+
+  // Draw reveal based on progress
+  const revealX = progress * W;
+
+  configs.forEach(cfg => {
+    // Centre line
+    ctx.strokeStyle='rgba(125,133,144,0.2)'; ctx.setLineDash([3,3]); ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(0,cfg.cy); ctx.lineTo(W,cfg.cy); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Wave up to revealX
+    ctx.beginPath();
+    for(let x=0; x<=Math.min(revealX,W); x++){
+      const y = cfg.cy - cfg.amp * Math.sin(2*Math.PI*x/cfg.period + cfg.phaseAdj);
+      if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=cfg.color; ctx.lineWidth=cfg.lw; ctx.stroke();
+
+    // Label
+    ctx.fillStyle=cfg.color; ctx.font='11px JetBrains Mono'; ctx.textAlign='left';
+    ctx.fillText(cfg.label, 8, cfg.cy - cfg.amp - 6);
+  });
+
+  // Sync event highlight
+  if(revealX >= syncX){
+    const highlightAlpha = Math.min(1, (revealX - syncX) / 60);
+    ctx.fillStyle=`rgba(63,185,80,${0.08*highlightAlpha})`;
+    ctx.fillRect(syncX-20, 0, 40, H);
+    ctx.strokeStyle=`rgba(63,185,80,${0.6*highlightAlpha})`;
+    ctx.lineWidth=2; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(syncX,0); ctx.lineTo(syncX,H); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=`rgba(63,185,80,${highlightAlpha})`;
+    ctx.font='bold 13px Syne'; ctx.textAlign='center';
+    ctx.fillText('SYNCHRONICITY EVENT', syncX, 18);
+    ctx.font='11px JetBrains Mono';
+    ctx.fillText('ALL CYCLES BOTTOMING', syncX, 32);
+    ctx.fillText('↓ MAJOR BUY SIGNAL', syncX, H-8);
+
+    // Sync dots
+    configs.forEach(cfg => {
+      const troughY = cfg.cy + cfg.amp;
+      ctx.beginPath(); ctx.arc(syncX, troughY, 8, 0, Math.PI*2);
+      ctx.fillStyle=`rgba(63,185,80,${highlightAlpha})`; ctx.fill();
+      ctx.strokeStyle='#0d1117'; ctx.lineWidth=2; ctx.stroke();
+    });
+  }
+}
+
+function toggleSync(){
+  if(syncPlaying){
+    cancelAnimationFrame(syncAnimId);
+    syncPlaying=false;
+    document.getElementById('syncPlayBtn').textContent='▶ Animate Sync Event';
+  } else {
+    syncPlaying=true;
+    document.getElementById('syncPlayBtn').textContent='⏸ Pause';
+    animateSync();
+  }
+}
+function animateSync(){
+  syncFrame = Math.min(syncFrame+0.004, 1);
+  drawSync(syncFrame);
+  if(syncFrame < 1 && syncPlaying) syncAnimId = requestAnimationFrame(animateSync);
+  else { syncPlaying=false; document.getElementById('syncPlayBtn').textContent='▶ Animate Again'; }
+}
+function resetSync(){
+  cancelAnimationFrame(syncAnimId);
+  syncPlaying=false; syncFrame=0;
+  drawSync(0);
+  document.getElementById('syncPlayBtn').textContent='▶ Animate Sync Event';
+}
+drawSync(0);
+
+// =========================================
+// CANVAS 6: Summation — Toggle cycles
+// =========================================
+let sumState = {s1:true, s2:true, s3:true, s4:true};
+
+function toggleSum(n){
+  // The checkboxes are inside label, handle manually
+  const cb = document.getElementById('sc'+n);
+  // Don't toggle here since checkbox change handler calls drawSummation
+  // Just update visual state
+  const lbl = document.getElementById('st'+n);
+  setTimeout(()=>{
+    sumState['s'+n] = cb.checked;
+    lbl.classList.toggle('off', !cb.checked);
+    drawSummation();
+  },10);
+}
+
+function drawSummation(){
+  const c = document.getElementById('sumCanvas');
+  const ctx = c.getContext('2d');
+  const W=760, H=260;
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='rgba(48,54,61,0.4)'; ctx.lineWidth=0.5;
+  for(let gx=0;gx<=W;gx+=80){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+  for(let gy=0;gy<=H;gy+=52){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+
+  const cy = H*0.55;
+  // Trend: slight upward slope
+  const trendSlope = sumState.s4 ? 0.04 : 0;
+
+  // Individual cycles
+  const cycles = [
+    {period:480, amp:55, color:'rgba(227,179,65,0.35)', show:sumState.s1},
+    {period:240, amp:30, color:'rgba(56,139,253,0.35)', show:sumState.s2},
+    {period:120, amp:18, color:'rgba(188,140,255,0.35)', show:sumState.s3},
+  ];
+
+  // Draw individual cycles (faint)
+  cycles.forEach(cfg => {
+    if(!cfg.show) return;
+    ctx.beginPath();
+    for(let x=0;x<=W;x++){
+      const trend = trendSlope * x;
+      const y = cy - cfg.amp*Math.sin(2*Math.PI*x/cfg.period) - trend;
+      if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=cfg.color; ctx.lineWidth=1.5; ctx.stroke();
+  });
+
+  // Draw composite
+  ctx.beginPath();
+  for(let x=0;x<=W;x++){
+    let y = cy;
+    const trend = trendSlope * x;
+    if(sumState.s1) y -= 55*Math.sin(2*Math.PI*x/480);
+    if(sumState.s2) y -= 30*Math.sin(2*Math.PI*x/240);
+    if(sumState.s3) y -= 18*Math.sin(2*Math.PI*x/120);
+    if(sumState.s4) y -= trend;
+    if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle='#e6edf3'; ctx.lineWidth=2.5; ctx.stroke();
+
+  // Centre reference
+  ctx.strokeStyle='rgba(125,133,144,0.2)'; ctx.setLineDash([4,4]); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,cy); ctx.lineTo(W,cy); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Legend
+  ctx.font='11px JetBrains Mono'; ctx.textAlign='left';
+  ctx.fillStyle='rgba(227,179,65,0.6)'; ctx.fillText('── Long (80d)', 8, 20);
+  ctx.fillStyle='rgba(56,139,253,0.6)'; ctx.fillText('── Medium (40d)', 8, 34);
+  ctx.fillStyle='rgba(188,140,255,0.6)'; ctx.fillText('── Short (20d)', 8, 48);
+  ctx.fillStyle='#e6edf3'; ctx.fillText('━━ COMPOSITE (price chart)', 8, 62);
+}
+
+// Init on load
+document.querySelectorAll('input[type=checkbox]').forEach(cb => {
+  cb.addEventListener('change', drawSummation);
+});
+drawSummation();
+
+// =========================================
+// QUIZ
+// =========================================
+let quizAnswers = {};
+let quizDone = 0;
+
+function answerQ(qNum, optIdx, isCorrect, explanation){
+  if(quizAnswers[qNum] !== undefined) return; // already answered
+  quizAnswers[qNum] = isCorrect;
+  const opts = document.querySelectorAll(`#q${qNum} .quiz-opt`);
+  opts.forEach((opt,i) => {
+    opt.style.pointerEvents = 'none';
+    if(i === optIdx){
+      opt.classList.add(isCorrect ? 'correct' : 'wrong');
+    }
+    // Show correct answer if wrong
+    if(!isCorrect){
+      // We don't have easy access to which one is correct here, just show the message
+    }
+  });
+  const exp = document.getElementById('qe'+qNum);
+  exp.textContent = explanation;
+  exp.style.display = 'block';
+  quizDone++;
+  // Update progress
+  updateProgress();
+  if(quizDone === 5){
+    const score = Object.values(quizAnswers).filter(Boolean).length;
+    const final = document.getElementById('quiz-final');
+    final.style.display='block';
+    document.getElementById('final-score').textContent = score + '/5';
+    const msgs = ['Keep studying — re-read the lessons above!','Getting there — review translation and synchronicity.','Good effort! Focus on the summation principle.','Very good! Just one concept to nail down.','Perfect score! You\'ve mastered Murphy\'s Time Cycles.'];
+    document.getElementById('score-msg').textContent = msgs[score];
+    markProgress(7);
+  }
+}
+
+// =========================================
+// PROGRESS TRACKING
+// =========================================
+function updateProgress(){
+  // Mark lessons as done based on scroll
+}
+function markProgress(n){
+  for(let i=0;i<=n;i++){
+    const el = document.getElementById('pd'+i);
+    if(el) el.className = i===n ? 'prog-dot active' : 'prog-dot done';
+  }
+}
+
+// Scroll-based progress
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      const id = e.target.id;
+      const map = {l0:0,l1:1,l2:2,l3:3,l4:4,l5:5,l6:6,l7:7};
+      if(map[id]!==undefined) markProgress(map[id]);
+    }
+  });
+}, {threshold:0.3});
+document.querySelectorAll('.lesson').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

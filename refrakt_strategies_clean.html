@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refrakt — Options Strategies Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --beige:     #F5F0E8;
+  --beige2:    #EDE8DF;
+  --beige3:    #E4DDD1;
+  --cream:     #FAF7F2;
+  --ink:       #1C1917;
+  --ink2:      #44403C;
+  --ink3:      #78716C;
+  --ink4:      #A8A29E;
+  --rule:      rgba(28,25,23,0.10);
+
+  --sage:      #4A7C59;
+  --sage-bg:   #EBF2ED;
+  --sage-mid:  #C5DCC9;
+  --clay:      #A85C3A;
+  --clay-bg:   #F5EAE4;
+  --clay-mid:  #E0BAA8;
+  --slate:     #3B5A7A;
+  --slate-bg:  #E7EEF5;
+  --slate-mid: #AFC4D6;
+  --sand:      #8A6C2A;
+  --sand-bg:   #F5EDDB;
+  --sand-mid:  #D9C28A;
+  --plum:      #6B4580;
+  --plum-bg:   #EFE8F5;
+  --plum-mid:  #C9ADDA;
+  --teal:      #2A6B6B;
+  --teal-bg:   #E3F0F0;
+  --teal-mid:  #8DC4C4;
+  --rust:      #B54F2A;
+  --rust-bg:   #F7EBE5;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 15px; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* ── NAV ── */
+nav {
+  background: var(--beige);
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.logo {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.logo span { color: var(--ink3); font-weight: 400; }
+.nav-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+.pill {
+  padding: 5px 13px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink3);
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.pill:hover { background: var(--beige2); color: var(--ink); }
+.p1 { border-color: var(--sage-mid); color: var(--sage); background: var(--sage-bg); }
+.p2 { border-color: var(--clay-mid); color: var(--clay); background: var(--clay-bg); }
+.p3 { border-color: var(--slate-mid); color: var(--slate); background: var(--slate-bg); }
+.p4 { border-color: var(--sand-mid); color: var(--sand); background: var(--sand-bg); }
+.p5 { border-color: var(--plum-mid); color: var(--plum); background: var(--plum-bg); }
+.p6 { border-color: var(--teal-mid); color: var(--teal); background: var(--teal-bg); }
+.p7 { border-color: var(--rust); color: var(--rust); background: var(--rust-bg); }
+
+/* ── LAYOUT ── */
+.wrap { max-width: 960px; margin: 0 auto; padding: 40px 40px 80px; }
+
+/* ── PAGE TITLE ── */
+.page-title {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+.page-title h1 { font-size: 28px; font-weight: 300; color: var(--ink); letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 8px; }
+.page-title p { font-size: 14px; color: var(--ink3); max-width: 520px; }
+
+/* ── STRATEGY SECTION ── */
+.strategy { margin-bottom: 56px; scroll-margin-top: 72px; }
+
+.s-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+  flex-wrap: wrap;
+}
+.s-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink4); letter-spacing: 0.1em; margin-bottom: 4px; }
+.s-name { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
+.s-sub { font-size: 13px; color: var(--ink3); margin-top: 4px; }
+.s-tags { display: flex; gap: 6px; align-items: flex-start; flex-wrap: wrap; margin-top: 4px; }
+.stag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+/* ── SETUP BOX ── */
+.setup {
+  background: var(--beige);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 20px 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  line-height: 2;
+  margin-bottom: 24px;
+}
+.setup-row { display: flex; align-items: baseline; gap: 12px; }
+.s-buy  { color: var(--sage);  font-weight: 500; }
+.s-sell { color: var(--clay);  font-weight: 500; }
+.s-note { color: var(--ink3);  font-size: 11px; }
+.s-divider { border-top: 1px solid var(--rule); margin: 10px 0; }
+.s-net  { color: var(--ink2); font-weight: 500; }
+
+/* ── METRICS ── */
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
+.metric {
+  background: var(--beige);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+.metric-label { font-size: 10px; font-weight: 500; color: var(--ink4); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+.metric-val { font-family: 'DM Mono', monospace; font-size: 17px; font-weight: 500; }
+.metric-sub { font-size: 11px; color: var(--ink4); margin-top: 4px; }
+.mv-sage  { color: var(--sage); }
+.mv-clay  { color: var(--clay); }
+.mv-slate { color: var(--slate); }
+.mv-sand  { color: var(--sand); }
+.mv-plum  { color: var(--plum); }
+.mv-teal  { color: var(--teal); }
+.mv-rust  { color: var(--rust); }
+.mv-ink   { color: var(--ink2); }
+
+/* ── PAYOFF BAR ── */
+.payoff { display: flex; gap: 2px; margin-bottom: 24px; border-radius: 8px; overflow: hidden; }
+.pz { flex: 1; padding: 12px 8px; text-align: center; }
+.pz-label { font-size: 10px; color: var(--ink3); margin-bottom: 4px; font-family: 'DM Mono', monospace; }
+.pz-val { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
+.pz-loss   { background: var(--clay-bg); }
+.pz-be     { background: var(--sand-bg); }
+.pz-profit { background: var(--sage-bg); }
+.pz-loss .pz-val   { color: var(--clay); }
+.pz-be .pz-val     { color: var(--sand); }
+.pz-profit .pz-val { color: var(--sage); }
+
+/* ── TWO COLUMNS ── */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.col-card {
+  background: var(--beige);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.col-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+.col-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 13px; color: var(--ink2); line-height: 1.5; }
+.col-item:last-child { margin-bottom: 0; }
+.dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+
+/* ── ANALOGY ── */
+.analogy {
+  border-left: 3px solid var(--sand-mid);
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  background: var(--sand-bg);
+  border-radius: 0 8px 8px 0;
+}
+.analogy-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sand); margin-bottom: 6px; }
+.analogy-text { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+/* ── CALLOUT ── */
+.callout {
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.callout-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+.callout-warn { background: var(--clay-bg); border: 1px solid var(--clay-mid); }
+.callout-warn .callout-label { color: var(--clay); }
+.callout-warn p { color: var(--ink2); }
+.callout-good { background: var(--sage-bg); border: 1px solid var(--sage-mid); }
+.callout-good .callout-label { color: var(--sage); }
+.callout-good p { color: var(--ink2); }
+.callout-info { background: var(--slate-bg); border: 1px solid var(--slate-mid); }
+.callout-info .callout-label { color: var(--slate); }
+.callout-info p { color: var(--ink2); }
+.callout-note { background: var(--beige2); border: 1px solid var(--beige3); }
+.callout-note .callout-label { color: var(--ink3); }
+.callout-note p { color: var(--ink2); }
+
+/* ── FORMULA ── */
+.formula {
+  background: var(--beige2);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  line-height: 1.9;
+  color: var(--ink2);
+  margin-bottom: 24px;
+}
+.formula .f-highlight { color: var(--ink); font-weight: 500; }
+.formula .f-muted { color: var(--ink4); }
+.formula .f-sage { color: var(--sage); font-weight: 500; }
+.formula .f-clay { color: var(--clay); font-weight: 500; }
+.formula .f-sand { color: var(--sand); font-weight: 500; }
+
+/* ── SECTION LABEL ── */
+.sec-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+/* ── WIDE PAYOFF (condor) ── */
+.payoff-5 { display: flex; gap: 2px; margin-bottom: 24px; border-radius: 8px; overflow: hidden; }
+.payoff-5 .pz { padding: 12px 4px; }
+
+/* ── COMPARISON ── */
+.vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.vs-card {
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.vs-title { font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+.vs-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+.vs-row:last-child { margin-bottom: 0; }
+.vs-key { color: var(--ink3); }
+.vs-val { font-family: 'DM Mono', monospace; font-weight: 500; }
+
+/* ── MASTER TABLE ── */
+.master-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+.master-table th {
+  background: var(--beige2);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  border-bottom: 1px solid var(--rule);
+}
+.master-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink2);
+  vertical-align: middle;
+}
+.master-table tr:last-child td { border-bottom: none; }
+.master-table tr:hover td { background: var(--beige); }
+.master-table .s-name-cell { font-weight: 500; color: var(--ink); }
+
+/* ── FOOTER RULE ── */
+.footer-rule {
+  background: var(--beige);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 20px 24px;
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 1.8;
+  margin-top: 8px;
+}
+.footer-rule strong { color: var(--ink2); font-weight: 500; }
+
+/* ── DIVIDER ── */
+hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+@media (max-width: 640px) {
+  .wrap { padding: 24px 20px; }
+  nav { padding: 12px 20px; }
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .cols, .vs-grid { grid-template-columns: 1fr; }
+  .s-header { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Refrakt <span>/ Options Strategies</span></div>
+  <div class="nav-pills">
+    <a class="pill p1" href="#s1">Bull Call</a>
+    <a class="pill p2" href="#s2">Bear Put</a>
+    <a class="pill p3" href="#s3">Bear Call</a>
+    <a class="pill p4" href="#s4">Bull Put</a>
+    <a class="pill p5" href="#s5">Straddle</a>
+    <a class="pill p6" href="#s6">Strangle</a>
+    <a class="pill p7" href="#s7">Iron Condor</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="page-title">
+  <h1>Options Strategies Reference</h1>
+  <p>Seven strategies. Each with setup, numbers, analogy, and rules. Open alongside Kite on a second screen. Nifty base = 24,300 throughout.</p>
+</div>
+
+<!-- ═══════════════ SELECTOR ═══════════════ -->
+<div class="sec-label" style="margin-top:0;">Strategy selector — pick by market condition</div>
+<table class="master-table" style="margin-bottom:48px;">
+  <thead>
+    <tr>
+      <th>If market is...</th>
+      <th>Use this</th>
+      <th>You</th>
+      <th>Time</th>
+      <th>Ready now?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Moderately rising</td><td class="s-name-cell" style="color:var(--sage);">Bull Call Spread</td><td style="color:var(--clay);">Pay ₹7,800</td><td style="color:var(--clay);">Enemy</td><td><span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Yes</span></td></tr>
+    <tr><td>Moderately falling</td><td class="s-name-cell" style="color:var(--clay);">Bear Put Spread</td><td style="color:var(--clay);">Pay ₹7,150</td><td style="color:var(--clay);">Enemy</td><td><span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Yes</span></td></tr>
+    <tr><td>Flat or mildly falling</td><td class="s-name-cell" style="color:var(--slate);">Bear Call Spread</td><td style="color:var(--sage);">Collect ₹3,575</td><td style="color:var(--sage);">Friend</td><td><span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">Later</span></td></tr>
+    <tr><td>Flat or mildly rising</td><td class="s-name-cell" style="color:var(--sand);">Bull Put Spread</td><td style="color:var(--sage);">Collect ₹2,600</td><td style="color:var(--sage);">Friend</td><td><span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">Later</span></td></tr>
+    <tr><td>Big event — no direction view</td><td class="s-name-cell" style="color:var(--plum);">Long Straddle</td><td style="color:var(--clay);">Pay ₹23,075</td><td style="color:var(--clay);">Enemy ×2</td><td><span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">Capital tight</span></td></tr>
+    <tr><td>Big event — cheaper version</td><td class="s-name-cell" style="color:var(--teal);">Long Strangle</td><td style="color:var(--clay);">Pay ₹10,725</td><td style="color:var(--clay);">Enemy ×2</td><td><span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Yes</span></td></tr>
+    <tr><td>Range-bound — no events</td><td class="s-name-cell" style="color:var(--rust);">Iron Condor</td><td style="color:var(--sage);">Collect ₹6,500</td><td style="color:var(--sage);">Friend ×4</td><td><span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">Later</span></td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ═══════════════ S1 — BULL CALL SPREAD ═══════════════ -->
+<div class="strategy" id="s1">
+  <div class="s-header">
+    <div>
+      <div class="s-num">Strategy 01</div>
+      <div class="s-name" style="color:var(--sage);">Bull Call Spread</div>
+      <div class="s-sub">Moderately bullish. Pay a reduced premium. Profit capped at the upper strike.</div>
+      <div class="s-tags" style="margin-top:10px;">
+        <span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Bullish</span>
+        <span class="stag" style="border-color:var(--clay-mid);color:var(--clay);background:var(--clay-bg);">Debit — you pay</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup">
+    <div class="setup-row"><span class="s-buy">BUY  24,300 CE &nbsp;@&nbsp; ₹180</span><span class="s-note">you pay — your right to profit from rise</span></div>
+    <div class="setup-row"><span class="s-sell">SELL 24,700 CE &nbsp;@&nbsp; ₹60 &nbsp;</span><span class="s-note">you collect — caps upside at 24,700</span></div>
+    <div class="s-divider"></div>
+    <div class="s-net">Net cost = ₹180 − ₹60 = ₹120 per unit &nbsp;·&nbsp; Total paid = ₹120 × 65 = ₹7,800</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Max profit</div><div class="metric-val mv-sage">₹18,200</div><div class="metric-sub">Nifty ≥ 24,700</div></div>
+    <div class="metric"><div class="metric-label">Max loss</div><div class="metric-val mv-clay">₹7,800</div><div class="metric-sub">Nifty ≤ 24,300</div></div>
+    <div class="metric"><div class="metric-label">Breakeven</div><div class="metric-val mv-sand">24,420</div><div class="metric-sub">Lower strike + net paid</div></div>
+    <div class="metric"><div class="metric-label">R : R</div><div class="metric-val mv-slate">1 : 2.3</div><div class="metric-sub">Below Murphy's 1:3 min</div></div>
+  </div>
+
+  <div class="payoff">
+    <div class="pz pz-loss"><div class="pz-label">Below 24,300</div><div class="pz-val">− ₹7,800</div></div>
+    <div class="pz pz-be" style="flex:0.6;"><div class="pz-label">24,420</div><div class="pz-val">₹0</div></div>
+    <div class="pz pz-profit"><div class="pz-label">Above 24,700</div><div class="pz-val">+ ₹18,200</div></div>
+  </div>
+
+  <div class="sec-label">Formula</div>
+  <div class="formula">
+    <div><span class="f-muted">Max profit&nbsp; = </span><span class="f-highlight">(24,700 − 24,300) − ₹120 = ₹280 × 65 = ₹18,200</span></div>
+    <div><span class="f-muted">Max loss&nbsp;&nbsp;&nbsp; = </span><span class="f-clay">Net premium paid = ₹120 × 65 = ₹7,800</span></div>
+    <div><span class="f-muted">Breakeven&nbsp; = </span><span class="f-sand">Lower strike + net paid = 24,300 + 120 = 24,420</span></div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">The train ticket analogy</div>
+    <div class="analogy-text">Delhi to Mumbai costs ₹180. You have a coupon giving ₹60 off — if you promise not to travel beyond Mumbai. Net cost ₹120. You reach your destination. Just not further. The coupon is the Call you sold.</div>
+  </div>
+
+  <div class="cols">
+    <div class="col-card">
+      <div class="col-label" style="color:var(--sage);">Use when</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>Bullish but not expecting a rocket — moderate rise only</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>IV is high — selling upper Call offsets expensive premium</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>Want defined risk with lower cost than a naked Call</div>
+    </div>
+    <div class="col-card">
+      <div class="col-label" style="color:var(--clay);">Avoid when</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Expecting a big rally — sold Call caps all gains above 24,700</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>R:R at 1:2.3 is below Murphy's minimum — adjust strikes first</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Major event week — move may overshoot the profit cap</div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">R:R note</div>
+    <p>This setup gives 1:2.3 — below Murphy's 1:3 minimum. Fix: sell the 25,000 CE instead of 24,700 to widen the profit zone, or wait for a cheaper entry to improve the ratio.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════ S2 — BEAR PUT SPREAD ═══════════════ -->
+<div class="strategy" id="s2">
+  <div class="s-header">
+    <div>
+      <div class="s-num">Strategy 02</div>
+      <div class="s-name" style="color:var(--clay);">Bear Put Spread</div>
+      <div class="s-sub">Moderately bearish. Pay a reduced premium. Profit capped at the lower strike.</div>
+      <div class="s-tags" style="margin-top:10px;">
+        <span class="stag" style="border-color:var(--clay-mid);color:var(--clay);background:var(--clay-bg);">Bearish</span>
+        <span class="stag" style="border-color:var(--clay-mid);color:var(--clay);background:var(--clay-bg);">Debit — you pay</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup">
+    <div class="setup-row"><span class="s-buy">BUY  24,300 PE &nbsp;@&nbsp; ₹175</span><span class="s-note">you pay — your right to profit from fall</span></div>
+    <div class="setup-row"><span class="s-sell">SELL 23,900 PE &nbsp;@&nbsp; ₹65 &nbsp;</span><span class="s-note">you collect — caps downside profit at 23,900</span></div>
+    <div class="s-divider"></div>
+    <div class="s-net">Net cost = ₹175 − ₹65 = ₹110 per unit &nbsp;·&nbsp; Total paid = ₹110 × 65 = ₹7,150</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Max profit</div><div class="metric-val mv-sage">₹18,850</div><div class="metric-sub">Nifty ≤ 23,900</div></div>
+    <div class="metric"><div class="metric-label">Max loss</div><div class="metric-val mv-clay">₹7,150</div><div class="metric-sub">Nifty ≥ 24,300</div></div>
+    <div class="metric"><div class="metric-label">Breakeven</div><div class="metric-val mv-sand">24,190</div><div class="metric-sub">Higher strike − net paid</div></div>
+    <div class="metric"><div class="metric-label">R : R</div><div class="metric-val mv-slate">1 : 2.6</div><div class="metric-sub">Close to Murphy's 1:3</div></div>
+  </div>
+
+  <div class="payoff">
+    <div class="pz pz-profit"><div class="pz-label">Below 23,900</div><div class="pz-val">+ ₹18,850</div></div>
+    <div class="pz pz-be" style="flex:0.6;"><div class="pz-label">24,190</div><div class="pz-val">₹0</div></div>
+    <div class="pz pz-loss"><div class="pz-label">Above 24,300</div><div class="pz-val">− ₹7,150</div></div>
+  </div>
+
+  <div class="sec-label">Formula</div>
+  <div class="formula">
+    <div><span class="f-muted">Max profit&nbsp; = </span><span class="f-highlight">(24,300 − 23,900) − ₹110 = ₹290 × 65 = ₹18,850</span></div>
+    <div><span class="f-muted">Max loss&nbsp;&nbsp;&nbsp; = </span><span class="f-clay">Net premium paid = ₹110 × 65 = ₹7,150</span></div>
+    <div><span class="f-muted">Breakeven&nbsp; = </span><span class="f-sand">Higher strike − net paid = 24,300 − 110 = 24,190</span></div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">The exact mirror of strategy 01</div>
+    <div class="analogy-text">Same train ticket logic — opposite direction. You want to travel Mumbai to Delhi (Nifty falling). Full ticket ₹175. Coupon gives ₹65 off if you don't go beyond Delhi. Net cost ₹110. Profit is capped at 23,900 but your cost is meaningfully lower.</div>
+  </div>
+
+  <div class="cols">
+    <div class="col-card">
+      <div class="col-label" style="color:var(--sage);">Use when</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>Bearish but expecting a controlled fall — not a crash</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>IV is elevated — selling lower Put offsets premium cost</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>Budget disappointment, mild global sell-off expected</div>
+    </div>
+    <div class="col-card">
+      <div class="col-label" style="color:var(--clay);">Avoid when</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Expecting a crash — sold Put caps profit at 23,900</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Use Strangle instead if direction is genuinely unknown</div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════ S3 — BEAR CALL SPREAD ═══════════════ -->
+<div class="strategy" id="s3">
+  <div class="s-header">
+    <div>
+      <div class="s-num">Strategy 03</div>
+      <div class="s-name" style="color:var(--slate);">Bear Call Spread</div>
+      <div class="s-sub">Mildly bearish or neutral. Collect premium. Profit if Nifty stays flat or falls.</div>
+      <div class="s-tags" style="margin-top:10px;">
+        <span class="stag" style="border-color:var(--clay-mid);color:var(--clay);background:var(--clay-bg);">Bearish / Neutral</span>
+        <span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Credit — you collect</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup">
+    <div class="setup-row"><span class="s-sell">SELL 24,500 CE &nbsp;@&nbsp; ₹90 &nbsp;</span><span class="s-note">you collect — obligated if Nifty crosses 24,500</span></div>
+    <div class="setup-row"><span class="s-buy">BUY  24,800 CE &nbsp;@&nbsp; ₹35 &nbsp;</span><span class="s-note">you pay — protects if Nifty rockets above 24,800</span></div>
+    <div class="s-divider"></div>
+    <div class="s-net">Net collected = ₹90 − ₹35 = ₹55 per unit &nbsp;·&nbsp; Total income = ₹55 × 65 = ₹3,575</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Max profit</div><div class="metric-val mv-sage">₹3,575</div><div class="metric-sub">Nifty stays ≤ 24,500</div></div>
+    <div class="metric"><div class="metric-label">Max loss</div><div class="metric-val mv-clay">₹15,925</div><div class="metric-sub">Nifty ≥ 24,800</div></div>
+    <div class="metric"><div class="metric-label">Breakeven</div><div class="metric-val mv-sand">24,555</div><div class="metric-sub">Sold strike + net collected</div></div>
+    <div class="metric"><div class="metric-label">Win probability</div><div class="metric-val mv-plum">≈ 70%</div><div class="metric-sub">Nifty must rise 200+ pts to hurt</div></div>
+  </div>
+
+  <div class="payoff">
+    <div class="pz pz-profit"><div class="pz-label">Below 24,500</div><div class="pz-val">+ ₹3,575</div></div>
+    <div class="pz pz-be" style="flex:0.5;"><div class="pz-label">24,555</div><div class="pz-val">₹0</div></div>
+    <div class="pz pz-loss"><div class="pz-label">Above 24,800</div><div class="pz-val">− ₹15,925</div></div>
+  </div>
+
+  <div class="sec-label">What happens when Nifty falls</div>
+  <div class="formula">
+    <div><span class="f-muted">Nifty falls to 23,800. Both Calls are deep OTM. Both expire worthless.</span></div>
+    <div><span class="f-sage">SOLD 24,500 CE → worthless → you keep ₹90 &nbsp;✓</span></div>
+    <div><span class="f-clay">BOUGHT 24,800 CE → worthless → ₹35 paid gone &nbsp;✗</span></div>
+    <div><span class="f-sand">Net = ₹90 − ₹35 = ₹55 × 65 = ₹3,575 &nbsp;— maximum profit achieved</span></div>
+    <div class="f-muted" style="margin-top:4px;">The further Nifty falls — the better. Every Call above current price dies worthless.</div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">The toll booth on one end</div>
+    <div class="analogy-text">You set a toll booth at 24,500. You collect toll from anyone who tries to pass above. But if traffic breaks through wildly (above 24,800), your insurance kicks in at 24,800 to limit your losses. Flat roads and downhill — you just collect. Steep uphill only hurts between 24,500 and 24,800.</div>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-label">Rachit — for future reference</div>
+    <p>Bear Call Spread involves selling a Call — requires margin on Kite (~₹23,000). Not suitable with current ₹20,000 capital. Study this for when capital grows beyond ₹3L.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════ S4 — BULL PUT SPREAD ═══════════════ -->
+<div class="strategy" id="s4">
+  <div class="s-header">
+    <div>
+      <div class="s-num">Strategy 04</div>
+      <div class="s-name" style="color:var(--sand);">Bull Put Spread</div>
+      <div class="s-sub">Mildly bullish or neutral. Collect premium. Profit if Nifty stays flat or rises.</div>
+      <div class="s-tags" style="margin-top:10px;">
+        <span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Bullish / Neutral</span>
+        <span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Credit — you collect</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup">
+    <div class="setup-row"><span class="s-sell">SELL 24,350 PE &nbsp;@&nbsp; ₹120</span><span class="s-note">you collect — obligated if Nifty falls below 24,350</span></div>
+    <div class="setup-row"><span class="s-buy">BUY  24,000 PE &nbsp;@&nbsp; ₹80 &nbsp;</span><span class="s-note">you pay — protects if Nifty crashes below 24,000</span></div>
+    <div class="s-divider"></div>
+    <div class="s-net">Net collected = ₹120 − ₹80 = ₹40 per unit &nbsp;·&nbsp; Total income = ₹40 × 65 = ₹2,600</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Max profit</div><div class="metric-val mv-sage">₹2,600</div><div class="metric-sub">Nifty stays ≥ 24,350</div></div>
+    <div class="metric"><div class="metric-label">Max loss</div><div class="metric-val mv-clay">₹20,150</div><div class="metric-sub">Nifty ≤ 24,000</div></div>
+    <div class="metric"><div class="metric-label">Breakeven</div><div class="metric-val mv-sand">24,310</div><div class="metric-sub">Sold strike − net collected</div></div>
+    <div class="metric"><div class="metric-label">Margin needed</div><div class="metric-val mv-ink">≈ ₹23K</div><div class="metric-sub">vs ₹1.81L naked sell</div></div>
+  </div>
+
+  <div class="payoff">
+    <div class="pz pz-loss"><div class="pz-label">Below 24,000</div><div class="pz-val">− ₹20,150</div></div>
+    <div class="pz pz-be" style="flex:0.5;"><div class="pz-label">24,310</div><div class="pz-val">₹0</div></div>
+    <div class="pz pz-profit"><div class="pz-label">Above 24,350</div><div class="pz-val">+ ₹2,600</div></div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">The mini insurance company</div>
+    <div class="analogy-text">You sell insurance covering the 24,000–24,350 zone and collect premium. You buy reinsurance (24,000 PE) to cap your liability below 24,000. If nothing bad happens — you keep all premiums. If a small disaster hits the zone — you pay. If a catastrophe hits below 24,000 — your reinsurance covers the rest.</div>
+  </div>
+
+  <div class="callout callout-note">
+    <div class="callout-label">Why spreads beat naked selling</div>
+    <p>Naked Put sell: collect ₹7,800, need ₹1,81,125 margin, unlimited loss.<br>Bull Put Spread: collect ₹2,600, need ≈ ₹23,000 margin, loss capped at ₹20,150.<br>Less income — but 8× less capital required and no catastrophic tail risk.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════ S5 — LONG STRADDLE ═══════════════ -->
+<div class="strategy" id="s5">
+  <div class="s-header">
+    <div>
+      <div class="s-num">Strategy 05</div>
+      <div class="s-name" style="color:var(--plum);">Long Straddle</div>
+      <div class="s-sub">Big move coming. Direction unknown. Buy both sides at the same strike.</div>
+      <div class="s-tags" style="margin-top:10px;">
+        <span class="stag" style="border-color:var(--plum-mid);color:var(--plum);background:var(--plum-bg);">Event trade</span>
+        <span class="stag" style="border-color:var(--clay-mid);color:var(--clay);background:var(--clay-bg);">Debit — you pay both</span>
+        <span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">No direction view needed</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup">
+    <div class="setup-row"><span class="s-buy">BUY 24,300 CE &nbsp;@&nbsp; ₹180</span><span class="s-note">profits if Nifty rises significantly</span></div>
+    <div class="setup-row"><span class="s-buy">BUY 24,300 PE &nbsp;@&nbsp; ₹175</span><span class="s-note">profits if Nifty falls significantly</span></div>
+    <div class="s-divider"></div>
+    <div class="s-net">Total cost = ₹180 + ₹175 = ₹355 per unit &nbsp;·&nbsp; Total paid = ₹355 × 65 = ₹23,075</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Max profit</div><div class="metric-val mv-sage">Unlimited</div><div class="metric-sub">Nifty moves far either way</div></div>
+    <div class="metric"><div class="metric-label">Max loss</div><div class="metric-val mv-clay">₹23,075</div><div class="metric-sub">Nifty stays exactly at 24,300</div></div>
+    <div class="metric"><div class="metric-label">Upper breakeven</div><div class="metric-val mv-sand">24,655</div><div class="metric-sub">24,300 + ₹355</div></div>
+    <div class="metric"><div class="metric-label">Lower breakeven</div><div class="metric-val mv-sand">23,945</div><div class="metric-sub">24,300 − ₹355</div></div>
+  </div>
+
+  <div class="payoff">
+    <div class="pz pz-profit"><div class="pz-label">Below 23,945</div><div class="pz-val">Put profits</div></div>
+    <div class="pz pz-loss" style="flex:1.8;"><div class="pz-label">23,945 to 24,655 — loss zone</div><div class="pz-val">max − ₹23,075</div></div>
+    <div class="pz pz-profit"><div class="pz-label">Above 24,655</div><div class="pz-val">Call profits</div></div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">The two-venue booking</div>
+    <div class="analogy-text">You're hosting an event and don't know if it'll rain or be sunny. You book both an outdoor and an indoor venue. One booking gets wasted. But the other saves the event. The wasted booking is the cost of certainty — exactly what the losing option leg represents.</div>
+  </div>
+
+  <div class="sec-label">The Theta problem — why timing is everything</div>
+  <div class="formula">
+    <div><span class="f-clay">Enter 5 days early: Theta eats ₹150 before event. Need ₹505 move to break even.</span></div>
+    <div><span class="f-sage">Enter 1 day before: Theta eats only ₹35. Need ₹390 move. Much more achievable.</span></div>
+    <div class="f-muted" style="margin-top:4px;">This is a surgical strike — not a holding strategy.</div>
+  </div>
+
+  <div class="cols">
+    <div class="col-card">
+      <div class="col-label" style="color:var(--sage);">Event calendar triggers</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>RBI monetary policy (bi-monthly)</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>Union Budget (annual — biggest one)</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>US Fed rate decisions (8× per year)</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>Election results day</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>Major quarterly earnings (HDFC Bank, TCS, Reliance)</div>
+    </div>
+    <div class="col-card">
+      <div class="col-label" style="color:var(--clay);">Non-negotiable rules</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Enter 1–2 days before the event. Not 5 days before.</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Exit within 30–60 minutes of event resolution.</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Check IV Percentile — above 80% means premium already too expensive.</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Never use in a calm, range-bound week — Theta destroys both legs.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">Capital note</div>
+    <p>Straddle costs ₹23,075 — above the ₹20,000 options allocation. Use Long Strangle (Strategy 06) instead — same concept, cheaper entry at ₹10,725, slightly bigger move needed to profit.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════ S6 — LONG STRANGLE ═══════════════ -->
+<div class="strategy" id="s6">
+  <div class="s-header">
+    <div>
+      <div class="s-num">Strategy 06</div>
+      <div class="s-name" style="color:var(--teal);">Long Strangle</div>
+      <div class="s-sub">Big move coming. Cheaper than straddle — uses OTM options on both sides.</div>
+      <div class="s-tags" style="margin-top:10px;">
+        <span class="stag" style="border-color:var(--teal-mid);color:var(--teal);background:var(--teal-bg);">Event trade</span>
+        <span class="stag" style="border-color:var(--clay-mid);color:var(--clay);background:var(--clay-bg);">Debit — you pay both</span>
+        <span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Fits ₹20K capital</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup">
+    <div class="setup-row"><span class="s-buy">BUY 24,600 CE &nbsp;@&nbsp; ₹85 &nbsp;</span><span class="s-note">OTM Call — cheaper. Profits if Nifty crosses 24,600.</span></div>
+    <div class="setup-row"><span class="s-buy">BUY 24,000 PE &nbsp;@&nbsp; ₹80 &nbsp;</span><span class="s-note">OTM Put — cheaper. Profits if Nifty falls below 24,000.</span></div>
+    <div class="s-divider"></div>
+    <div class="s-net">Total cost = ₹85 + ₹80 = ₹165 per unit &nbsp;·&nbsp; Total paid = ₹165 × 65 = ₹10,725</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Max profit</div><div class="metric-val mv-sage">Unlimited</div><div class="metric-sub">Big move either direction</div></div>
+    <div class="metric"><div class="metric-label">Max loss</div><div class="metric-val mv-clay">₹10,725</div><div class="metric-sub">Nifty stays 24,000–24,600</div></div>
+    <div class="metric"><div class="metric-label">Upper breakeven</div><div class="metric-val mv-sand">24,765</div><div class="metric-sub">24,600 + ₹165</div></div>
+    <div class="metric"><div class="metric-label">Lower breakeven</div><div class="metric-val mv-sand">23,835</div><div class="metric-sub">24,000 − ₹165</div></div>
+  </div>
+
+  <div class="payoff">
+    <div class="pz pz-profit"><div class="pz-label">Below 23,835</div><div class="pz-val">Put profits</div></div>
+    <div class="pz pz-loss" style="flex:2;"><div class="pz-label">23,835 to 24,765 — loss zone (wider than straddle)</div><div class="pz-val">max − ₹10,725</div></div>
+    <div class="pz pz-profit"><div class="pz-label">Above 24,765</div><div class="pz-val">Call profits</div></div>
+  </div>
+
+  <div class="sec-label">Straddle vs Strangle — key differences</div>
+  <div class="vs-grid">
+    <div class="vs-card" style="background:var(--plum-bg);border-color:var(--plum-mid);">
+      <div class="vs-title" style="color:var(--plum);">Long Straddle (ATM)</div>
+      <div class="vs-row"><span class="vs-key">Cost</span><span class="vs-val" style="color:var(--clay);">₹23,075</span></div>
+      <div class="vs-row"><span class="vs-key">Breakeven needed</span><span class="vs-val">±₹355 (1.46%)</span></div>
+      <div class="vs-row"><span class="vs-key">Sensitivity</span><span class="vs-val">Maximum</span></div>
+      <div class="vs-row"><span class="vs-key">Capital fit</span><span class="vs-val" style="color:var(--clay);">Tight for ₹20K</span></div>
+    </div>
+    <div class="vs-card" style="background:var(--teal-bg);border-color:var(--teal-mid);">
+      <div class="vs-title" style="color:var(--teal);">Long Strangle (OTM) — use this</div>
+      <div class="vs-row"><span class="vs-key">Cost</span><span class="vs-val" style="color:var(--sage);">₹10,725 (saves ₹12,350)</span></div>
+      <div class="vs-row"><span class="vs-key">Breakeven needed</span><span class="vs-val">±1.9% (bigger move)</span></div>
+      <div class="vs-row"><span class="vs-key">Sensitivity</span><span class="vs-val">Lower but affordable</span></div>
+      <div class="vs-row"><span class="vs-key">Capital fit</span><span class="vs-val" style="color:var(--sage);">Fits within ₹20K</span></div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">Budget vs premium insurance</div>
+    <div class="analogy-text">Straddle is comprehensive insurance — covers from any small bump. Strangle is basic insurance with a higher deductible. You absorb the first ₹165 of movement yourself (the zone between 24,000 and 24,600). But when a real disaster hits in either direction — both policies pay out the same big claim.</div>
+  </div>
+
+  <div class="callout callout-good">
+    <div class="callout-label">Rachit's primary event trade tool</div>
+    <p>Long Strangle fits within your ₹20,000 allocation at ₹10,725. Use for RBI policy, Budget, US Fed decisions. Enter the day before the event. Exit the same day within 30–60 minutes of announcement. Never hold overnight after the event resolves — IV crush destroys remaining value rapidly.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════ S7 — IRON CONDOR ═══════════════ -->
+<div class="strategy" id="s7">
+  <div class="s-header">
+    <div>
+      <div class="s-num">Strategy 07</div>
+      <div class="s-name" style="color:var(--rust);">Iron Condor</div>
+      <div class="s-sub">Range-bound market. Collect from both sides simultaneously. Four legs.</div>
+      <div class="s-tags" style="margin-top:10px;">
+        <span class="stag" style="border-color:var(--rust);color:var(--rust);background:var(--rust-bg);">Range bound</span>
+        <span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Credit — you collect</span>
+        <span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">4 legs</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink4);margin-bottom:6px;">Upper wing — Bear Call Spread</div>
+    <div class="setup-row"><span class="s-sell">SELL 24,600 CE &nbsp;@&nbsp; ₹90 &nbsp;</span><span class="s-note">collect — Nifty won't cross 24,600</span></div>
+    <div class="setup-row"><span class="s-buy">BUY  24,900 CE &nbsp;@&nbsp; ₹35 &nbsp;</span><span class="s-note">pay — protects above 24,900</span></div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink4);margin:10px 0 6px;">Lower wing — Bull Put Spread</div>
+    <div class="setup-row"><span class="s-sell">SELL 24,000 PE &nbsp;@&nbsp; ₹85 &nbsp;</span><span class="s-note">collect — Nifty won't fall below 24,000</span></div>
+    <div class="setup-row"><span class="s-buy">BUY  23,700 PE &nbsp;@&nbsp; ₹40 &nbsp;</span><span class="s-note">pay — protects below 23,700</span></div>
+    <div class="s-divider"></div>
+    <div class="s-net">Net collected = (₹90 + ₹85) − (₹35 + ₹40) = ₹100 per unit &nbsp;·&nbsp; Total income = ₹6,500</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Max profit</div><div class="metric-val mv-sage">₹6,500</div><div class="metric-sub">Nifty between 24,000–24,600</div></div>
+    <div class="metric"><div class="metric-label">Max loss</div><div class="metric-val mv-clay">₹13,000</div><div class="metric-sub">Either breach at 24,900 or 23,700</div></div>
+    <div class="metric"><div class="metric-label">Upper breakeven</div><div class="metric-val mv-sand">24,700</div><div class="metric-sub">24,600 + ₹100</div></div>
+    <div class="metric"><div class="metric-label">Lower breakeven</div><div class="metric-val mv-sand">23,900</div><div class="metric-sub">24,000 − ₹100</div></div>
+  </div>
+
+  <div class="payoff-5 payoff">
+    <div class="pz pz-loss" style="flex:0.8;"><div class="pz-label">Below 23,700</div><div class="pz-val">−₹13,000</div></div>
+    <div class="pz pz-be" style="flex:0.6;"><div class="pz-label">23,700–23,900</div><div class="pz-val">Partial</div></div>
+    <div class="pz pz-profit" style="flex:2;"><div class="pz-label">23,900 to 24,700 — 800pt profit corridor</div><div class="pz-val">+₹6,500</div></div>
+    <div class="pz pz-be" style="flex:0.6;"><div class="pz-label">24,700–24,900</div><div class="pz-val">Partial</div></div>
+    <div class="pz pz-loss" style="flex:0.8;"><div class="pz-label">Above 24,900</div><div class="pz-val">−₹13,000</div></div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">The highway toll booth</div>
+    <div class="analogy-text">You own toll booths on both ends of a highway stretch. Vehicles going either direction pay you toll. As long as traffic stays on your stretch — you collect from both sides. Only if traffic goes completely outside your range (above 24,900 or below 23,700) does your loss materialise. In a quiet week, most traffic stays well within your road.</div>
+  </div>
+
+  <div class="cols">
+    <div class="col-card">
+      <div class="col-label" style="color:var(--sage);">Ideal conditions</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>No major events this week — calendar clear</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>Nifty in established range — Murphy shows consolidation</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>India VIX below 16 — stable market</div>
+      <div class="col-item"><div class="dot" style="background:var(--sage);"></div>Post-event calm — IV has crushed, market settling</div>
+    </div>
+    <div class="col-card">
+      <div class="col-label" style="color:var(--clay);">Never use when</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Budget, RBI, or Fed week — one event wipes all four legs</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>VIX above 18 — too much movement risk</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Geopolitical uncertainty — gap risk is real</div>
+      <div class="col-item"><div class="dot" style="background:var(--clay);"></div>Capital below ₹50,000 — four legs = four margin requirements</div>
+    </div>
+  </div>
+
+  <div class="callout callout-note">
+    <div class="callout-label">Why professionals love this</div>
+    <p>An 800-point profit corridor. In a normal non-event week, Nifty typically moves only 150–300 points — giving you 2–5× more breathing room than you need. This is the professional weekly income machine. But only in the right conditions.</p>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════ MASTER REFERENCE TABLE ═══════════════ -->
+<div style="margin-bottom:24px;">
+  <div class="page-title" style="margin-bottom:24px;padding-bottom:16px;">
+    <h1 style="font-size:20px;">All strategies — one view</h1>
+  </div>
+  <table class="master-table">
+    <thead>
+      <tr>
+        <th>Strategy</th>
+        <th>Pay / collect</th>
+        <th>Max profit</th>
+        <th>Max loss</th>
+        <th>Time</th>
+        <th>Fits now?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="s-name-cell" style="color:var(--sage);">Bull Call Spread</td>
+        <td style="color:var(--clay);">Pay ₹7,800</td>
+        <td style="color:var(--sage);font-family:'DM Mono',monospace;">₹18,200</td>
+        <td style="color:var(--clay);font-family:'DM Mono',monospace;">₹7,800</td>
+        <td style="color:var(--clay);">Enemy</td>
+        <td><span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Yes</span></td>
+      </tr>
+      <tr>
+        <td class="s-name-cell" style="color:var(--clay);">Bear Put Spread</td>
+        <td style="color:var(--clay);">Pay ₹7,150</td>
+        <td style="color:var(--sage);font-family:'DM Mono',monospace;">₹18,850</td>
+        <td style="color:var(--clay);font-family:'DM Mono',monospace;">₹7,150</td>
+        <td style="color:var(--clay);">Enemy</td>
+        <td><span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Yes</span></td>
+      </tr>
+      <tr>
+        <td class="s-name-cell" style="color:var(--slate);">Bear Call Spread</td>
+        <td style="color:var(--sage);">Collect ₹3,575</td>
+        <td style="color:var(--sage);font-family:'DM Mono',monospace;">₹3,575</td>
+        <td style="color:var(--clay);font-family:'DM Mono',monospace;">₹15,925</td>
+        <td style="color:var(--sage);">Friend</td>
+        <td><span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">Later</span></td>
+      </tr>
+      <tr>
+        <td class="s-name-cell" style="color:var(--sand);">Bull Put Spread</td>
+        <td style="color:var(--sage);">Collect ₹2,600</td>
+        <td style="color:var(--sage);font-family:'DM Mono',monospace;">₹2,600</td>
+        <td style="color:var(--clay);font-family:'DM Mono',monospace;">₹20,150</td>
+        <td style="color:var(--sage);">Friend</td>
+        <td><span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">Later</span></td>
+      </tr>
+      <tr>
+        <td class="s-name-cell" style="color:var(--plum);">Long Straddle</td>
+        <td style="color:var(--clay);">Pay ₹23,075</td>
+        <td style="color:var(--sage);font-family:'DM Mono',monospace;">Unlimited</td>
+        <td style="color:var(--clay);font-family:'DM Mono',monospace;">₹23,075</td>
+        <td style="color:var(--clay);">Enemy ×2</td>
+        <td><span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">Capital tight</span></td>
+      </tr>
+      <tr>
+        <td class="s-name-cell" style="color:var(--teal);">Long Strangle</td>
+        <td style="color:var(--clay);">Pay ₹10,725</td>
+        <td style="color:var(--sage);font-family:'DM Mono',monospace;">Unlimited</td>
+        <td style="color:var(--clay);font-family:'DM Mono',monospace;">₹10,725</td>
+        <td style="color:var(--clay);">Enemy ×2</td>
+        <td><span class="stag" style="border-color:var(--sage-mid);color:var(--sage);background:var(--sage-bg);">Yes — events</span></td>
+      </tr>
+      <tr>
+        <td class="s-name-cell" style="color:var(--rust);">Iron Condor</td>
+        <td style="color:var(--sage);">Collect ₹6,500</td>
+        <td style="color:var(--sage);font-family:'DM Mono',monospace;">₹6,500</td>
+        <td style="color:var(--clay);font-family:'DM Mono',monospace;">₹13,000</td>
+        <td style="color:var(--sage);">Friend ×4</td>
+        <td><span class="stag" style="border-color:var(--ink4);color:var(--ink3);background:var(--beige2);">Later</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer-rule" style="margin-top:16px;">
+    <strong>Debit strategies</strong> — you pay upfront. Need market to move enough to profit. Time is your enemy. Enter close to the catalyst. &nbsp;·&nbsp;
+    <strong>Credit strategies</strong> — you collect upfront. Need market to stay in range. Time works for you. &nbsp;·&nbsp;
+    <strong>Event trades</strong> — surgical strike. Enter 1–2 days before. Exit same day as event. Never hold after resolution.
+  </div>
+</div>
+
+</div>
+</body>
+</html>

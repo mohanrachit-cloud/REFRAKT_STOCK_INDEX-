@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refrakt — Knowledge Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2ede4;
+    --bg2: #ebe5db;
+    --surface: #faf7f2;
+    --ink: #1a1814;
+    --ink-mid: #3d3830;
+    --ink-light: #7a7060;
+    --ink-dim: #b0a898;
+    --rule: #ccc4b8;
+    --gold: #b8942a;
+    --gold-light: #d4aa40;
+    --gold-bg: rgba(184,148,42,0.1);
+    --dark-bar: #1a1814;
+    --green: #2d6b4a;
+    --amber: #9b6820;
+    --red: #7a3030;
+    --blue: #2a4a7a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .breadcrumb {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+  .breadcrumb span { color: var(--gold); }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--ink-dim);
+  }
+  .live-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ── SNAPSHOT BANNER ── */
+  .snapshot-banner {
+    background: var(--gold-bg);
+    border-bottom: 1px solid rgba(184,148,42,0.25);
+    padding: 10px 40px;
+  }
+  .snapshot-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .snapshot-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .snapshot-date {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .snapshot-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--ink-light);
+    font-style: normal;
+  }
+  .snapshot-note em {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 52px 40px 36px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(40px, 6vw, 70px);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 400;
+  }
+  .hero-desc {
+    margin-top: 16px;
+    font-size: 15px;
+    color: var(--ink-light);
+    max-width: 500px;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* ── META ROW ── */
+  .meta-row {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    gap: 28px;
+    border-bottom: 2px solid var(--ink);
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 3px; }
+  .meta-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+  .meta-divider { width: 1px; background: var(--rule); align-self: stretch; }
+
+  /* ── CONTROLS ── */
+  .controls {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--rule);
+  }
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-bottom: 2px solid var(--ink);
+    padding: 8px 12px;
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    outline: none;
+    letter-spacing: 0.05em;
+    transition: border-color 0.2s;
+  }
+  .search-box::placeholder { color: var(--ink-dim); }
+  .search-box:focus { border-bottom-color: var(--gold); }
+  .filter-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--rule);
+    padding: 6px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .filter-btn.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+  /* ── MAIN CONTENT ── */
+  .content {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* ── TRACK SECTION ── */
+  .track-section { margin-top: 48px; }
+
+  /* ── DARK SECTION BAR ── */
+  .section-bar {
+    background: var(--dark-bar);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+  }
+  .section-bar-left { display: flex; align-items: center; gap: 14px; }
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    border: 1px solid var(--gold);
+    padding: 2px 8px;
+  }
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #f0ebe0;
+  }
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: #6a6058;
+  }
+
+  /* ── B-TRACK TABS ── */
+  .tab-bar {
+    display: flex;
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .tab-btn:hover { color: var(--ink); background: var(--bg2); }
+  .tab-btn.active {
+    color: var(--ink);
+    border-bottom-color: var(--gold);
+    background: var(--bg);
+    font-weight: 500;
+  }
+  .tab-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+  }
+  .tab-btn.active .tab-dot { opacity: 1; background: var(--gold); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-top: none;
+  }
+
+  /* ── CHAT CARD ── */
+  .chat-card {
+    background: var(--surface);
+    padding: 20px 22px;
+    cursor: default;
+    transition: background 0.15s;
+    animation: slideUp 0.3s ease both;
+  }
+  .chat-card:hover { background: var(--bg2); }
+  .chat-card:nth-child(2) { animation-delay: 0.04s; }
+  .chat-card:nth-child(3) { animation-delay: 0.08s; }
+  .chat-card:nth-child(4) { animation-delay: 0.12s; }
+  .chat-card:nth-child(5) { animation-delay: 0.16s; }
+  .chat-card:nth-child(6) { animation-delay: 0.20s; }
+
+  @keyframes slideUp {
+    from { opacity:0; transform: translateY(6px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .card-eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .card-track-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .card-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border: 1px solid;
+  }
+  .status-done   { color: var(--green); border-color: var(--green); }
+  .status-active { color: var(--amber); border-color: var(--amber); }
+  .status-pending{ color: var(--ink-dim); border-color: var(--rule); }
+  .status-tool   { color: var(--blue); border-color: var(--blue); }
+  .status-admin  { color: var(--ink-dim); border-color: var(--rule); }
+
+  .card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.65;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule);
+  }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    background: var(--bg2);
+    padding: 2px 7px;
+    border: 1px solid var(--rule);
+  }
+  .card-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    color: var(--ink-dim);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  /* FA PLACEHOLDER */
+  .fa-placeholder {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: none;
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .fa-placeholder-icon {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--ink-dim);
+    margin-bottom: 12px;
+  }
+  .fa-placeholder-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .fa-placeholder-desc {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-style: italic;
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  .fa-buckets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .fa-bucket {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border: 1px solid var(--rule);
+    color: var(--ink-dim);
+    background: var(--bg2);
+  }
+
+  /* HIDDEN */
+  .hidden { display: none !important; }
+
+  /* EMPTY */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 48px;
+    font-style: italic;
+    color: var(--ink-light);
+    font-size: 15px;
+    border: 1px dashed var(--rule);
+    margin-top: 32px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 2px solid var(--ink);
+    padding: 24px 40px;
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .footer-logo span { font-style: italic; color: var(--gold); font-weight: 400; }
+  .footer-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    text-align: right;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="breadcrumb">
+      Refrakt Studios &nbsp;·&nbsp; <span>Knowledge Index</span> &nbsp;·&nbsp; Master Catalogue
+    </div>
+    <div class="header-right">
+      <div class="live-dot"></div>
+      <span>Static Snapshot</span>
+    </div>
+  </div>
+</header>
+
+<!-- SNAPSHOT BANNER -->
+<div class="snapshot-banner">
+  <div class="snapshot-inner">
+    <div>
+      <div class="snapshot-label">📸 &nbsp;Last Snapshot</div>
+      <div class="snapshot-date" id="snapshotDate">—</div>
+    </div>
+    <div class="snapshot-note">
+      This file is a <em>static snapshot</em> — not a live feed.<br>
+      Tell Claude <em>"Update index"</em> after any new session to refresh.
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Every Chat.<br><em>One Index.</em></h1>
+  <p class="hero-desc">
+    All Refrakt project conversations, mapped to curriculum tracks.
+    Find any concept, tool, or rabbit hole — in seconds.
+  </p>
+</div>
+
+<!-- META STATS -->
+<div class="meta-row">
+  <div class="meta-item">
+    <div class="meta-num" id="totalChats">—</div>
+    <div class="meta-label">Total Chats</div>
+  </div>
+  <div class="meta-divider"></div>
+  <div class="meta-item">
+    <div class="meta-num" id="doneCount">—</div>
+    <div class="meta-label">Completed</div>
+  </div>
+  <div class="meta-divider"></div>
+  <div class="meta-item">
+    <div class="meta-num" id="activeCount">—</div>
+    <div class="meta-label">In Progress</div>
+  </div>
+  <div class="meta-divider"></div>
+  <div class="meta-item">
+    <div class="meta-num" id="toolCount">—</div>
+    <div class="meta-label">Tools Built</div>
+  </div>
+  <div class="meta-divider"></div>
+  <div class="meta-item">
+    <div class="meta-num">7</div>
+    <div class="meta-label">Active Tracks</div>
+  </div>
+  <div class="meta-divider"></div>
+  <div class="meta-item">
+    <div class="meta-num">₹1L</div>
+    <div class="meta-label">Capital Base</div>
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <input type="text" class="search-box" id="searchInput" placeholder="Search conversations, concepts, tools..." oninput="filterCards()">
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-btn" onclick="setFilter('done',this)">Done</button>
+    <button class="filter-btn" onclick="setFilter('active',this)">Active</button>
+    <button class="filter-btn" onclick="setFilter('pending',this)">Pending</button>
+    <button class="filter-btn" onclick="setFilter('tool',this)">Tools</button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- ═══ A-TRACK ═══ -->
+  <div class="track-section" data-track="a">
+    <div class="section-bar">
+      <div class="section-bar-left">
+        <div class="section-tag">A-Track</div>
+        <div class="section-title">Asset Classes</div>
+      </div>
+      <div class="section-count" id="a-count"></div>
+    </div>
+    <div class="cards-grid" id="a-grid">
+
+      <div class="chat-card" data-status="active" data-tags="options greeks chain itm atm otm">
+        <div class="card-eyebrow"><div class="card-track-label">A5 · Options</div><div class="card-status status-active">Active</div></div>
+        <div class="card-title">Refrakt Options Masterclass — Pass 1 Shell</div>
+        <div class="card-desc">Foundation layer. ITM/ATM/OTM cinema analogy, all 4 Greeks (Delta=shadow, Theta=parking meter, Gamma=domino, Vega=umbrella), options chain visual, Max Pain.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">A5</span><span class="tag">Greeks</span><span class="tag">Chain</span></div><div class="card-date">19h ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="active" data-tags="options masterclass pass2 strategies">
+        <div class="card-eyebrow"><div class="card-track-label">A5 · C6 · Options</div><div class="card-status status-active">Active</div></div>
+        <div class="card-title">Building Pass 2 of the Refrakt Options Masterclass</div>
+        <div class="card-desc">Second-pass expansion. Strategies, deeper Greeks, expiry mechanics layer. Ongoing build-out of the masterclass document.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">A5</span><span class="tag">C6</span><span class="tag">Strategies</span></div><div class="card-date">18h ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="done" data-tags="options strategies guide spreads straddles">
+        <div class="card-eyebrow"><div class="card-track-label">A5 · C6 · Options</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Options Trading Strategies Guide & Document</div>
+        <div class="card-desc">Comprehensive strategy reference: Long/Short Call+Put, Spreads, Straddles. Exported as masterclass reference document.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">A5</span><span class="tag">Spreads</span><span class="tag">Doc</span></div><div class="card-date">3d ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="done" data-tags="nifty options analysis chain oi pcr">
+        <div class="card-eyebrow"><div class="card-track-label">A5 · B4 · Nifty</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Nifty 50 Options Analysis for Learning</div>
+        <div class="card-desc">Live options chain breakdown. Strike selection logic, OI interpretation, Put-Call ratio reading exercise on real Nifty data.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">A5</span><span class="tag">OI</span><span class="tag">PCR</span></div><div class="card-date">2d ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="done" data-tags="strike price lock options moneyness expiry">
+        <div class="card-eyebrow"><div class="card-track-label">A5 · C8 · Strike</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Strike Price Lock & Options Analysis</div>
+        <div class="card-desc">When to lock strikes, roll strategies, moneyness shifts near expiry. Expiry-day behaviour in Indian weekly contracts.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">Strike</span><span class="tag">Roll</span><span class="tag">Expiry</span></div><div class="card-date">1d ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="done" data-tags="bonds futures derivatives interest rate">
+        <div class="card-eyebrow"><div class="card-track-label">A3 · A4 · Bonds</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Futures & Options on Bonds</div>
+        <div class="card-desc">Bond derivatives introduction. Interest rate futures mechanics, bond F&O structure in Indian markets, yield-price relationship.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">A3</span><span class="tag">A4</span><span class="tag">Yield</span></div><div class="card-date">1w ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="done" data-tags="bonds options transition bridge risk">
+        <div class="card-eyebrow"><div class="card-track-label">A3 · A5 · Bridge</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Moving from Bonds to Options Trading</div>
+        <div class="card-desc">Risk profile comparison. Why options suit active capital allocation vs bond passivity. Conceptual bridge session.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">Bridge</span><span class="tag">Risk</span></div><div class="card-date">3d ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="done" data-tags="crypto bitcoin ethereum foundation asset">
+        <div class="card-eyebrow"><div class="card-track-label">A8 · Crypto</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Crypto Masterclass Foundation & Asset Architecture</div>
+        <div class="card-desc">Bitcoin/ETH fundamentals, on-chain vs exchange custody, Indian regulatory context for retail investors.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">A8</span><span class="tag">Bitcoin</span><span class="tag">Custody</span></div><div class="card-date">3d ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="done" data-tags="mutual funds nav sip motilal midcap">
+        <div class="card-eyebrow"><div class="card-track-label">A2 · Mutual Funds</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Interactive Mutual Funds Learning Capsule</div>
+        <div class="card-desc">Complete MF module. Categories, NAV mechanics, SIP math, tax implications. Motilal Midcap Fund as running example.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">A2</span><span class="tag">SIP</span><span class="tag">NAV</span></div><div class="card-date">1w ago</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ B-TRACK — TABBED ═══ -->
+  <div class="track-section" data-track="b">
+    <div class="section-bar">
+      <div class="section-bar-left">
+        <div class="section-tag">B-Track</div>
+        <div class="section-title">Analysis</div>
+      </div>
+      <div class="section-count" id="b-count"></div>
+    </div>
+
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('ta', this)">
+        <span class="tab-dot"></span>
+        Technical Analysis
+      </button>
+      <button class="tab-btn" onclick="switchTab('fa', this)">
+        <span class="tab-dot"></span>
+        Fundamental Analysis
+      </button>
+    </div>
+
+    <!-- TA PANEL -->
+    <div class="tab-panel active" id="panel-ta">
+      <div class="cards-grid" id="b-ta-grid">
+
+        <div class="chat-card" data-status="done" data-tags="candlestick murphy patterns app github">
+          <div class="card-eyebrow"><div class="card-track-label">B2 · Candlesticks</div><div class="card-status status-done">Done</div></div>
+          <div class="card-title">Murphy Candlestick Patterns — App Build</div>
+          <div class="card-desc">Interactive candlestick reference tool from Murphy's pattern library. V1 and V2 shipped to GitHub Pages portal.</div>
+          <div class="card-footer"><div class="card-tags"><span class="tag">B2</span><span class="tag">App</span><span class="tag">Portal</span></div><div class="card-date">Portal</div></div>
+        </div>
+
+        <div class="chat-card" data-status="done" data-tags="RSI relative strength divergence overbought oversold">
+          <div class="card-eyebrow"><div class="card-track-label">B4 · RSI</div><div class="card-status status-done">Done</div></div>
+          <div class="card-title">RSI Deep Dive — B4</div>
+          <div class="card-desc">RSI mechanics from Murphy. Overbought/oversold zones, divergence signals, failure swings applied to Nifty chart context.</div>
+          <div class="card-footer"><div class="card-tags"><span class="tag">B4</span><span class="tag">RSI</span><span class="tag">Divergence</span></div><div class="card-date">—</div></div>
+        </div>
+
+        <div class="chat-card" data-status="pending" data-tags="MACD signal histogram next macd">
+          <div class="card-eyebrow"><div class="card-track-label">B5 · Next Scheduled</div><div class="card-status status-pending">Queued</div></div>
+          <div class="card-title">MACD — B5</div>
+          <div class="card-desc">Next module after the Options/Futures detour completes. MACD line, signal line, histogram. Murphy Chapter reference locked.</div>
+          <div class="card-footer"><div class="card-tags"><span class="tag">B5</span><span class="tag">MACD</span><span class="tag">Next</span></div><div class="card-date">Queued</div></div>
+        </div>
+
+        <div class="chat-card" data-status="tool" data-tags="elliott wave fibonacci time cycles tool">
+          <div class="card-eyebrow"><div class="card-track-label">B14 · B15 · B3a</div><div class="card-status status-tool">Live</div></div>
+          <div class="card-title">Time Cycles + Elliott Wave + Fibonacci Tool</div>
+          <div class="card-desc">Combined analytical tool. Wave counting, Fibonacci retracement levels, time cycle overlays — all interactive on GitHub Pages.</div>
+          <div class="card-footer"><div class="card-tags"><span class="tag">Elliott</span><span class="tag">Fib</span><span class="tag">Portal</span></div><div class="card-date">Portal</div></div>
+        </div>
+
+        <div class="chat-card" data-status="done" data-tags="technical analysis foundations murphy TA">
+          <div class="card-eyebrow"><div class="card-track-label">B1 · TA Foundation</div><div class="card-status status-done">Done</div></div>
+          <div class="card-title">Technical Analysis — B1 Foundation</div>
+          <div class="card-desc">Murphy's core premise: prices discount everything, prices move in trends, history repeats. TA vs FA debate resolved. Framework set.</div>
+          <div class="card-footer"><div class="card-tags"><span class="tag">B1</span><span class="tag">Murphy</span><span class="tag">TA</span></div><div class="card-date">—</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FA PANEL -->
+    <div class="tab-panel" id="panel-fa">
+      <div class="fa-placeholder">
+        <div class="fa-placeholder-icon">⚑</div>
+        <div class="fa-placeholder-title">Fundamental Analysis — Coming Soon</div>
+        <div class="fa-placeholder-desc">
+          Share your FA session details and I'll populate this tab with the full conversation map.
+          Six buckets planned, ~50–60 indicators total, top 15 prioritised.
+        </div>
+        <div class="fa-buckets">
+          <span class="fa-bucket">Valuation</span>
+          <span class="fa-bucket">Profitability</span>
+          <span class="fa-bucket">Leverage</span>
+          <span class="fa-bucket">Liquidity</span>
+          <span class="fa-bucket">Efficiency</span>
+          <span class="fa-bucket">Growth</span>
+        </div>
+        <div style="margin-top:20px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold);">
+          B10 · Fundamental Analysis Layer · Pending Initiation
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ C-TRACK ═══ -->
+  <div class="track-section" data-track="c">
+    <div class="section-bar">
+      <div class="section-bar-left">
+        <div class="section-tag">C-Track</div>
+        <div class="section-title">Execution & Strategy</div>
+      </div>
+      <div class="section-count" id="c-count"></div>
+    </div>
+    <div class="cards-grid" id="c-grid">
+
+      <div class="chat-card" data-status="done" data-tags="expiry weekly monthly theta acceleration settlement">
+        <div class="card-eyebrow"><div class="card-track-label">C8 · Expiry</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Options Expiry Mechanics — C8</div>
+        <div class="card-desc">Weekly vs monthly expiry dynamics. Theta acceleration in final 3 days, expiry-day behaviour, settlement in Indian markets.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">C8</span><span class="tag">Theta</span><span class="tag">Settlement</span></div><div class="card-date">—</div></div>
+      </div>
+
+      <div class="chat-card" data-status="done" data-tags="risk management 2 percent stop loss position">
+        <div class="card-eyebrow"><div class="card-track-label">C4 · Risk</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Risk Management Foundation — C4</div>
+        <div class="card-desc">2% rule, stop-loss discipline, risk-reward ratios. Applied to ₹1L capital base with full allocation plan.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">C4</span><span class="tag">2% Rule</span><span class="tag">Capital</span></div><div class="card-date">—</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ D-TRACK ═══ -->
+  <div class="track-section" data-track="d">
+    <div class="section-bar">
+      <div class="section-bar-left">
+        <div class="section-tag">D-Track</div>
+        <div class="section-title">Tools Built</div>
+      </div>
+      <div class="section-count" id="d-count"></div>
+    </div>
+    <div class="cards-grid" id="d-grid">
+
+      <div class="chat-card" data-status="tool" data-tags="candlestick app patterns murphy portal">
+        <div class="card-eyebrow"><div class="card-track-label">D2 · Live on Portal</div><div class="card-status status-tool">Live</div></div>
+        <div class="card-title">Murphy Candlestick App — D2</div>
+        <div class="card-desc">40+ patterns from Murphy with definitions and trade signals. V1 + V2 on GitHub Pages. Primary pattern reference tool.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">D2</span><span class="tag">GitHub</span><span class="tag">Murphy</span></div><div class="card-date">Portal</div></div>
+      </div>
+
+      <div class="chat-card" data-status="tool" data-tags="master dashboard portal nav hub">
+        <div class="card-eyebrow"><div class="card-track-label">D3 · Live on Portal</div><div class="card-status status-tool">Live</div></div>
+        <div class="card-title">Master Dashboard — D3</div>
+        <div class="card-desc">Central portal hub on GitHub Pages. Nav system with Refrakt SVG logo, gold breadcrumb pill. All tools accessible from one URL.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">D3</span><span class="tag">Portal</span><span class="tag">Nav</span></div><div class="card-date">Portal</div></div>
+      </div>
+
+      <div class="chat-card" data-status="tool" data-tags="mutual funds tracker sip nav calculator">
+        <div class="card-eyebrow"><div class="card-track-label">D8 · A2 · MF</div><div class="card-status status-tool">Live</div></div>
+        <div class="card-title">Mutual Funds Learning Capsule — D8</div>
+        <div class="card-desc">Interactive MF tool. Category explorer, SIP calculator, return comparisons. Shipped as standalone HTML.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">D8</span><span class="tag">SIP</span><span class="tag">MF</span></div><div class="card-date">1w ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="tool" data-tags="options strategies payoff pnl breakeven">
+        <div class="card-eyebrow"><div class="card-track-label">C6 · Options Strategies</div><div class="card-status status-tool">Live</div></div>
+        <div class="card-title">Options Strategies Reference — C6 Tool</div>
+        <div class="card-desc">Strategy payoff visualiser. All major strategies with P&L diagrams, breakeven logic, best-use conditions per market view.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">C6</span><span class="tag">P&L</span><span class="tag">Payoff</span></div><div class="card-date">3d ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="tool" data-tags="elliott wave fibonacci time cycles portal">
+        <div class="card-eyebrow"><div class="card-track-label">B14–15 · B3a</div><div class="card-status status-tool">Live</div></div>
+        <div class="card-title">Elliott Wave + Fibonacci + Time Cycles Tool</div>
+        <div class="card-desc">Combined wave counting, fib retracements and cycle overlays. Deployed to GitHub Pages portal.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">Elliott</span><span class="tag">Fib</span><span class="tag">Cycles</span></div><div class="card-date">Portal</div></div>
+      </div>
+
+      <div class="chat-card" data-status="pending" data-tags="position size calculator kelly 2 percent">
+        <div class="card-eyebrow"><div class="card-track-label">D1 · C3 · Pending</div><div class="card-status status-pending">Pending</div></div>
+        <div class="card-title">Position Size Calculator — D1</div>
+        <div class="card-desc">Risk-based position sizing tool. Kelly criterion + 2% rule variants. Planned for ₹1L capital base deployment.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">D1</span><span class="tag">Kelly</span><span class="tag">Sizing</span></div><div class="card-date">Queued</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ E-TRACK ═══ -->
+  <div class="track-section" data-track="e">
+    <div class="section-bar">
+      <div class="section-bar-left">
+        <div class="section-tag">E-Track</div>
+        <div class="section-title">Psychology & Behaviour</div>
+      </div>
+      <div class="section-count" id="e-count"></div>
+    </div>
+    <div class="cards-grid" id="e-grid">
+
+      <div class="chat-card" data-status="done" data-tags="emotional neutrality fomo revenge anchoring bias">
+        <div class="card-eyebrow"><div class="card-track-label">E1 · Psychology</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Emotional Neutrality in Trading — E1</div>
+        <div class="card-desc">FOMO, revenge trading, anchoring bias. Pre-trade checklist logic. Applied to live trade observations.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">E1</span><span class="tag">FOMO</span><span class="tag">Bias</span></div><div class="card-date">—</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ F-TRACK ═══ -->
+  <div class="track-section" data-track="f">
+    <div class="section-bar">
+      <div class="section-bar-left">
+        <div class="section-tag">F-Track</div>
+        <div class="section-title">Tax Architecture</div>
+      </div>
+      <div class="section-count" id="f-count"></div>
+    </div>
+    <div class="cards-grid" id="f-grid">
+
+      <div class="chat-card" data-status="active" data-tags="tax equity 30 percent stcg ltcg fno">
+        <div class="card-eyebrow"><div class="card-track-label">F1 · Equity Tax</div><div class="card-status status-active">Partial</div></div>
+        <div class="card-title">Equity Tax Framework — F1</div>
+        <div class="card-desc">30% slab applied throughout all calculations. STCG/LTCG on equity, F&O tax as business income. Constants embedded in all tools.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">F1</span><span class="tag">30%</span><span class="tag">STCG</span></div><div class="card-date">Running</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ UTILITY ═══ -->
+  <div class="track-section" data-track="util">
+    <div class="section-bar">
+      <div class="section-bar-left">
+        <div class="section-tag">Utility</div>
+        <div class="section-title">Admin & Workflow</div>
+      </div>
+      <div class="section-count" id="util-count"></div>
+    </div>
+    <div class="cards-grid" id="util-grid">
+
+      <div class="chat-card" data-status="done" data-tags="excel financial analysis playlist review">
+        <div class="card-eyebrow"><div class="card-track-label">Utility · Excel</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Financial Analysis in Excel — Playlist Review</div>
+        <div class="card-desc">Review of Excel-based financial analysis playlist. Key formulas and models mapped to Refrakt tools layer.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">Excel</span><span class="tag">Review</span></div><div class="card-date">4m ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="done" data-tags="udemy excel course financial modelling">
+        <div class="card-eyebrow"><div class="card-track-label">Utility · Learning</div><div class="card-status status-done">Done</div></div>
+        <div class="card-title">Understanding a Complex Udemy Excel Course</div>
+        <div class="card-desc">Udemy course breakdown for Excel financial modelling. Modules mapped to Refrakt tool-building needs.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">Excel</span><span class="tag">Udemy</span></div><div class="card-date">19h ago</div></div>
+      </div>
+
+      <div class="chat-card" data-status="admin" data-tags="data storage retention files admin project">
+        <div class="card-eyebrow"><div class="card-track-label">Utility · Admin</div><div class="card-status status-admin">Admin</div></div>
+        <div class="card-title">Data Storage & File Retention Policy</div>
+        <div class="card-desc">Project file management. What persists across sessions, GitHub Pages as permanent tool home, project file limitations.</div>
+        <div class="card-footer"><div class="card-tags"><span class="tag">Admin</span><span class="tag">Files</span></div><div class="card-date">1w ago</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="empty-state" id="emptyState">No conversations match your search.</div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Refrakt <span>Studios</span></div>
+  <div class="footer-meta">
+    Murphy · O'Neil · Zerodha Kite · TradingView<br>
+    Knowledge Index · Snapshot: <span id="footerDate">Apr 2026</span>
+  </div>
+</footer>
+
+<script>
+  // ── SNAPSHOT DATE ──
+  const now = new Date();
+  const opts = { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' };
+  document.getElementById('snapshotDate').textContent = now.toLocaleDateString('en-IN', opts);
+  document.getElementById('footerDate').textContent = now.toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'});
+
+  // ── STATS ──
+  document.addEventListener('DOMContentLoaded', () => {
+    const all    = document.querySelectorAll('.chat-card');
+    const done   = document.querySelectorAll('[data-status="done"]');
+    const active = document.querySelectorAll('[data-status="active"]');
+    const tools  = document.querySelectorAll('[data-status="tool"]');
+    document.getElementById('totalChats').textContent  = all.length;
+    document.getElementById('doneCount').textContent   = done.length;
+    document.getElementById('activeCount').textContent = active.length;
+    document.getElementById('toolCount').textContent   = tools.length;
+
+    // Section counts (B-track counts both panels)
+    ['a','c','d','e','f','util'].forEach(t => {
+      const grid = document.getElementById(`${t}-grid`);
+      if (!grid) return;
+      const n = grid.querySelectorAll('.chat-card').length;
+      const el = document.getElementById(`${t}-count`);
+      if (el) el.textContent = `${n} conversation${n!==1?'s':''}`;
+    });
+
+    // B-track count = TA + FA cards
+    const bTA = document.getElementById('b-ta-grid');
+    const bCards = bTA ? bTA.querySelectorAll('.chat-card').length : 0;
+    document.getElementById('b-count').textContent = `${bCards} TA conversation${bCards!==1?'s':''} · FA pending`;
+  });
+
+  // ── TAB SWITCH ──
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`panel-${tab}`).classList.add('active');
+  }
+
+  // ── FILTER ──
+  let currentFilter = 'all';
+
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterCards();
+  }
+
+  function filterCards() {
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+    let visible = 0;
+
+    document.querySelectorAll('.chat-card').forEach(card => {
+      const text   = card.textContent.toLowerCase();
+      const tags   = (card.dataset.tags || '').toLowerCase();
+      const status = card.dataset.status;
+      const matchSearch = !query || text.includes(query) || tags.includes(query);
+      const matchFilter = currentFilter === 'all' || status === currentFilter;
+      if (matchSearch && matchFilter) { card.classList.remove('hidden'); visible++; }
+      else { card.classList.add('hidden'); }
+    });
+
+    // Hide empty track sections
+    document.querySelectorAll('.track-section').forEach(sec => {
+      const v = sec.querySelectorAll('.chat-card:not(.hidden)').length;
+      sec.style.display = v > 0 ? '' : 'none';
+    });
+
+    document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+  }
+</script>
+</body>
+</html>

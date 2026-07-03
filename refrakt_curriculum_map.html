@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refrakt Studios — Master Curriculum Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0e0c0a;
+    --bg2:       #151210;
+    --surface:   #1a1714;
+    --surface2:  #211e1a;
+    --ink:       #f0ebe0;
+    --ink-mid:   #c8bfb0;
+    --ink-light: #8a7f6e;
+    --ink-dim:   #4a4238;
+    --rule:      #2a2520;
+    --gold:      #c9a84c;
+    --gold-dim:  #7a621c;
+    --gold-bg:   rgba(201,168,76,0.08);
+    --green:     #3a8c5c;
+    --green-bg:  rgba(58,140,92,0.12);
+    --amber:     #c98a2a;
+    --amber-bg:  rgba(201,138,42,0.12);
+    --blue:      #4a86c8;
+    --blue-bg:   rgba(74,134,200,0.12);
+    --red:       #c04a4a;
+    --red-bg:    rgba(192,74,74,0.1);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(14,12,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav-logo svg { width: 28px; height: 28px; }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .nav-brand em { font-style: italic; color: var(--gold); font-weight: 400; }
+  .nav-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: var(--gold-bg);
+    border: 1px solid var(--gold-dim);
+    padding: 4px 14px;
+    border-radius: 2px;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 80px 48px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(48px, 7vw, 84px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 400;
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--ink-light);
+    max-width: 560px;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 48px;
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .stat {
+    flex: 1;
+    padding: 0 32px 0 0;
+    border-right: 1px solid var(--rule);
+    margin-right: 32px;
+  }
+  .stat:last-child { border-right: none; margin-right: 0; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .stat-num.gold { color: var(--gold); }
+  .stat-num.green { color: var(--green); }
+  .stat-num.blue { color: var(--blue); }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-top: 6px;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    position: sticky;
+    top: 57px;
+    z-index: 100;
+    background: rgba(14,12,10,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 48px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+  }
+  .filter-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  .filter-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink-light);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .filter-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--bg);
+  }
+  .search-wrap {
+    margin-left: auto;
+  }
+  .search-input {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    padding: 5px 14px;
+    outline: none;
+    width: 220px;
+    transition: border-color 0.2s;
+    border-radius: 2px;
+  }
+  .search-input::placeholder { color: var(--ink-dim); }
+  .search-input:focus { border-color: var(--gold-dim); }
+
+  /* ── MAIN ── */
+  .main {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 48px 80px;
+  }
+
+  /* ── TRACK SECTION ── */
+  .track {
+    margin-top: 56px;
+    animation: fadeIn 0.4s ease both;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  .track-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .track-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    padding: 4px 14px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .track-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .track-meta {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--ink-dim);
+    text-align: right;
+  }
+  .track-progress {
+    height: 2px;
+    background: var(--rule);
+    border-radius: 1px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .track-progress-bar {
+    height: 100%;
+    border-radius: 1px;
+    transition: width 0.6s ease;
+  }
+
+  /* ── MODULE GRID ── */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 10px;
+  }
+
+  /* ── MODULE CARD ── */
+  .module-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 18px 20px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .module-card:hover {
+    background: var(--surface2);
+    border-color: var(--ink-dim);
+    transform: translateY(-1px);
+  }
+  .module-card.status-done {
+    border-left: 3px solid var(--green);
+  }
+  .module-card.status-active {
+    border-left: 3px solid var(--amber);
+  }
+  .module-card.status-pending {
+    border-left: 3px solid var(--rule);
+    opacity: 0.65;
+  }
+  .module-card.status-next {
+    border-left: 3px solid var(--blue);
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    opacity: 1;
+  }
+  .module-card.status-live {
+    border-left: 3px solid var(--gold);
+  }
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+  .card-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--ink-light);
+  }
+  .card-status-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 2px 9px;
+    border-radius: 1px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .pill-done    { background: var(--green-bg);  color: var(--green);  border: 1px solid rgba(58,140,92,0.3); }
+  .pill-active  { background: var(--amber-bg);  color: var(--amber);  border: 1px solid rgba(201,138,42,0.3); }
+  .pill-pending { background: transparent;      color: var(--ink-dim); border: 1px solid var(--rule); }
+  .pill-next    { background: var(--blue-bg);   color: var(--blue);   border: 1px solid rgba(74,134,200,0.3); }
+  .pill-live    { background: var(--gold-bg);   color: var(--gold);   border: 1px solid var(--gold-dim); }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .card-note {
+    font-size: 12px;
+    color: var(--ink-light);
+    line-height: 1.55;
+    font-style: italic;
+  }
+  .card-next-badge {
+    position: absolute;
+    top: 0; right: 0;
+    background: var(--blue);
+    color: white;
+    font-family: 'DM Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 0.15em;
+    padding: 3px 8px;
+    text-transform: uppercase;
+  }
+
+  /* ── PHASE TIMELINE ── */
+  .phase-section {
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+  }
+  .phase-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .phase-eyebrow::before { content:''; width:24px; height:1px; background:var(--gold); }
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 10px;
+  }
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .phase-card.current {
+    border-color: var(--gold-dim);
+    background: var(--gold-bg);
+  }
+  .phase-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--rule);
+    position: absolute;
+    bottom: -8px;
+    right: 12px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .phase-card.current .phase-num { color: var(--gold-dim); }
+  .phase-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 8px;
+  }
+  .phase-card.current .phase-label { color: var(--gold); }
+  .phase-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-mid);
+    line-height: 1.4;
+    position: relative;
+    z-index: 1;
+  }
+  .phase-card.current .phase-title { color: var(--ink); }
+  .phase-items {
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .phase-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    color: var(--ink-light);
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .phase-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--ink-dim);
+    flex-shrink: 0;
+  }
+  .phase-card.current .phase-dot { background: var(--gold); }
+
+  /* ── HIDDEN / FILTER ── */
+  .module-card.hidden { display: none; }
+  .track.all-hidden { display: none; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 60px 0;
+    font-style: italic;
+    color: var(--ink-light);
+    font-size: 16px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--rule);
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink-mid);
+  }
+  .footer-brand em { font-style: italic; color: var(--gold); font-weight: 400; }
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    color: var(--ink-dim);
+    text-align: right;
+    line-height: 1.9;
+    text-transform: uppercase;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--ink-dim); border-radius: 2px; }
+
+  @media (max-width: 700px) {
+    nav, .hero, .stats-bar, .filter-bar, .main, footer { padding-left: 20px; padding-right: 20px; }
+    .nav-links { display: none; }
+    .stats-bar { flex-wrap: wrap; gap: 20px; }
+    .stat { border-right: none; margin-right: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="28" height="28" rx="2" fill="#c9a84c" fill-opacity="0.12"/>
+      <path d="M7 21L14 7L21 21" stroke="#c9a84c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9.5 16.5H18.5" stroke="#c9a84c" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="nav-brand">Refrakt <em>Studios</em></div>
+    </div>
+    <div class="nav-pill">Curriculum Map</div>
+  </div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#track-A">Assets</a></li>
+      <li><a href="#track-B">Analysis</a></li>
+      <li><a href="#track-C">Execution</a></li>
+      <li><a href="#track-D">Tools</a></li>
+      <li><a href="#phases">Phases</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Master Curriculum · April 2026 · Murphy + O'Neil Framework</div>
+  <h1>The Full<br><em>Roadmap.</em></h1>
+  <p class="hero-sub">Every module, every tool, every gap — mapped across 7 tracks and 5 phases. From ₹1L starting capital to systematic, independent market operation.</p>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat">
+    <div class="stat-num green" id="statDone">—</div>
+    <div class="stat-label">Modules Done</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num gold" id="statActive">—</div>
+    <div class="stat-label">In Progress</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="statPending" style="color:var(--ink-light)">—</div>
+    <div class="stat-label">Pending</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num blue" id="statLive">—</div>
+    <div class="stat-label">Tools Live</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" style="color:var(--ink-mid)">7</div>
+    <div class="stat-label">Tracks</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num gold">₹1L</div>
+    <div class="stat-label">Capital Base</div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">Filter ·</span>
+  <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+  <button class="filter-btn" onclick="setFilter('done',this)">Done</button>
+  <button class="filter-btn" onclick="setFilter('active',this)">Active</button>
+  <button class="filter-btn" onclick="setFilter('next',this)">Next Up</button>
+  <button class="filter-btn" onclick="setFilter('pending',this)">Pending</button>
+  <button class="filter-btn" onclick="setFilter('live',this)">Tools Live</button>
+  <div class="search-wrap">
+    <input type="text" class="search-input" id="searchInput" placeholder="Search modules..." oninput="applyFilters()">
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="main">
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="emptyState">No modules match your filter.</div>
+
+</div>
+
+<!-- PHASE TIMELINE -->
+<div class="main">
+  <div class="phase-section" id="phases">
+    <div class="phase-eyebrow">Priority Phase Sequence</div>
+    <div class="phases">
+
+      <div class="phase-card current">
+        <div class="phase-label">Phase 1 · Current</div>
+        <div class="phase-title">The Detour Ends</div>
+        <div class="phase-items">
+          <div class="phase-item"><div class="phase-dot"></div>Options quiz</div>
+          <div class="phase-item"><div class="phase-dot"></div>Futures deep-dive</div>
+          <div class="phase-item"><div class="phase-dot"></div>Commodities</div>
+          <div class="phase-item"><div class="phase-dot"></div>Intermarket Analysis</div>
+          <div class="phase-item"><div class="phase-dot"></div>MACD (B5)</div>
+          <div class="phase-item"><div class="phase-dot"></div>Chart Patterns</div>
+          <div class="phase-item"><div class="phase-dot"></div>FA Layer</div>
+        </div>
+        <div class="phase-num">1</div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-label">Phase 2</div>
+        <div class="phase-title">Execution Layer</div>
+        <div class="phase-items">
+          <div class="phase-item"><div class="phase-dot"></div>Options strategies (live)</div>
+          <div class="phase-item"><div class="phase-dot"></div>Futures mechanics</div>
+          <div class="phase-item"><div class="phase-dot"></div>Position size calc (D1)</div>
+          <div class="phase-item"><div class="phase-dot"></div>Trade journal (C5)</div>
+        </div>
+        <div class="phase-num">2</div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-label">Phase 3</div>
+        <div class="phase-title">Portfolio Architecture</div>
+        <div class="phase-items">
+          <div class="phase-item"><div class="phase-dot"></div>Portfolio construction</div>
+          <div class="phase-item"><div class="phase-dot"></div>Tax architecture (full)</div>
+          <div class="phase-item"><div class="phase-dot"></div>Capital allocation framework</div>
+        </div>
+        <div class="phase-num">3</div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-label">Phase 4</div>
+        <div class="phase-title">Market Overlay</div>
+        <div class="phase-items">
+          <div class="phase-item"><div class="phase-dot"></div>Bonds-equity relationship</div>
+          <div class="phase-item"><div class="phase-dot"></div>Sector rotation</div>
+          <div class="phase-item"><div class="phase-dot"></div>Commodity/currency overlay</div>
+        </div>
+        <div class="phase-num">4</div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-label">Phase 5</div>
+        <div class="phase-title">Mind & Cycles</div>
+        <div class="phase-items">
+          <div class="phase-item"><div class="phase-dot"></div>Behavioural finance</div>
+          <div class="phase-item"><div class="phase-dot"></div>Market cycles (Marks/Dalio)</div>
+          <div class="phase-item"><div class="phase-dot"></div>Van Tharp psychology</div>
+        </div>
+        <div class="phase-num">5</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Refrakt <em>Studios</em></div>
+  <div class="footer-note">
+    Bibles: Murphy · O'Neil &nbsp;|&nbsp; Platform: Zerodha Kite · TradingView<br>
+    Capital: ₹1L · Tax Slab: 30% &nbsp;|&nbsp; Generated April 2026
+  </div>
+</footer>
+
+<script>
+const TRACKS = [
+  {
+    code: 'A',
+    label: 'Asset Classes',
+    color: '#4a86c8',
+    description: 'The instruments you will trade and invest in.',
+    modules: [
+      { id:'A1', name:'Equities', status:'active', note:'Live capital deployed on Zerodha Kite. ₹60k active equity bucket.' },
+      { id:'A2', name:'Mutual Funds', status:'done', note:'Full module complete. Interactive tool built. Motilal Midcap as example.' },
+      { id:'A3', name:'Bonds', status:'active', note:'Masterclass doc read. Yield-price relationship, bond F&O covered. Deep-dive pending.' },
+      { id:'A4', name:'Futures', status:'active', note:'Masterclass doc READ. Contango, backwardation, calendar spreads covered. Deep-dive pending.' },
+      { id:'A5', name:'Options', status:'active', note:'Greeks done (Delta/Theta/Gamma/Vega), chain visual, max pain. Quiz + strategies pending.' },
+      { id:'A6', name:'Commodities', status:'pending', note:'Not started. Part of the detour sequence.' },
+      { id:'A7', name:'Forex', status:'pending', note:'Not started. ₹5k currency futures planned Month 3–4.' },
+      { id:'A8', name:'Crypto', status:'done', note:'Foundation done. Bitcoin/ETH, Indian regulatory context, custody model.' },
+      { id:'A9', name:'REITs', status:'pending', note:'Not started.' },
+    ]
+  },
+  {
+    code: 'B',
+    label: 'Technical & Fundamental Analysis',
+    color: '#7f77dd',
+    description: 'How to read markets — indicators, charts, patterns, fundamentals.',
+    modules: [
+      { id:'B1',  name:'TA Foundation',           status:'done',    note:"Murphy's 3 premises: prices discount everything, prices move in trends, history repeats." },
+      { id:'B1a', name:'Dow Theory',               status:'pending', note:'Gap identified. Theory of market phases, averages must confirm.' },
+      { id:'B2',  name:'Candlestick Patterns',     status:'done',    note:'Complete. App built (V1+V2) and live on GitHub Pages portal.' },
+      { id:'B3',  name:'Chart Patterns',           status:'active',  note:'Partial. H&S, flags, triangles covered. Continuation patterns pending.' },
+      { id:'B3a', name:'Fibonacci Retracement',    status:'live',    note:'Tool built and live on portal. Elliott-Fibonacci combined tool deployed.' },
+      { id:'B4',  name:'RSI',                      status:'done',    note:'Full deep-dive. Overbought/oversold, divergence, failure swings on Nifty.' },
+      { id:'B5',  name:'MACD',                     status:'next',    note:'NEXT SCHEDULED MODULE. MACD line, signal line, histogram. Murphy Chapter locked.' },
+      { id:'B6',  name:'Volume Analysis',          status:'pending', note:'Not started. Volume precedes price — Murphy.' },
+      { id:'B6a', name:'Long-Term Charts',         status:'pending', note:'Gap identified. Monthly/weekly chart reading discipline.' },
+      { id:'B7',  name:'Moving Averages',          status:'pending', note:'Not started. 20/50/200 EMA/SMA framework.' },
+      { id:'B8',  name:'Bollinger Bands',          status:'pending', note:'Not started. Volatility envelope around moving average.' },
+      { id:'B9',  name:'Stochastic Oscillator',   status:'pending', note:'Not started.' },
+      { id:'B10', name:'Fundamental Analysis',     status:'active',  note:'6-bucket framework partial. 50–60 indicators total, top 15 prioritised. DCF pending.' },
+      { id:'B11', name:'Intermarket Analysis',     status:'pending', note:'Not started. Bonds, stocks, commodities, currencies interplay — Murphy.' },
+      { id:'B12', name:'Point & Figure Charts',    status:'pending', note:'Gap identified. Price-only charts, noise elimination.' },
+      { id:'B13', name:'Elliott Wave Theory',      status:'live',    note:'Tool live on portal. 5-wave impulse, 3-wave correction framework.' },
+      { id:'B14', name:'Time Cycles',              status:'live',    note:'Tool live on portal. Seasonal patterns, cycle identification.' },
+      { id:'B15', name:'Computers & Trading Systems', status:'pending', note:'Gap identified. System testing, optimisation, curve-fitting pitfalls.' },
+    ]
+  },
+  {
+    code: 'C',
+    label: 'Execution & Strategy',
+    color: '#3a8c5c',
+    description: 'How to actually trade — platforms, risk, sizing, strategy.',
+    modules: [
+      { id:'C1', name:'Zerodha Kite',         status:'done',   note:'Platform walkthrough complete. Order types, GTT, basket orders.' },
+      { id:'C2', name:'TradingView',           status:'done',   note:'Charting setup complete. Indicators, alerts, Nifty workspace configured.' },
+      { id:'C3', name:'Position Sizing',       status:'active', note:'Partial. 2% rule framework done. D1 calculator tool pending.' },
+      { id:'C4', name:'Risk Management',       status:'done',   note:'2% rule, R:R ratios, stop-loss discipline. Applied to ₹1L capital.' },
+      { id:'C5', name:'Trade Journal',         status:'pending', note:'Not started. Critical for pattern recognition over time.' },
+      { id:'C6', name:'Options Strategies',    status:'active', note:'Strategy doc done (spreads, straddles, strangles). Live practice pending.' },
+      { id:'C7', name:'Futures Mechanics',     status:'active', note:'Doc read. Margin, MTM, roll strategy. Live execution pending.' },
+      { id:'C8', name:'Expiry Mechanics',      status:'done',   note:'Weekly vs monthly. Theta acceleration, expiry-day behaviour, settlement.' },
+    ]
+  },
+  {
+    code: 'D',
+    label: 'Tools Built',
+    color: '#c9a84c',
+    description: 'Every tool deployed to the Refrakt GitHub Pages portal.',
+    modules: [
+      { id:'D1', name:'Position Size Calculator', status:'pending', note:'High priority. Risk-based sizing: 2% rule + Kelly. ₹1L capital base.' },
+      { id:'D2', name:'Candlestick Pattern App',  status:'live',    note:'V1 + V2 live on portal. 40+ patterns from Murphy with trade signals.' },
+      { id:'D3', name:'Master Dashboard',         status:'live',    note:'Portal hub live on GitHub Pages. Refrakt nav + gold breadcrumb system.' },
+      { id:'D7', name:'Options P&L Calculator',   status:'pending', note:'Payoff diagrams, breakeven logic, strategy builder.' },
+      { id:'D8', name:'MF Tracker',               status:'live',    note:'Interactive SIP calculator, NAV tracker, category explorer.' },
+      { id:'D9', name:'Tax Calculator',           status:'pending', note:'STCG/LTCG, F&O as business income, 30% slab applied.' },
+      { id:'D10', name:'Bonds Calculator',        status:'pending', note:'Yield-to-maturity, duration, price-yield curve.' },
+    ]
+  },
+  {
+    code: 'E',
+    label: 'Psychology & Behaviour',
+    color: '#c98a2a',
+    description: 'The hardest part — managing your own brain while trading.',
+    modules: [
+      { id:'E1', name:'Emotional Neutrality', status:'done',    note:'FOMO, revenge trading, anchoring bias. Pre-trade checklist logic.' },
+      { id:'E2', name:'Behavioural Finance',  status:'pending', note:'Not started. Kahneman, loss aversion, cognitive biases framework.' },
+      { id:'E3', name:'Van Tharp Framework',  status:'pending', note:'Not started. Position sizing as the primary variable in trading success.' },
+    ]
+  },
+  {
+    code: 'F',
+    label: 'Tax Architecture',
+    color: '#c04a4a',
+    description: 'Keeping what you make. 30% slab always factored in.',
+    modules: [
+      { id:'F1', name:'Equity Tax (STCG/LTCG)',     status:'active',  note:'Partial. STCG at 15%, LTCG at 10% above ₹1L. 30% slab embedded.' },
+      { id:'F2', name:'F&O Tax (Business Income)',  status:'pending', note:'Not started. F&O as non-speculative business income — complex filing.' },
+      { id:'F3', name:'Mutual Fund Tax',             status:'active',  note:'Partial. Equity vs debt MF tax treatment covered.' },
+      { id:'F4', name:'Bonds Tax',                  status:'active',  note:'Partial. Interest as income, capital gains on bonds.' },
+      { id:'F5', name:'Passive Income Architecture', status:'pending', note:'Not started. Refrakt Studios revenue + trading income structure.' },
+      { id:'F6', name:'Emergency Fund Setup',       status:'done',    note:'Done. ₹15k overnight fund buffer always maintained.' },
+    ]
+  },
+  {
+    code: 'G',
+    label: 'Critical Gaps',
+    color: '#6a6058',
+    description: 'Important topics identified as missing — need to be filled.',
+    modules: [
+      { id:'G1', name:'Portfolio Construction',        status:'pending', note:'Not started. Asset allocation, rebalancing, correlation management.' },
+      { id:'G2', name:'Behavioural Finance (deep)',    status:'pending', note:'Not started. Beyond E2 — systemic market irrationality.' },
+      { id:'G3', name:'Market Cycles',                 status:'pending', note:'Not started. Howard Marks + Ray Dalio cycle frameworks.' },
+      { id:'G4', name:'Full Tax Architecture',         status:'pending', note:'Not started. Integrated F1-F5 into a single tax-efficient structure.' },
+      { id:'G5', name:'Capital Allocation Framework',  status:'pending', note:'Not started. When to deploy, when to sit in cash, position limits.' },
+      { id:'G6', name:'News Catalyst Reading',         status:'pending', note:'Not started. How to interpret news-driven price action without reacting.' },
+    ]
+  },
+];
+
+const STATUS_CONFIG = {
+  done:    { label:'Done',    pillClass:'pill-done',    cardClass:'status-done' },
+  active:  { label:'Active',  pillClass:'pill-active',  cardClass:'status-active' },
+  pending: { label:'Pending', pillClass:'pill-pending', cardClass:'status-pending' },
+  next:    { label:'Next Up', pillClass:'pill-next',    cardClass:'status-next' },
+  live:    { label:'Live ✦', pillClass:'pill-live',    cardClass:'status-live' },
+};
+
+let currentFilter = 'all';
+let searchTerm = '';
+
+function buildUI() {
+  const main = document.getElementById('main');
+  // Remove existing tracks
+  main.querySelectorAll('.track').forEach(t => t.remove());
+
+  TRACKS.forEach(track => {
+    const section = document.createElement('div');
+    section.className = 'track';
+    section.id = `track-${track.code}`;
+
+    const doneCount = track.modules.filter(m => m.status === 'done' || m.status === 'live').length;
+    const pct = Math.round((doneCount / track.modules.length) * 100);
+
+    section.innerHTML = `
+      <div class="track-header">
+        <div class="track-badge" style="background:${track.color}22; color:${track.color}; border:1px solid ${track.color}44;">${track.code}-Track</div>
+        <div class="track-title">${track.label}</div>
+        <div class="track-meta">
+          ${doneCount}/${track.modules.length} done &nbsp;·&nbsp; ${pct}%
+          <div class="track-progress">
+            <div class="track-progress-bar" style="width:${pct}%; background:${track.color};"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modules-grid" id="grid-${track.code}"></div>
+    `;
+
+    main.insertBefore(section, main.querySelector('#emptyState'));
+
+    const grid = section.querySelector(`#grid-${track.code}`);
+    track.modules.forEach(mod => {
+      const s = STATUS_CONFIG[mod.status] || STATUS_CONFIG.pending;
+      const card = document.createElement('div');
+      card.className = `module-card ${s.cardClass}`;
+      card.dataset.status = mod.status;
+      card.dataset.text = `${mod.id} ${mod.name} ${mod.note}`.toLowerCase();
+      card.innerHTML = `
+        ${mod.status === 'next' ? '<div class="card-next-badge">Next Up</div>' : ''}
+        <div class="card-top">
+          <div class="card-id">${mod.id}</div>
+          <div class="card-status-pill ${s.pillClass}">${s.label}</div>
+        </div>
+        <div class="card-name">${mod.name}</div>
+        <div class="card-note">${mod.note}</div>
+      `;
+      grid.appendChild(card);
+    });
+  });
+
+  updateStats();
+}
+
+function updateStats() {
+  const all = document.querySelectorAll('.module-card');
+  document.getElementById('statDone').textContent    = [...all].filter(m => m.dataset.status === 'done').length;
+  document.getElementById('statActive').textContent  = [...all].filter(m => m.dataset.status === 'active').length;
+  document.getElementById('statPending').textContent = [...all].filter(m => m.dataset.status === 'pending' || m.dataset.status === 'next').length;
+  document.getElementById('statLive').textContent    = [...all].filter(m => m.dataset.status === 'live').length;
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+  let totalVisible = 0;
+
+  document.querySelectorAll('.track').forEach(track => {
+    const cards = track.querySelectorAll('.module-card');
+    let trackVisible = 0;
+    cards.forEach(card => {
+      const statusMatch = currentFilter === 'all' || card.dataset.status === currentFilter;
+      const searchMatch = !searchTerm || card.dataset.text.includes(searchTerm);
+      if (statusMatch && searchMatch) {
+        card.classList.remove('hidden');
+        trackVisible++;
+        totalVisible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+    track.classList.toggle('all-hidden', trackVisible === 0);
+  });
+
+  document.getElementById('emptyState').style.display = totalVisible === 0 ? 'block' : 'none';
+}
+
+buildUI();
+</script>
+</body>
+</html>

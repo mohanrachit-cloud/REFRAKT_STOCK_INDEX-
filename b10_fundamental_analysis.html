@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B10 — Fundamental Analysis | Refrakt Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF7F2;--beige:#F5F0E8;--beige2:#EDE8DF;--beige3:#E4DDD1;
+  --white:#FFFFFF;--ink:#1C1917;--ink2:#44403C;--ink3:#78716C;--ink4:#A8A29E;
+  --rule:rgba(28,25,23,0.10);
+  --gold:#C9A227;--gold2:#E3B341;--gold-bg:#F5EDDB;--gold-mid:#D9C28A;
+  --sage:#4A7C59;--sage-bg:#EBF2ED;--sage-mid:#C5DCC9;
+  --clay:#A85C3A;--clay-bg:#F5EAE4;--clay-mid:#E0BAA8;
+  --slate:#3B5A7A;--slate-bg:#E7EEF5;--slate-mid:#AFC4D6;
+  --plum:#6B4580;--plum-bg:#EFE8F5;--plum-mid:#C9ADDA;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.7;}
+
+nav{background:var(--beige);border-bottom:1px solid var(--rule);padding:12px 40px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;}
+.logo-wrap{display:flex;align-items:center;gap:8px;}
+.logo-text{font-family:'DM Mono',monospace;font-weight:500;font-size:13px;color:var(--ink);letter-spacing:.12em;text-transform:uppercase;}
+.bc-sep{color:var(--ink4);font-size:13px;}
+.bc-pill{font-family:'DM Mono',monospace;font-size:11px;background:var(--gold-bg);border:1px solid var(--gold-mid);color:var(--gold);padding:3px 10px;border-radius:20px;text-decoration:none;}
+.bc-current{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink4);}
+
+.hero{padding:64px 40px 48px;border-bottom:1px solid var(--rule);}
+.chapter-tag{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.chapter-tag::before{content:'';display:inline-block;width:24px;height:1px;background:var(--gold);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,64px);font-weight:900;color:var(--ink);line-height:1.06;letter-spacing:-.02em;}
+.hero h1 em{color:var(--gold2);font-style:italic;}
+.hero-sub{font-weight:300;font-size:15px;color:var(--ink3);max-width:560px;line-height:1.8;margin:16px 0 28px;}
+.toc-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.toc-pill{font-family:'DM Mono',monospace;font-size:11px;padding:4px 12px;border-radius:20px;border:1px solid var(--rule);color:var(--ink4);text-decoration:none;background:var(--white);transition:all .15s;}
+.toc-pill:hover{border-color:var(--gold-mid);color:var(--gold);background:var(--gold-bg);}
+
+.progress-strip{background:var(--beige);border-bottom:1px solid var(--rule);padding:14px 40px;display:flex;align-items:center;gap:16px;}
+.progress-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.prog-track{flex:1;height:3px;background:var(--beige3);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width .3s ease;}
+.prog-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);min-width:36px;text-align:right;}
+
+.main{max-width:920px;margin:0 auto;padding:52px 40px 80px;}
+.section{margin-bottom:68px;animation:fadeUp .4s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+.track-bar{background:var(--ink);padding:12px 20px;border-radius:6px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.track-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);}
+.track-title{font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;color:var(--cream);text-transform:uppercase;letter-spacing:.08em;}
+
+.callout{border-left:3px solid var(--gold-mid);background:var(--gold-bg);padding:14px 18px;border-radius:0 6px 6px 0;font-size:14px;color:var(--ink2);line-height:1.7;margin:20px 0;font-weight:300;}
+.callout strong{color:var(--ink);font-weight:600;}
+.callout-sage{border-left-color:var(--sage-mid);background:var(--sage-bg);}
+.callout-clay{border-left-color:var(--clay-mid);background:var(--clay-bg);}
+.callout-slate{border-left-color:var(--slate-mid);background:var(--slate-bg);}
+
+/* METRIC CARDS */
+.metric-card{background:var(--white);border:1px solid var(--rule);border-radius:8px;margin-bottom:16px;overflow:hidden;transition:border-color .15s;}
+.metric-card:hover{border-color:var(--beige3);}
+.mc-header{padding:18px 22px 14px;border-bottom:1px solid var(--rule);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.mc-left{flex:1;}
+.mc-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);letter-spacing:1px;margin-bottom:5px;}
+.mc-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.25;}
+.mc-formula{font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);background:var(--gold-bg);border:1px solid var(--gold-mid);border-radius:4px;padding:3px 10px;display:inline-block;}
+.mc-badges{display:flex;flex-direction:column;gap:5px;align-items:flex-end;}
+.mc-bench{font-family:'DM Mono',monospace;font-size:10px;padding:2px 9px;border-radius:3px;white-space:nowrap;letter-spacing:.3px;}
+.bench-g{background:var(--sage-bg);color:var(--sage);border:1px solid var(--sage-mid);}
+.bench-r{background:var(--clay-bg);color:var(--clay);border:1px solid var(--clay-mid);}
+.bench-a{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-mid);}
+.mc-body{padding:18px 22px;}
+.mc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
+@media(max-width:700px){.mc-grid{grid-template-columns:1fr;}}
+.mc-block label{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:6px;}
+.mc-block p{font-size:13px;color:var(--ink2);line-height:1.65;font-weight:300;}
+.analogy{color:var(--plum)!important;font-style:italic;}
+.example{color:var(--sage)!important;}
+.redflag{background:var(--clay-bg);border:1px solid var(--clay-mid);border-radius:6px;padding:10px 14px;margin-top:14px;font-size:13px;color:var(--ink2);display:flex;gap:8px;align-items:flex-start;font-weight:300;}
+.redflag::before{content:'⚠️';flex-shrink:0;}
+
+/* SCREENER TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0;}
+th{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);letter-spacing:1px;text-transform:uppercase;padding:10px 14px;border-bottom:1px solid var(--rule);text-align:left;background:var(--beige);}
+td{padding:10px 14px;border-bottom:1px solid var(--rule);color:var(--ink2);vertical-align:top;font-weight:300;}
+tr:hover td{background:var(--cream);}
+.tag{font-family:'DM Mono',monospace;font-size:10px;padding:2px 8px;border-radius:3px;letter-spacing:.3px;}
+.tag-g{background:var(--sage-bg);color:var(--sage);border:1px solid var(--sage-mid);}
+.tag-a{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-mid);}
+.tag-r{background:var(--clay-bg);color:var(--clay);border:1px solid var(--clay-mid);}
+
+/* CALCULATOR */
+.calc-widget{background:var(--white);border:1px solid var(--rule);border-radius:8px;padding:26px;margin-bottom:16px;}
+.calc-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;margin-bottom:18px;color:var(--ink);}
+.calc-subtitle{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;display:block;}
+.calc-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:16px;}
+.calc-field label{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;}
+.calc-field input{width:100%;background:var(--cream);border:1px solid var(--rule);border-radius:6px;padding:8px 12px;color:var(--ink);font-family:'DM Mono',monospace;font-size:13px;outline:none;transition:border-color .15s;}
+.calc-field input:focus{border-color:var(--gold-mid);}
+.calc-btn{background:var(--ink);color:var(--cream);font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;padding:10px 24px;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s;}
+.calc-btn:hover{opacity:.8;}
+.calc-result{margin-top:16px;padding:16px;background:var(--beige);border-radius:6px;display:none;}
+.calc-result.show{display:block;}
+.result-val{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1;}
+.result-label{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink4);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.result-verdict{font-size:13px;padding:8px 12px;border-radius:4px;font-weight:300;line-height:1.6;}
+
+/* QUIZ */
+.quiz-block{background:var(--white);border:1px solid var(--rule);border-radius:8px;padding:28px;}
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.quiz-badge{font-family:'DM Mono',monospace;font-size:10px;background:var(--beige);border:1px solid var(--rule);color:var(--ink4);padding:3px 10px;border-radius:20px;letter-spacing:1px;}
+.quiz-title-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);}
+.quiz-q{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--rule);}
+.quiz-q:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.quiz-q-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;}
+.quiz-q-text{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:14px;line-height:1.4;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:560px){.quiz-options{grid-template-columns:1fr;}}
+.quiz-opt{padding:10px 14px;border:1px solid var(--rule);border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:10px;transition:all .15s;background:var(--cream);color:var(--ink2);font-weight:300;}
+.quiz-opt:hover{border-color:var(--beige3);background:var(--beige);}
+.quiz-opt.correct{border-color:var(--sage-mid);background:var(--sage-bg);color:var(--sage);}
+.quiz-opt.wrong{border-color:var(--clay-mid);background:var(--clay-bg);color:var(--clay);}
+.opt-letter{font-family:'DM Mono',monospace;font-size:10px;background:var(--beige);border:1px solid var(--rule);border-radius:3px;padding:1px 6px;flex-shrink:0;color:var(--ink4);}
+.quiz-explanation{display:none;font-size:13px;color:var(--ink3);line-height:1.65;margin-top:10px;padding:10px 14px;background:var(--beige);border-radius:6px;font-weight:300;}
+.quiz-explanation.show{display:block;}
+
+footer{border-top:1px solid var(--rule);padding:24px 40px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink4);}
+footer a{color:var(--gold);text-decoration:none;}
+@media(max-width:640px){.hero{padding:40px 20px 36px;}.main{padding:36px 20px 60px;}nav{padding:12px 20px;}.mc-badges{align-items:flex-start;}.progress-strip{padding:14px 20px;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-wrap">
+    <svg width="22" height="22" viewBox="0 0 28 28" fill="none"><polygon points="14,2 26,24 2,24" fill="none" stroke="#C9A227" stroke-width="1.5"/><polygon points="14,8 22,22 6,22" fill="rgba(201,162,39,0.15)" stroke="#C9A227" stroke-width="1"/></svg>
+    <span class="logo-text">Refrakt</span>
+  </div>
+  <span class="bc-sep">›</span>
+  <a href="fa_index.html" class="bc-pill">← FA Hub</a>
+  <span class="bc-sep">›</span>
+  <span class="bc-current">B10 · Fundamental Analysis</span>
+</nav>
+
+<div class="hero">
+  <div class="chapter-tag">B10 · Fundamental Analysis · Top 15 Metrics</div>
+  <h1>The Numbers Behind<br>Every Great <em>Stock Pick.</em></h1>
+  <p class="hero-sub">Six buckets. Fifteen metrics. Every one with a formula, an Indian example, and a red-flag threshold. FA is not about Excel models — it's about knowing when a stock is genuinely cheap vs dangerously cheap.</p>
+  <div class="toc-pills">
+    <a class="toc-pill" href="#s1">📐 Valuation</a>
+    <a class="toc-pill" href="#s2">💰 Profitability</a>
+    <a class="toc-pill" href="#s3">🏗 Quality</a>
+    <a class="toc-pill" href="#s4">📈 Growth</a>
+    <a class="toc-pill" href="#s5">💧 Cash Flow</a>
+    <a class="toc-pill" href="#s6">🇮🇳 India Layer</a>
+    <a class="toc-pill" href="#s7">🔢 Calculator</a>
+    <a class="toc-pill" href="#quiz">📝 Quiz</a>
+  </div>
+</div>
+
+<div class="progress-strip">
+  <span class="progress-label">Module Progress</span>
+  <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+  <span class="prog-pct" id="progPct">0%</span>
+</div>
+
+<div class="main">
+
+<!-- BUCKET 1 -->
+<div class="section" id="s1">
+  <div class="track-bar"><span class="track-label">Bucket 01</span><span class="track-title">Valuation Ratios — Is the Stock Cheap or Expensive?</span></div>
+  <div class="callout"><strong>The Valuation Trap:</strong> P/E of 10 is not automatically cheap. P/E of 40 is not automatically expensive. Compare always vs sector median, historical average, and growth rate (PEG). Context is everything.</div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 01 of 15</div><div class="mc-title">P/E Ratio — Price to Earnings</div><div class="mc-formula">P/E = Market Price per Share ÷ EPS</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">NSE Large Cap: 20–25x fair</span><span class="mc-bench bench-r">Danger: &gt;60x without growth</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>How many rupees you're paying for every ₹1 of profit the company earns. P/E of 25 = you're paying ₹25 for ₹1 of annual earnings. The market's price tag on profitability.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Buying a chai stall earning ₹1L/year. Someone asks ₹25L for it — that's P/E 25. Fair? Depends entirely on whether earnings are growing or shrinking.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Infosys: P/E 22–28x (steady IT). Zomato: 300x+ when loss-making — pure hope premium. Nifty 50 historical average: ~20x. Sector context is non-negotiable.</p></div>
+      </div>
+      <div class="redflag">P/E much higher than sector peers without proportional growth = priced for perfection. Any earnings miss triggers brutal corrections. Negative P/E = loss-making company.</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 02 of 15</div><div class="mc-title">P/B Ratio — Price to Book Value</div><div class="mc-formula">P/B = Market Price ÷ Book Value per Share</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Below 1.5x = undervalued watch</span><span class="mc-bench bench-r">Above 5x needs ROE justification</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>Book Value = Assets minus Liabilities = liquidation value today. P/B tells you the premium the market pays over what the company is worth if it shut down and sold everything.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">You own a flat worth ₹50L (book value). Someone offers ₹1.5Cr (P/B = 3). They're betting on the location's future, not today's value. Same logic applies to stocks.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">HDFC Bank P/B ~3.5x — premium justified by consistent 16%+ ROE. SBI at P/B ~1.2x — cheaper but lower quality. P/B &lt;1 can mean value trap, not always a bargain.</p></div>
+      </div>
+      <div class="redflag">P/B below 1 is NOT automatically a buy. High NPAs in PSU banks inflate book value artificially. Always pair P/B with asset quality checks.</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 03 of 15</div><div class="mc-title">PEG Ratio — The Growth-Adjusted P/E</div><div class="mc-formula">PEG = P/E ÷ Earnings Growth Rate (%)</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">PEG &lt;1 = potentially undervalued</span><span class="mc-bench bench-a">PEG 1–1.5 = fairly valued</span><span class="mc-bench bench-r">PEG &gt;2 = expensive for growth</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>P/E tells you price. PEG adds growth to the equation. P/E 30 with 30% growth = PEG 1 (fair). P/E 30 with 10% growth = PEG 3 (expensive). Same P/E, opposite conclusions.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Two auto-rickshaw drivers earning ₹500/day. One static. One learning app-based driving and doubling annually. Would you pay the same for both businesses? PEG captures this difference.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Midcap IT: P/E 35, earnings growing 40% = PEG 0.87 → potentially cheap. TCS: P/E 28, growing 8% = PEG 3.5 → expensive relative to growth despite lower absolute P/E.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BUCKET 2 -->
+<div class="section" id="s2">
+  <div class="track-bar"><span class="track-label">Bucket 02</span><span class="track-title">Profitability — How Efficiently Does It Make Money?</span></div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 04 of 15</div><div class="mc-title">ROE — Return on Equity</div><div class="mc-formula">ROE = Net Profit ÷ Shareholders' Equity × 100</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Good: &gt;15% consistently</span><span class="mc-bench bench-a">Exceptional: &gt;25%</span><span class="mc-bench bench-r">Poor: below 10%</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>For every ₹100 of shareholder money in the business, how many rupees of profit did it generate? ROE 20% = ₹20 profit on ₹100 equity. Measures management efficiency with your capital.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">You invest ₹1L in a biryani shop earning ₹20k = ROE 20%. Your friend's shop earns ₹8k on ₹1L = ROE 8%. Same capital deployed, very different returns. Every investor picks the first.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Asian Paints: ROE consistently 25%+ over a decade. That's exceptional compounding of shareholder wealth. PSU banks with ROE 6–8% barely cover their cost of equity.</p></div>
+      </div>
+      <div class="redflag">High ROE through excessive debt is a trap. Always check D/E alongside ROE. A company borrowing heavily to inflate ROE collapses when interest rates rise. Use DuPont: ROE = Net Margin × Asset Turnover × Leverage.</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 05 of 15</div><div class="mc-title">ROCE — Return on Capital Employed</div><div class="mc-formula">ROCE = EBIT ÷ Capital Employed × 100</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Good: &gt;15%, ideally &gt;WACC</span><span class="mc-bench bench-r">ROCE &lt; WACC = destroying value</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>Includes BOTH debt and equity capital (unlike ROE which only covers equity). Capital Employed = Total Assets − Current Liabilities. Better for capital-intensive businesses: steel, cement, telecom.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Factory using ₹50L own money + ₹50L bank loan = ₹1Cr capital employed. Earns ₹15L EBIT = ROCE 15%. This measures returns on ALL capital, not just your share of it.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Titan Company: ROCE ~35%+ — efficient, low asset intensity. Tata Steel: ROCE swings from 8% to 25% with commodity cycles. Cyclical companies always show volatile ROCE.</p></div>
+      </div>
+      <div class="redflag">ROCE &lt; cost of borrowing (WACC ~8–10% in India) = company destroying wealth with every rupee invested. No growth rate justifies this for sustained periods.</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 06 of 15</div><div class="mc-title">Operating Profit Margin (EBITDA Margin)</div><div class="mc-formula">OPM = EBITDA ÷ Revenue × 100</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">IT/Pharma: 20–35% healthy</span><span class="mc-bench bench-a">FMCG: 15–25% normal</span><span class="mc-bench bench-r">Retail: 3–8% typical</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>Of every ₹100 revenue, how much survives after operating costs but before interest and taxes. Measures core business efficiency without financing decisions distorting the picture.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Cloud kitchen earns ₹1L revenue, costs ₹70k running it — EBITDA margin 30%. Another earns ₹2L but costs ₹1.9L — only 5% margin. Bigger revenue, far worse business underneath.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">HCL Technologies: ~25% EBITDA margin (asset-light IT). Reliance Retail: ~6% (volume-driven). Never compare margins across sectors — it's meaningless without context.</p></div>
+      </div>
+      <div class="redflag">Margin compression over consecutive quarters even as revenue grows = rising input costs or pricing pressure. This precedes earnings downgrades. Watch closely into results season.</div>
+    </div>
+  </div>
+</div>
+
+<!-- BUCKET 3 -->
+<div class="section" id="s3">
+  <div class="track-bar"><span class="track-label">Bucket 03</span><span class="track-title">Business Quality — Can It Survive a Bad Year?</span></div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 07 of 15</div><div class="mc-title">Debt to Equity Ratio</div><div class="mc-formula">D/E = Total Debt ÷ Shareholders' Equity</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Ideal: &lt;0.5 most sectors</span><span class="mc-bench bench-a">Tolerable: &lt;1 capital-intensive</span><span class="mc-bench bench-r">Danger: &gt;2 non-infra</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>For every ₹1 of shareholder equity, how many rupees has the company borrowed? D/E 0.5 = ₹50 debt per ₹100 equity. High D/E amplifies profits in good times AND losses in bad times equally.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Flat bought for ₹1Cr — ₹30L own, ₹70L loan. D/E = 2.3. Property rises 20% = you made 67% on your capital. It falls 20% = you lost 67%. Debt is a lever — it cuts both ways.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Bajaj Finance: D/E ~5 — but it's an NBFC, lending IS its business. Nestle India: near-zero debt. Never compare D/E across sectors. Banks and NBFCs are structural exceptions.</p></div>
+      </div>
+      <div class="redflag">Rising D/E + falling ROCE simultaneously = dangerous. The company borrows more but generates less return. This is how IL&FS, DHFL, and Jet Airways spiralled before collapse.</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 08 of 15</div><div class="mc-title">Interest Coverage Ratio</div><div class="mc-formula">ICR = EBIT ÷ Interest Expense</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Safe: &gt;3x</span><span class="mc-bench bench-a">Watch: 1.5–3x</span><span class="mc-bench bench-r">Distress: &lt;1.5x</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>How many times can operating profit cover the interest bill? ICR 3 = earns 3x what it owes in interest. Measures survival capacity in a downturn — not just growth potential.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Salary ₹1L, EMIs ₹33k = ICR 3. Comfortable. Salary ₹1L, EMIs ₹90k = ICR 1.1. One missed bonus and you default. Companies work identically. One bad quarter and it's margin call time.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Reliance Industries ICR ~8–10x: fortress balance sheet. Vodafone Idea: ICR below 1 for extended periods — why it's been a debt trap destroying equity value relentlessly.</p></div>
+      </div>
+      <div class="redflag">ICR declining consistently over 4–6 quarters even with revenue growth = interest costs eating the business alive. Often precedes credit rating downgrades and stock crashes.</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 09 of 15</div><div class="mc-title">Promoter Holding & Pledging</div><div class="mc-formula">BSE/NSE → Shareholding Pattern → Quarterly</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Ideal: &gt;50% held, 0% pledged</span><span class="mc-bench bench-r">Danger: pledging &gt;20% of holding</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>Promoters are founders/major owners. High holding = founders believe in the business. Pledging = promoter uses own shares as loan collateral. If stock falls, lender force-sells shares — crash accelerates. Cascading collapse.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Restaurant owner pledges his restaurant as collateral. Business dips, bank seizes the property. News of seizure scares customers away. Pledging = a doom loop waiting for the trigger event.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Zee Entertainment: heavy promoter pledging caused a 70%+ crash in 2019. DHFL: promoters pledged heavily before collapse. Bajaj group: near-zero pledging, decades of consistent compounding.</p></div>
+      </div>
+      <div class="redflag">Promoter holding declining quarter-on-quarter is a silent exit signal. They know the business better than anyone. Consistent selling into price strength is an alarm bell — not a buying opportunity.</div>
+    </div>
+  </div>
+</div>
+
+<!-- BUCKET 4 -->
+<div class="section" id="s4">
+  <div class="track-bar"><span class="track-label">Bucket 04</span><span class="track-title">Growth Metrics — Is the Business Getting Better?</span></div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 10 of 15</div><div class="mc-title">Revenue & Earnings CAGR (3Y / 5Y)</div><div class="mc-formula">CAGR = (End Value ÷ Start Value)^(1/n) − 1</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Midcap target: &gt;15% CAGR</span><span class="mc-bench bench-a">Large cap: 10–15% respectable</span><span class="mc-bench bench-r">Below 8% barely beats inflation</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>Compound Annual Growth Rate smooths year-to-year noise into a steady annual growth rate over multiple years. Always look at 3Y AND 5Y CAGR — single-year figures mislead badly and mask cyclical distortion.</p></div>
+        <div class="mc-block"><label>Analogy — Rule of 72</label><p class="analogy">Divide 72 by CAGR to know how long it takes to double. 15% CAGR = doubles in 4.8 years. 8% = doubles in 9 years. A company at 20% CAGR doubles its top line every 3.6 years. That is compounding power made visible.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Dixon Technologies: Revenue CAGR ~45% over 5 years (electronics manufacturing). HUL: ~8% CAGR — mature and stable but slow. Markets pay very different multiples for these two trajectories.</p></div>
+      </div>
+      <div class="redflag">Revenue growing but earnings CAGR flat = margin erosion. The company grows the top line by sacrificing profitability — often a price war signal or a loss of competitive moat.</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 11 of 15</div><div class="mc-title">Earnings Consistency — O'Neil's CAN SLIM Connection</div><div class="mc-formula">Check: Quarterly EPS trend over 8–12 quarters</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">O'Neil: 25%+ EPS growth last 2 qtrs</span><span class="mc-bench bench-r">Two consecutive misses = exit signal</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>Not just how much earnings grew — how consistently. One good year and three bad years is not a compounder. You want steady, ideally accelerating EPS growth across at least 8 quarters with no major misses.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Two students. Ravi: 90, 92, 89, 93, 95 — consistent. Priya: 95, 60, 88, 45, 92 — volatile. Who gets the scholarship (premium valuation)? Ravi. Institutions buy consistency, not occasional brilliance.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Bajaj Finance: consistent 25–35% EPS growth over multiple years — commanded 8–10x P/B premium as a result. Volatile quarterly results = lower PE multiples. Simple as that. Check on Screener.in 10Y view.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BUCKET 5 -->
+<div class="section" id="s5">
+  <div class="track-bar"><span class="track-label">Bucket 05</span><span class="track-title">Cash Flow Health — The Fraud Detector</span></div>
+  <div class="callout callout-clay"><strong>The Golden Rule of FA:</strong> A company can show profit on paper through accounting adjustments. It cannot fake cash in the bank. If Net Profit rises but Operating Cash Flow falls — someone is lying. Check this before every single investment.</div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 12 of 15</div><div class="mc-title">Operating Cash Flow vs Net Profit</div><div class="mc-formula">CFO/PAT Ratio = Operating Cash Flow ÷ Net Profit</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Healthy: CFO/PAT &gt;1</span><span class="mc-bench bench-a">Acceptable: 0.7–1</span><span class="mc-bench bench-r">Danger: consistently &lt;0.5</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>Net Profit includes accruals — revenue recorded but not yet received as cash. OCF shows actual cash generated from operations. A healthy business should have OCF ≥ Net Profit consistently across years.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Contractor shows ₹10L "profit" — but ₹8L is unpaid client invoices. Actual cash received = ₹2L. OCF = ₹2L, Net Profit = ₹10L. This is either a receivables problem or outright fraud. Both are bad.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">Satyam: Net Profit rising, OCF suspicious for years before ₹7,000Cr fraud surfaced. PCJ (PC Jeweller): large receivables vs profit — stock crashed 80%. This check takes 2 minutes on Screener.in.</p></div>
+      </div>
+      <div class="redflag">Receivables growing faster than revenue = customers not paying = channel stuffing or fake sales. India's most common accounting fraud pattern. Check receivables days trend over 3–5 years every time.</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 13 of 15</div><div class="mc-title">Free Cash Flow — The Real Measure of Value</div><div class="mc-formula">FCF = Operating Cash Flow − Capital Expenditure</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Positive FCF 5+ years = quality</span><span class="mc-bench bench-a">Negative FCF OK in high-growth phase</span><span class="mc-bench bench-r">Negative FCF in mature biz = trap</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>After the business generates cash from operations AND spends what it needs to maintain/grow assets (capex), what's left over? FCF = what can be returned to shareholders or reinvested at high ROCE.</p></div>
+        <div class="mc-block"><label>Analogy</label><p class="analogy">Mango orchard earns ₹5L from fruit (OCF). Costs ₹1L to maintain the trees (capex). FCF = ₹4L. This ₹4L is the real value the orchard creates — yours to reinvest, distribute, or save.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">HUL: asset-light FMCG, consistently strong FCF — steady dividends and buybacks flow from it. Vodafone Idea: massive negative FCF for years from spectrum capex. Burning cash constantly. Equity = zero.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BUCKET 6 -->
+<div class="section" id="s6">
+  <div class="track-bar"><span class="track-label">Bucket 06</span><span class="track-title">India-Specific Layer — What Global FA Courses Miss</span></div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 14 of 15</div><div class="mc-title">Screener.in Workflow — Your FA Command Centre</div><div class="mc-formula">screener.in → Stock → Key Ratios + Cash Flow tab</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-g">Free tier covers all 15 metrics</span><span class="mc-bench bench-a">Pro ₹750/mo for custom screens</span></div>
+    </div>
+    <div class="mc-body">
+      <table>
+        <tr><th>What You Need</th><th>Where to Find It</th><th>Time</th></tr>
+        <tr><td>P/E, P/B, ROE, ROCE</td><td>Stock page → Key Ratios (top section)</td><td><span class="tag tag-g">2 min</span></td></tr>
+        <tr><td>Revenue + Earnings CAGR</td><td>10-year Financial Data → Sales, Net Profit columns</td><td><span class="tag tag-g">2 min</span></td></tr>
+        <tr><td>Debt/Equity, ICR</td><td>Key Ratios → Balance Sheet section</td><td><span class="tag tag-g">1 min</span></td></tr>
+        <tr><td>OCF vs Net Profit</td><td>Cash Flow tab → CFO vs PAT comparison</td><td><span class="tag tag-a">3 min</span></td></tr>
+        <tr><td>Promoter Holding trend</td><td>Shareholding tab → quarterly promoter % chart</td><td><span class="tag tag-g">2 min</span></td></tr>
+        <tr><td>Pledging %</td><td>Shareholding → Pledged column under promoter data</td><td><span class="tag tag-r">CHECK FIRST</span></td></tr>
+        <tr><td>Custom Screen (all 15 at once)</td><td>Screener → Custom Screen → add ratio filters</td><td><span class="tag tag-a">10 min setup</span></td></tr>
+      </table>
+      <div class="callout callout-slate" style="margin-top:16px;"><strong>Rachit's 10-Minute FA Checklist:</strong> ROE &gt;15% ✓ → ROCE &gt;15% ✓ → D/E &lt;1 ✓ → OCF/PAT &gt;0.7 ✓ → Promoter pledging &lt;10% ✓ → Revenue CAGR &gt;12% ✓. All 6 pass → go deeper. 2+ fail → skip. NSE has 5,000 other stocks.</div>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="mc-header">
+      <div class="mc-left"><div class="mc-num">METRIC 15 of 15</div><div class="mc-title">Tax-Adjusted Return — Your 30% Reality Check</div><div class="mc-formula">Post-Tax Return = Gross Return × (1 − Tax Rate)</div></div>
+      <div class="mc-badges"><span class="mc-bench bench-r">STCG &lt;12 months: 20% tax</span><span class="mc-bench bench-a">LTCG &gt;12 months: 12.5% above ₹1.25L</span></div>
+    </div>
+    <div class="mc-body">
+      <div class="mc-grid">
+        <div class="mc-block"><label>Definition</label><p>Your gross return is not your real return. STCG (&lt;12 months) = 20% flat. LTCG (&gt;12 months) = 12.5% on gains above ₹1.25L/year. Factor this into every hold/sell decision.</p></div>
+        <div class="mc-block"><label>Analogy — The Divide by 1.1 Trick</label><p class="analogy">Quick mental math: divide any gain by 1.1 for rough LTCG post-tax estimate. ₹1L gain → ÷1.1 → ~₹91k real gain. For STCG: divide by 1.25. Fast approximation for on-the-spot decisions.</p></div>
+        <div class="mc-block"><label>Indian Example</label><p class="example">18% STCG return (10 months) → post-tax = 14.4%. 15% LTCG (13 months) → post-tax = 13.1%. The "lower return" stock nets more after tax. Holding period matters more than most investors realize.</p></div>
+      </div>
+      <div class="redflag">At 30% income slab, short-term trading tax drag is enormous. A trader making 25% gross and paying 20% STCG earns 20% net. A long-term investor making 20% gross at 12.5% LTCG earns 17.5% net. Time in market beats timing the market — and the tax code proves it mathematically.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="section" id="s7">
+  <div class="track-bar"><span class="track-label">Interactive Tool</span><span class="track-title">Quick Ratio Calculators</span></div>
+
+  <div class="calc-widget">
+    <div class="calc-title">ROE Calculator</div>
+    <span class="calc-subtitle">Metric 04 · Return on Equity</span>
+    <div class="calc-row">
+      <div class="calc-field"><label>Net Profit (₹ Cr)</label><input type="number" id="roe_p" placeholder="e.g. 500"></div>
+      <div class="calc-field"><label>Shareholders Equity (₹ Cr)</label><input type="number" id="roe_e" placeholder="e.g. 2000"></div>
+    </div>
+    <button class="calc-btn" onclick="calcROE()">Calculate →</button>
+    <div class="calc-result" id="roe_r">
+      <div class="result-val" id="roe_v">—</div>
+      <div class="result-label">Return on Equity</div>
+      <div class="result-verdict" id="roe_verd"></div>
+    </div>
+  </div>
+
+  <div class="calc-widget">
+    <div class="calc-title">ROCE Calculator</div>
+    <span class="calc-subtitle">Metric 05 · Return on Capital Employed</span>
+    <div class="calc-row">
+      <div class="calc-field"><label>EBIT (₹ Cr)</label><input type="number" id="rc_e" placeholder="e.g. 600"></div>
+      <div class="calc-field"><label>Total Assets (₹ Cr)</label><input type="number" id="rc_a" placeholder="e.g. 4000"></div>
+      <div class="calc-field"><label>Current Liabilities (₹ Cr)</label><input type="number" id="rc_l" placeholder="e.g. 800"></div>
+    </div>
+    <button class="calc-btn" onclick="calcROCE()">Calculate →</button>
+    <div class="calc-result" id="rc_r">
+      <div class="result-val" id="rc_v">—</div>
+      <div class="result-label">Return on Capital Employed</div>
+      <div class="result-verdict" id="rc_verd"></div>
+    </div>
+  </div>
+
+  <div class="calc-widget">
+    <div class="calc-title">Post-Tax Return Calculator</div>
+    <span class="calc-subtitle">Metric 15 · STCG vs LTCG Tax Impact</span>
+    <div class="calc-row">
+      <div class="calc-field"><label>Gross Return (%)</label><input type="number" id="tx_g" placeholder="e.g. 22"></div>
+      <div class="calc-field"><label>Holding Period (months)</label><input type="number" id="tx_m" placeholder="e.g. 8"></div>
+      <div class="calc-field"><label>Investment Amount (₹)</label><input type="number" id="tx_a" placeholder="e.g. 50000"></div>
+    </div>
+    <button class="calc-btn" onclick="calcTax()">Calculate →</button>
+    <div class="calc-result" id="tx_r">
+      <div class="result-val" id="tx_v">—</div>
+      <div class="result-label" id="tx_l">Post-Tax Net Gain</div>
+      <div class="result-verdict" id="tx_verd"></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="section" id="quiz">
+  <div class="track-bar"><span class="track-label">Knowledge Check</span><span class="track-title">B10 Final Quiz — 6 Questions</span></div>
+  <div class="quiz-block">
+    <div class="quiz-header"><span class="quiz-badge">B10 · FINAL QUIZ</span><span class="quiz-title-text">FA Fundamentals</span></div>
+
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q1 of 6 · Valuation</div>
+      <div class="quiz-q-text">A company has P/E of 45 and earnings growth of 45% YoY. Its PEG ratio is:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> 2.0 — expensive</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> 1.0 — fairly valued</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> 0.5 — undervalued</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Cannot be calculated</div>
+      </div>
+      <div class="quiz-explanation">✅ PEG = 45 ÷ 45 = 1.0. Fairly valued. PEG &lt;1 = bargain territory; &gt;2 = expensive for the growth on offer. Same P/E can mean very different things depending on the growth rate behind it.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q2 of 6 · Profitability</div>
+      <div class="quiz-q-text">Company A: ROE 28%, D/E 0.2. Company B: ROE 30%, D/E 3.5. Which is the better quality business?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Company B — higher ROE wins always</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Equal — both have strong ROE</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Company A — ROE without excessive debt is genuine</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Cannot judge without revenue data</div>
+      </div>
+      <div class="quiz-explanation">✅ Company A. High ROE through massive leverage (D/E 3.5) is fragile — one downturn and interest costs devour profits. Company A earns strong returns on mostly equity capital = sustainable competitive moat.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="d">
+      <div class="quiz-q-num">Q3 of 6 · Fraud Detection</div>
+      <div class="quiz-q-text">A company reports Net Profit growing 25% YoY but Operating Cash Flow has declined for 3 consecutive years. This most likely indicates:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Normal — profits lead cash flows</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Great — profits growing fast</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> A capex-heavy expansion phase</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Potential manipulation — receivables inflating profit</div>
+      </div>
+      <div class="quiz-explanation">✅ D. Profit growing + OCF declining = receivables piling up (sales recorded but cash not received). Classic fraud setup seen in Satyam, PCJ, and dozens of Indian small-caps. Exit immediately or at minimum investigate receivables days trend over 3–5 years.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="a">
+      <div class="quiz-q-num">Q4 of 6 · India Layer</div>
+      <div class="quiz-q-text">Promoter holding dropped from 68% to 61% over 4 consecutive quarters while stock price was rising. Most likely interpretation?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Silent exit signal — selling into price strength</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Normal — SEBI mandates promoter dilution</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Bullish — lower promoter holding = more float</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Irrelevant — only pledging matters</div>
+      </div>
+      <div class="quiz-explanation">✅ A. Promoters know the business better than anyone. Consistent selling across 4 quarters — especially into price strength — is a silent alarm. They may see growth plateauing or regulatory risks before the market does. Don't ignore this data point.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q5 of 6 · Tax</div>
+      <div class="quiz-q-text">You earn ₹80,000 profit from a stock sold after 10 months. Tax liability in India (post-July 2024)?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Zero — below ₹1.25L threshold</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> ₹16,000 — STCG at 20%</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> ₹10,000 — LTCG at 12.5%</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> ₹24,000 — 30% income tax applies</div>
+      </div>
+      <div class="quiz-explanation">✅ B. Held &lt;12 months = STCG. Tax = 20% flat. ₹80,000 × 20% = ₹16,000. The ₹1.25L exemption only applies to LTCG, not STCG. Holding period determines the tax bracket — check before every sell decision.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q6 of 6 · Integration</div>
+      <div class="quiz-q-text">FA complete — ROE 22%, D/E 0.3, OCF healthy, 18% CAGR. What is your NEXT step before buying?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Buy immediately — FA is done</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Calculate DCF and compare to market price</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Open TradingView — find the TA entry trigger</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Wait for next quarterly results</div>
+      </div>
+      <div class="quiz-explanation">✅ C. FA gave you conviction — you know WHAT to buy. TA gives you WHEN. A great company bought at a technically wrong point (overbought, at resistance, in downtrend) still causes short-term pain. Use RSI, support levels, and trend confirmation before entering. FA + TA = your actual edge.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<footer>Refrakt Studios · B10 Fundamental Analysis · Indian Equity Markets · <a href="fa_index.html">← FA Hub</a> · <a href="index.html">Portal Home</a></footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  const p=Math.round((d.scrollTop/(d.scrollHeight-d.clientHeight))*100);
+  document.getElementById('progFill').style.width=p+'%';
+  document.getElementById('progPct').textContent=p+'%';
+});
+document.querySelectorAll('.quiz-opt').forEach(o=>{
+  o.addEventListener('click',function(){
+    const q=this.closest('.quiz-q');
+    if(q.dataset.answered) return;
+    q.dataset.answered='1';
+    const c=q.dataset.correct,ch=this.dataset.val;
+    q.querySelectorAll('.quiz-opt').forEach(x=>{
+      if(x.dataset.val===c) x.classList.add('correct');
+      else if(x.dataset.val===ch&&ch!==c) x.classList.add('wrong');
+    });
+    q.querySelector('.quiz-explanation').classList.add('show');
+  });
+});
+function verdict(el,text,bg){el.textContent=text;el.style.background=bg;el.style.borderRadius='4px';el.style.padding='8px 12px';}
+function calcROE(){
+  const p=+document.getElementById('roe_p').value,e=+document.getElementById('roe_e').value;
+  if(!p||!e) return;
+  const v=((p/e)*100).toFixed(1);
+  document.getElementById('roe_v').textContent=v+'%';
+  const el=document.getElementById('roe_verd');
+  if(v>=25) verdict(el,'🟢 Exceptional — top-tier capital efficiency.',`var(--sage-bg)`);
+  else if(v>=15) verdict(el,'🟡 Good — above cost of equity. Healthy business.',`var(--gold-bg)`);
+  else if(v>=10) verdict(el,'🟠 Below average — barely covering cost of equity.',`rgba(240,136,62,.1)`);
+  else verdict(el,'🔴 Poor — likely destroying shareholder value. Dig deeper.',`var(--clay-bg)`);
+  document.getElementById('roe_r').classList.add('show');
+}
+function calcROCE(){
+  const e=+document.getElementById('rc_e').value,a=+document.getElementById('rc_a').value,l=+document.getElementById('rc_l').value;
+  if(!e||!a) return;
+  const ce=a-l,v=((e/ce)*100).toFixed(1);
+  document.getElementById('rc_v').textContent=v+'%';
+  const el=document.getElementById('rc_verd');
+  if(v>=20) verdict(el,'🟢 Strong — well above WACC (~9%). Excellent capital allocation.',`var(--sage-bg)`);
+  else if(v>=15) verdict(el,'🟡 Good — above typical WACC. Efficient management.',`var(--gold-bg)`);
+  else if(v>=10) verdict(el,'🟠 Borderline — close to WACC. Thin value creation margin.',`rgba(240,136,62,.1)`);
+  else verdict(el,'🔴 Below WACC — destroying economic value every year.',`var(--clay-bg)`);
+  document.getElementById('rc_r').classList.add('show');
+}
+function calcTax(){
+  const g=+document.getElementById('tx_g').value,m=+document.getElementById('tx_m').value,a=+document.getElementById('tx_a').value;
+  if(!g||!m||!a) return;
+  const isLT=m>=12,gain=a*(g/100);
+  let tax=isLT?Math.max(0,gain-125000)*0.125:gain*0.20;
+  const net=gain-tax,nr=((net/a)*100).toFixed(1);
+  document.getElementById('tx_v').textContent='₹'+Math.round(net).toLocaleString('en-IN');
+  document.getElementById('tx_l').textContent=`Post-tax (${isLT?'LTCG 12.5%':'STCG 20%'}) · Net return: ${nr}%`;
+  const el=document.getElementById('tx_verd');
+  const saving=Math.round(gain*0.075);
+  verdict(el,`${isLT?'📅 LTCG applies.':'⚡ STCG. Holding to 12 months saves ₹'+saving.toLocaleString('en-IN')+'.'} Tax drag: ${(g-+nr).toFixed(1)}%. Gross ${g}% → Net ${nr}%.`,isLT?`var(--sage-bg)`:`var(--clay-bg)`);
+  document.getElementById('tx_r').classList.add('show');
+}
+</script>
+</body>
+</html>

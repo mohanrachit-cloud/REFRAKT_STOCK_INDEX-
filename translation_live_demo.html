@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Left vs Right Translation — Live Candles | Refrakt</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0d1117;color:#e6edf3;font-family:'Syne',sans-serif;min-height:100vh;padding:0 0 48px;}
+
+.top-bar{background:#161b22;border-bottom:1px solid #30363d;padding:14px 28px;display:flex;align-items:center;gap:16px;}
+.logo{font-weight:800;font-size:15px;color:#e3b341;letter-spacing:1px;}
+.breadcrumb{font-family:'JetBrains Mono',monospace;font-size:11px;color:#7d8590;}
+.breadcrumb a{color:#e3b341;text-decoration:none;}
+
+.hero{padding:36px 32px 24px;border-bottom:1px solid #30363d;}
+.hero h1{font-size:clamp(24px,4vw,40px);font-weight:800;line-height:1.1;margin-bottom:10px;}
+.hero h1 span{color:#e3b341;}
+.hero p{color:#7d8590;font-size:14px;max-width:600px;line-height:1.7;}
+
+/* SCENARIO TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid #30363d;padding:0 32px;}
+.tab{padding:14px 28px;font-size:14px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;color:#7d8590;letter-spacing:.5px;}
+.tab.active-bull{color:#3fb950;border-bottom-color:#3fb950;}
+.tab.active-bear{color:#f85149;border-bottom-color:#f85149;}
+.tab:hover{color:#e6edf3;}
+
+/* MAIN LAYOUT */
+.main{padding:28px 32px;display:grid;grid-template-columns:1fr 340px;gap:24px;max-width:1200px;}
+@media(max-width:900px){.main{grid-template-columns:1fr;padding:20px 16px;}}
+
+/* CHART AREA */
+.chart-card{background:#161b22;border:1px solid #30363d;border-radius:12px;overflow:hidden;}
+.chart-header{padding:14px 20px;border-bottom:1px solid #30363d;display:flex;align-items:center;justify-content:space-between;flex-wrap:gap;}
+.chart-title{font-family:'JetBrains Mono',monospace;font-size:12px;color:#7d8590;letter-spacing:1px;text-transform:uppercase;}
+.chart-ticker{font-weight:700;font-size:16px;}
+.chart-controls{display:flex;gap:10px;align-items:center;}
+.ctrl-btn{padding:6px 16px;border-radius:6px;border:1px solid #30363d;background:#1c2128;color:#7d8590;font-size:12px;cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .2s;}
+.ctrl-btn:hover{border-color:#e3b341;color:#e3b341;}
+.ctrl-btn.playing{border-color:#3fb950;color:#3fb950;background:rgba(63,185,80,.08);}
+.ctrl-btn.paused{border-color:#f85149;color:#f85149;}
+.speed-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:#7d8590;}
+#speed-slider{width:80px;accent-color:#e3b341;}
+canvas#mainChart{display:block;width:100%;}
+
+/* LEGEND STRIP */
+.legend-strip{padding:10px 20px;border-top:1px solid #30363d;display:flex;gap:20px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#7d8590;font-family:'JetBrains Mono',monospace;}
+.legend-dot{width:10px;height:4px;border-radius:2px;}
+
+/* SIDE PANEL */
+.side-panel{display:flex;flex-direction:column;gap:16px;}
+
+.info-card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px;}
+.info-card h3{font-size:13px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:#7d8590;margin-bottom:14px;}
+
+/* SIGNAL BADGE */
+.signal-badge{border-radius:10px;padding:16px;text-align:center;margin-bottom:14px;}
+.signal-badge.bull{background:rgba(63,185,80,.1);border:1px solid #3fb950;}
+.signal-badge.bear{background:rgba(248,81,73,.1);border:1px solid #f85149;}
+.signal-badge .sb-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;margin-bottom:6px;color:#7d8590;}
+.signal-badge .sb-val{font-size:20px;font-weight:800;}
+.signal-badge.bull .sb-val{color:#3fb950;}
+.signal-badge.bear .sb-val{color:#f85149;}
+.signal-badge .sb-sub{font-size:11px;margin-top:6px;line-height:1.5;}
+.signal-badge.bull .sb-sub{color:rgba(63,185,80,.7);}
+.signal-badge.bear .sb-sub{color:rgba(248,81,73,.7);}
+
+/* PHASE METER */
+.phase-meter{margin-bottom:14px;}
+.phase-meter-label{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:#7d8590;margin-bottom:6px;}
+.phase-track{height:8px;background:#1c2128;border-radius:4px;position:relative;overflow:visible;}
+.phase-fill-rise{height:100%;border-radius:4px 0 0 4px;transition:width .1s;}
+.phase-fill-fall{position:absolute;top:0;height:100%;border-radius:0 4px 4px 0;}
+.phase-cursor{position:absolute;top:-4px;width:3px;height:16px;border-radius:2px;background:#e3b341;transform:translateX(-50%);transition:left .1s;}
+.phase-midmark{position:absolute;top:-4px;left:50%;width:1px;height:16px;background:rgba(125,133,144,.4);transform:translateX(-50%);}
+
+/* STATS */
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(48,54,61,.5);}
+.stat-row:last-child{border-bottom:none;}
+.stat-label{font-size:12px;color:#7d8590;}
+.stat-value{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+
+/* ANNOTATION BOX */
+.annotation-box{border-left:3px solid;padding:12px 14px;border-radius:0 8px 8px 0;font-size:13px;line-height:1.65;margin-top:4px;}
+.annotation-box.bull{border-left-color:#3fb950;background:rgba(63,185,80,.06);color:#e6edf3;}
+.annotation-box.bear{border-left-color:#f85149;background:rgba(248,81,73,.06);color:#e6edf3;}
+.annotation-box strong{color:#e3b341;}
+
+/* STEP CALLOUT */
+.steps{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.step{display:flex;gap:10px;align-items:flex-start;}
+.step-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.step-num.bull{background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.3);}
+.step-num.bear{background:rgba(248,81,73,.15);color:#f85149;border:1px solid rgba(248,81,73,.3);}
+.step-text{font-size:12px;color:#7d8590;line-height:1.6;padding-top:2px;}
+.step-text strong{color:#e6edf3;}
+
+/* BOTTOM EXPLAINER */
+.explainer{padding:20px 32px;max-width:1200px;}
+.explain-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+@media(max-width:700px){.explain-grid{grid-template-columns:1fr;}}
+.explain-card{background:#161b22;border-radius:10px;padding:20px;border:1px solid #30363d;}
+.explain-card h4{font-size:14px;font-weight:700;margin-bottom:10px;}
+.explain-card.bull h4{color:#3fb950;}
+.explain-card.bear h4{color:#f85149;}
+.explain-card p{font-size:13px;color:#7d8590;line-height:1.7;}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <span class="logo">REFRAKT</span>
+  <span class="breadcrumb"><a href="master_dashboard.html">← Portal</a> › Time Cycles › Translation (Live Demo)</span>
+</div>
+
+<div class="hero">
+  <h1>Left vs Right <span>Translation</span></h1>
+  <p>Watch candles printing in real time. The gold curve is the cycle drawn LIVE on top. See exactly where the crest lands — and what that tells you about the trend. Switch between bull and bear to see the difference.</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active-bull" id="tab-bull" onclick="switchScenario('bull')">&#9650; RIGHT TRANSLATION — Bull Market</div>
+  <div class="tab" id="tab-bear" onclick="switchScenario('bear')">&#9660; LEFT TRANSLATION — Bear Market</div>
+</div>
+
+<div class="main">
+
+  <!-- CHART -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">NIFTY 50 · DAILY · CYCLE OVERLAY</div>
+        <div class="chart-ticker" id="ticker-price">23,<span style="color:#3fb950">418</span></div>
+      </div>
+      <div class="chart-controls">
+        <div class="speed-wrap">
+          Speed: <input type="range" id="speed-slider" min="1" max="10" value="4">
+        </div>
+        <button class="ctrl-btn playing" id="play-btn" onclick="togglePlay()">⏸ Pause</button>
+        <button class="ctrl-btn" onclick="restartAnim()">↺ Restart</button>
+      </div>
+    </div>
+    <canvas id="mainChart" width="800" height="420"></canvas>
+    <div class="legend-strip">
+      <div class="legend-item"><div class="legend-dot" style="background:#3fb950"></div> Bullish candle</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f85149"></div> Bearish candle</div>
+      <div class="legend-item"><div class="legend-dot" style="height:2px;background:#e3b341"></div> Cycle curve</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(63,185,80,.5)"></div> Rising phase</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(248,81,73,.5)"></div> Falling phase</div>
+      <div class="legend-item"><div class="legend-dot" style="height:2px;background:rgba(125,133,144,.4);border-top:1px dashed #555"></div> Midpoint</div>
+    </div>
+  </div>
+
+  <!-- SIDE PANEL -->
+  <div class="side-panel">
+
+    <!-- Signal -->
+    <div class="info-card">
+      <h3>Live Signal</h3>
+      <div class="signal-badge bull" id="signal-badge">
+        <div class="sb-label">TRANSLATION TYPE</div>
+        <div class="sb-val" id="sig-type">RIGHT</div>
+        <div class="sb-sub" id="sig-sub">Crest in second half → BULLISH TREND</div>
+      </div>
+      <div class="phase-meter">
+        <div class="phase-meter-label">
+          <span>TROUGH 1</span>
+          <span id="phase-pct">0%</span>
+          <span>TROUGH 2</span>
+        </div>
+        <div class="phase-track" id="phase-track">
+          <div class="phase-fill-rise" id="phase-rise" style="width:0%;background:#3fb950;opacity:.4;"></div>
+          <div class="phase-fill-fall" id="phase-fall" style="left:0%;width:0%;background:#f85149;opacity:.4;"></div>
+          <div class="phase-midmark"></div>
+          <div class="phase-cursor" id="phase-cursor" style="left:0%;"></div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Cycle progress</span>
+        <span class="stat-value" id="stat-progress" style="color:#e3b341">0%</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Current phase</span>
+        <span class="stat-value" id="stat-phase" style="color:#3fb950">RISING ↑</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Crest position</span>
+        <span class="stat-value" id="stat-crest">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Time rising</span>
+        <span class="stat-value" id="stat-rise" style="color:#3fb950">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Time falling</span>
+        <span class="stat-value" id="stat-fall" style="color:#f85149">—</span>
+      </div>
+    </div>
+
+    <!-- What to do -->
+    <div class="info-card">
+      <h3>What This Means</h3>
+      <div class="annotation-box bull" id="annotation-box">
+        <strong>Right Translation → Trade with the bulls.</strong> The crest falls in the second half, meaning price spends most of the cycle RISING. The underlying trend is UP. Buy dips near the trough. Hold through minor pullbacks.
+      </div>
+      <div class="steps" id="steps-box">
+        <div class="step">
+          <div class="step-num bull">1</div>
+          <div class="step-text"><strong>Identify cycle trough.</strong> Look for a prior swing low — that's your trough. Count forward from there.</div>
+        </div>
+        <div class="step">
+          <div class="step-num bull">2</div>
+          <div class="step-text"><strong>Mark the midpoint.</strong> Half the cycle period. If 20 weeks, mark week 10 with a vertical line.</div>
+        </div>
+        <div class="step">
+          <div class="step-num bull">3</div>
+          <div class="step-text"><strong>Note where the peak lands.</strong> After the peak forms — was it BEFORE or AFTER the midpoint?</div>
+        </div>
+        <div class="step">
+          <div class="step-num bull">4</div>
+          <div class="step-text"><strong>After peak = Right Translation = Bull.</strong> Buy the next pullback. The next trough will likely be HIGHER than the last.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- EXPLAINER CARDS -->
+<div class="explainer">
+  <div style="font-size:13px;color:#7d8590;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Key Concept</div>
+  <div style="font-size:18px;font-weight:700;">Why Does Translation Reveal the Trend?</div>
+
+  <div class="explain-grid">
+    <div class="explain-card bull">
+      <h4>&#9650; Right Translation (Bull Market)</h4>
+      <p>
+        The crest (price peak) falls in the <strong style="color:#e6edf3">second half</strong> of the cycle. 
+        This means price spent most of its time RISING — the bulls have control. 
+        Each successive crest tends to be <strong style="color:#e6edf3">higher than the last</strong> (higher highs). 
+        Each successive trough is also higher (higher lows). 
+        This IS the definition of an uptrend — you just confirmed it through cycle analysis.
+        <br><br>
+        <strong style="color:#3fb950">Trading rule:</strong> In right-translated cycles, buying pullbacks (near the trough) and holding into the second half works consistently. The descent is short and shallow. Don't bail early.
+      </p>
+    </div>
+    <div class="explain-card bear">
+      <h4>&#9660; Left Translation (Bear Market)</h4>
+      <p>
+        The crest falls in the <strong style="color:#e6edf3">first half</strong> of the cycle. 
+        Price peaked early and is spending most of its time FALLING. 
+        Each successive crest tends to be <strong style="color:#e6edf3">lower than the last</strong> (lower highs). 
+        The market is weak — bulls can barely push price up for even half the cycle before sellers take over.
+        <br><br>
+        <strong style="color:#f85149">Trading rule:</strong> In left-translated cycles, avoid buying rallies. The crest arrives quickly, then the long descent begins. Sell into strength. Each bounce is a selling opportunity, not a buying one.
+      </p>
+    </div>
+  </div>
+
+  <div style="background:#161b22;border-radius:10px;padding:20px;border:1px solid #30363d;margin-top:16px;">
+    <div style="font-size:14px;font-weight:700;color:#e3b341;margin-bottom:10px;">&#9654; Murphy's Exact Words on Translation</div>
+    <p style="font-size:13px;color:#7d8590;line-height:1.7;">
+      "In a bull market, cycles show right translation — the peaks occur in the right half of the cycle. 
+      In a bear market, the cycles show left translation — peaks tend to occur in the left half... 
+      As long as the peaks are occurring in the right half of the cycle, the bull trend is intact. 
+      <strong style="color:#e6edf3">When peaks begin to shift to the left half of the cycle, it is a sign that the bull market may be ending.</strong> 
+      This is one of the most valuable tools for determining whether the trend has changed."
+    </p>
+    <div style="margin-top:14px;padding:12px 16px;background:#1c2128;border-radius:8px;font-size:13px;color:#7d8590;line-height:1.6;">
+      <strong style="color:#e3b341">Nifty Application:</strong> 
+      Nifty's 4-year cycle (Kitchin): peaks in 2007 (right), 2010 (right), 2015 (right), 2021 (extreme right — 90% of cycle was rising). 
+      The 2022 correction showed left translation as FII outflows began — crest appeared by March 2022, then 9 months of decline to the June 2022 low. 
+      That shift to left translation was the early warning Murphy describes.
+    </div>
+  </div>
+</div>
+
+<script>
+// =============================================
+// CONFIGURATION
+// =============================================
+const CANDLE_COUNT = 60;
+const CHART_PAD_L = 48, CHART_PAD_R = 24, CHART_PAD_T = 32, CHART_PAD_B = 40;
+let scenario = 'bull'; // 'bull' or 'bear'
+let animFrame = 0;
+let animRunning = true;
+let animId = null;
+let lastTime = 0;
+let speed = 4;
+
+// Scenario configs
+const SCENARIOS = {
+  bull: {
+    crestFrac: 0.72,    // crest at 72% of cycle = right translation
+    basePrice: 23000,
+    amplitude: 1200,    // total price swing
+    trend: 0.8,         // positive trend per candle
+    volatility: 80,
+    cyclePeriod: CANDLE_COUNT,
+    label: 'NIFTY 50 · BULL CYCLE',
+    color: '#3fb950',
+  },
+  bear: {
+    crestFrac: 0.28,    // crest at 28% = left translation
+    basePrice: 24000,
+    amplitude: 1800,
+    trend: -0.6,
+    volatility: 100,
+    cyclePeriod: CANDLE_COUNT,
+    label: 'NIFTY 50 · BEAR CYCLE',
+    color: '#f85149',
+  }
+};
+
+// =============================================
+// DATA GENERATION
+// =============================================
+function generateCandles(cfg, count) {
+  const candles = [];
+  let price = cfg.basePrice;
+  const period = cfg.cyclePeriod;
+  const crestFrac = cfg.crestFrac;
+
+  for (let i = 0; i < count; i++) {
+    const t = i / period; // 0 to 1 (and beyond for multi-cycle)
+    const cycleT = t % 1; // position within current cycle
+
+    // Skewed sine: peaks at crestFrac
+    let cycleY;
+    if (cycleT <= crestFrac) {
+      cycleY = Math.sin((cycleT / crestFrac) * Math.PI * 0.5); // 0→1
+    } else {
+      cycleY = Math.cos(((cycleT - crestFrac) / (1 - crestFrac)) * Math.PI * 0.5); // 1→0
+    }
+
+    // Price = baseline + cycle + trend + noise
+    const cyclePrice = cfg.amplitude * cycleY;
+    const trendPrice = cfg.trend * i * 4;
+    const noise = (Math.random() - 0.5) * cfg.volatility * 2;
+
+    const midPrice = cfg.basePrice + cyclePrice + trendPrice + noise;
+
+    // OHLC generation
+    const bodySize = 20 + Math.random() * 60;
+    const isUp = Math.random() > 0.45 + (cycleY > 0.5 ? 0.1 : -0.1);
+    const open = midPrice + (Math.random() - 0.5) * bodySize * 0.5;
+    const close = open + (isUp ? 1 : -1) * (bodySize * (0.3 + Math.random() * 0.7));
+    const wickRange = bodySize * (0.5 + Math.random());
+    const high = Math.max(open, close) + wickRange * Math.random();
+    const low = Math.min(open, close) - wickRange * Math.random();
+
+    candles.push({ open, high, low, close, isUp, cycleY });
+  }
+  return candles;
+}
+
+// =============================================
+// DRAWING
+// =============================================
+const canvas = document.getElementById('mainChart');
+const ctx = canvas.getContext('2d');
+
+function drawChart(candles, revealCount, cfg) {
+  const W = canvas.width, H = canvas.height;
+  const plotW = W - CHART_PAD_L - CHART_PAD_R;
+  const plotH = H - CHART_PAD_T - CHART_PAD_B;
+  const plotX = CHART_PAD_L, plotY = CHART_PAD_T;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#161b22';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(48,54,61,0.5)';
+  ctx.lineWidth = 0.5;
+  for (let gx = 0; gx <= 10; gx++) {
+    const x = plotX + gx * plotW / 10;
+    ctx.beginPath(); ctx.moveTo(x, plotY); ctx.lineTo(x, plotY + plotH); ctx.stroke();
+  }
+  for (let gy = 0; gy <= 5; gy++) {
+    const y = plotY + gy * plotH / 5;
+    ctx.beginPath(); ctx.moveTo(plotX, y); ctx.lineTo(plotX + plotW, y); ctx.stroke();
+  }
+
+  if (revealCount < 2) return;
+
+  // Price range from visible candles
+  const visible = candles.slice(0, revealCount);
+  const minP = Math.min(...visible.map(c => c.low)) - 50;
+  const maxP = Math.max(...visible.map(c => c.high)) + 50;
+  const priceRange = maxP - minP;
+
+  function toY(price) {
+    return plotY + plotH - ((price - minP) / priceRange) * plotH;
+  }
+
+  const totalCandles = CANDLE_COUNT;
+  const candleW = plotW / totalCandles;
+  const bodyW = Math.max(2, candleW * 0.6);
+
+  // === CYCLE PERIOD SHADING ===
+  const cycleStartX = plotX;
+  const cycleEndX = plotX + plotW;
+  const midX = plotX + plotW * 0.5;
+  const crestX = plotX + plotW * cfg.crestFrac;
+
+  // Left half shade
+  ctx.fillStyle = 'rgba(63,185,80,0.04)';
+  ctx.fillRect(cycleStartX, plotY, midX - cycleStartX, plotH);
+  // Right half shade
+  ctx.fillStyle = 'rgba(248,81,73,0.04)';
+  ctx.fillRect(midX, plotY, cycleEndX - midX, plotH);
+
+  // Midpoint line
+  ctx.strokeStyle = 'rgba(125,133,144,0.4)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(midX, plotY); ctx.lineTo(midX, plotY + plotH); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(125,133,144,0.7)';
+  ctx.font = '10px JetBrains Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText('50% MIDPOINT', midX, plotY + 12);
+
+  // Half labels in shaded zones (faint)
+  ctx.fillStyle = 'rgba(63,185,80,0.25)';
+  ctx.font = 'bold 13px Syne';
+  ctx.textAlign = 'center';
+  ctx.fillText('FIRST HALF', plotX + (midX - plotX) / 2, plotY + plotH * 0.85);
+  ctx.fillStyle = 'rgba(248,81,73,0.25)';
+  ctx.fillText('SECOND HALF', midX + (cycleEndX - midX) / 2, plotY + plotH * 0.85);
+
+  // === CANDLES ===
+  visible.forEach((c, i) => {
+    const x = plotX + (i + 0.5) * candleW;
+    const openY = toY(c.open);
+    const closeY = toY(c.close);
+    const highY = toY(c.high);
+    const lowY = toY(c.low);
+    const color = c.isUp ? '#3fb950' : '#f85149';
+    const bodyTop = Math.min(openY, closeY);
+    const bodyBot = Math.max(openY, closeY);
+    const bodyH = Math.max(1, bodyBot - bodyTop);
+
+    // Wick
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, highY);
+    ctx.lineTo(x, lowY);
+    ctx.stroke();
+
+    // Body
+    ctx.fillStyle = color;
+    ctx.fillRect(x - bodyW / 2, bodyTop, bodyW, bodyH);
+  });
+
+  // === CYCLE CURVE (drawn on top of candles) ===
+  const cyclePoints = [];
+  for (let i = 0; i <= revealCount - 1; i++) {
+    const cycleT = i / (CANDLE_COUNT - 1);
+    let cycleY_norm;
+    if (cycleT <= cfg.crestFrac) {
+      cycleY_norm = Math.sin((cycleT / cfg.crestFrac) * Math.PI * 0.5);
+    } else {
+      cycleY_norm = Math.cos(((cycleT - cfg.crestFrac) / (1 - cfg.crestFrac)) * Math.PI * 0.5);
+    }
+
+    // Map cycle to price space (scale to visible price range)
+    const cyclePrice = minP + cycleY_norm * priceRange * 0.75 + priceRange * 0.1;
+    const cx = plotX + (i + 0.5) * candleW;
+    const cy2 = toY(cyclePrice);
+    cyclePoints.push({ cx, cy2, cycleT, cycleY_norm });
+  }
+
+  // Draw two-colored curve (green rising, red falling)
+  if (cyclePoints.length > 1) {
+    // Rising segment (0 → crest)
+    ctx.beginPath();
+    let startedRise = false;
+    for (const p of cyclePoints) {
+      if (p.cycleT <= cfg.crestFrac) {
+        if (!startedRise) { ctx.moveTo(p.cx, p.cy2); startedRise = true; }
+        else ctx.lineTo(p.cx, p.cy2);
+      }
+    }
+    ctx.strokeStyle = '#3fb950';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Falling segment (crest → end)
+    ctx.beginPath();
+    let startedFall = false;
+    let prevFallP = null;
+    for (const p of cyclePoints) {
+      if (p.cycleT >= cfg.crestFrac) {
+        if (!startedFall) {
+          // Connect from last rise point
+          const lastRise = cyclePoints.filter(x => x.cycleT <= cfg.crestFrac).pop();
+          if (lastRise) ctx.moveTo(lastRise.cx, lastRise.cy2);
+          else ctx.moveTo(p.cx, p.cy2);
+          startedFall = true;
+        }
+        ctx.lineTo(p.cx, p.cy2);
+      }
+    }
+    ctx.strokeStyle = '#f85149';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+  }
+
+  // === CREST MARKER (only when reached) ===
+  const crestIdx = Math.round(cfg.crestFrac * (CANDLE_COUNT - 1));
+  if (revealCount > crestIdx + 1) {
+    const crestP = cyclePoints[crestIdx];
+    if (crestP) {
+      // Vertical dashed line at crest
+      ctx.strokeStyle = 'rgba(227,179,65,0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      ctx.moveTo(crestP.cx, plotY);
+      ctx.lineTo(crestP.cx, plotY + plotH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Crest dot
+      ctx.beginPath();
+      ctx.arc(crestP.cx, crestP.cy2, 8, 0, Math.PI * 2);
+      ctx.fillStyle = '#e3b341';
+      ctx.fill();
+      ctx.strokeStyle = '#0d1117';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Crest label
+      ctx.fillStyle = '#e3b341';
+      ctx.font = 'bold 12px Syne';
+      ctx.textAlign = 'center';
+      ctx.fillText('CREST', crestP.cx, plotY + 26);
+
+      // Arrow showing which half it's in
+      const isRight = cfg.crestFrac > 0.5;
+      const halfLabel = isRight ? '← IN SECOND HALF (RIGHT ✓)' : 'IN FIRST HALF (LEFT ✗) →';
+      const halfColor = isRight ? '#3fb950' : '#f85149';
+      ctx.fillStyle = halfColor;
+      ctx.font = 'bold 11px JetBrains Mono';
+      ctx.textAlign = isRight ? 'right' : 'left';
+      const labelX = isRight ? crestP.cx - 12 : crestP.cx + 12;
+      ctx.fillText(halfLabel, labelX, plotY + 28);
+    }
+  }
+
+  // === TROUGH MARKERS ===
+  // Trough 1 (start)
+  const t1P = cyclePoints[0];
+  if (t1P) {
+    ctx.beginPath();
+    ctx.arc(t1P.cx, t1P.cy2, 7, 0, Math.PI * 2);
+    ctx.fillStyle = '#f85149';
+    ctx.fill();
+    ctx.strokeStyle = '#0d1117';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = '#f85149';
+    ctx.font = '10px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText('TROUGH 1', t1P.cx, plotY + plotH - 6);
+  }
+
+  // Trough 2 (end, only when almost done)
+  if (revealCount >= CANDLE_COUNT - 2) {
+    const t2P = cyclePoints[cyclePoints.length - 1];
+    if (t2P) {
+      ctx.beginPath();
+      ctx.arc(t2P.cx, t2P.cy2, 7, 0, Math.PI * 2);
+      ctx.fillStyle = '#f85149';
+      ctx.fill();
+      ctx.strokeStyle = '#0d1117';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = '#f85149';
+      ctx.font = '10px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('TROUGH 2', t2P.cx, plotY + plotH - 6);
+
+      // Period arrow
+      ctx.strokeStyle = 'rgba(56,139,253,0.6)';
+      ctx.lineWidth = 1;
+      const arrY = plotY + plotH - 22;
+      ctx.beginPath();
+      ctx.moveTo(t1P.cx, arrY);
+      ctx.lineTo(t2P.cx, arrY);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(56,139,253,0.8)';
+      ctx.font = '10px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('ONE FULL CYCLE PERIOD', (t1P.cx + t2P.cx) / 2, arrY - 5);
+    }
+  }
+
+  // === LIVE CANDLE CURSOR ===
+  if (revealCount > 0 && revealCount < CANDLE_COUNT) {
+    const lastC = visible[visible.length - 1];
+    const curX = plotX + (revealCount - 0.5) * candleW;
+    ctx.strokeStyle = 'rgba(227,179,65,0.3)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(curX + candleW, plotY);
+    ctx.lineTo(curX + candleW, plotY + plotH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Price label
+    const currentPrice = Math.round(lastC.close);
+    const priceColor = lastC.isUp ? '#3fb950' : '#f85149';
+    ctx.fillStyle = priceColor;
+    ctx.font = 'bold 12px JetBrains Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText(currentPrice.toLocaleString(), plotX - 4, toY(lastC.close) + 4);
+
+    // Update ticker
+    document.getElementById('ticker-price').innerHTML =
+      `${Math.floor(currentPrice / 1000)},<span style="color:${priceColor}">${String(currentPrice % 1000).padStart(3, '0')}</span>`;
+  }
+
+  // Y-axis labels
+  ctx.fillStyle = '#7d8590';
+  ctx.font = '10px JetBrains Mono';
+  ctx.textAlign = 'right';
+  const priceStep = Math.round(priceRange / 5 / 100) * 100;
+  for (let i = 0; i <= 5; i++) {
+    const p = minP + i * (priceRange / 5);
+    const y = toY(p);
+    ctx.fillText(Math.round(p).toLocaleString(), plotX - 4, y + 4);
+  }
+}
+
+// =============================================
+// ANIMATION LOOP
+// =============================================
+let currentCandles = [];
+let currentCfg = SCENARIOS.bull;
+
+function initScenario(sc) {
+  scenario = sc;
+  currentCfg = SCENARIOS[sc];
+  currentCandles = generateCandles(currentCfg, CANDLE_COUNT);
+  animFrame = 0;
+  updateSidePanel(0);
+}
+
+function animate(ts) {
+  if (!animRunning) return;
+  const spd = parseInt(document.getElementById('speed-slider').value);
+  const interval = Math.max(20, 200 - spd * 18);
+
+  if (ts - lastTime > interval) {
+    animFrame = Math.min(animFrame + 1, CANDLE_COUNT);
+    lastTime = ts;
+    drawChart(currentCandles, animFrame, currentCfg);
+    updateSidePanel(animFrame / CANDLE_COUNT);
+  }
+
+  if (animFrame < CANDLE_COUNT) {
+    animId = requestAnimationFrame(animate);
+  } else {
+    // Loop after pause
+    setTimeout(() => {
+      if (animRunning) {
+        animFrame = 0;
+        animId = requestAnimationFrame(animate);
+      }
+    }, 3000);
+  }
+}
+
+function updateSidePanel(progress) {
+  const cfg = currentCfg;
+  const pct = Math.round(progress * 100);
+  const pastCrest = progress > cfg.crestFrac;
+  const phase = !pastCrest ? 'RISING' : 'FALLING';
+  const phaseColor = !pastCrest ? '#3fb950' : '#f85149';
+  const sc = scenario;
+
+  // Phase meter
+  document.getElementById('phase-pct').textContent = pct + '%';
+  document.getElementById('phase-cursor').style.left = pct + '%';
+
+  if (!pastCrest) {
+    document.getElementById('phase-rise').style.width = pct + '%';
+    document.getElementById('phase-fall').style.width = '0%';
+    document.getElementById('phase-fall').style.left = '100%';
+  } else {
+    document.getElementById('phase-rise').style.width = Math.round(cfg.crestFrac * 100) + '%';
+    const fallLeft = Math.round(cfg.crestFrac * 100);
+    const fallWidth = pct - fallLeft;
+    document.getElementById('phase-fall').style.left = fallLeft + '%';
+    document.getElementById('phase-fall').style.width = fallWidth + '%';
+  }
+
+  document.getElementById('stat-progress').textContent = pct + '%';
+  document.getElementById('stat-phase').textContent = phase + (phase === 'RISING' ? ' ↑' : ' ↓');
+  document.getElementById('stat-phase').style.color = phaseColor;
+
+  if (pastCrest) {
+    const crestPct = Math.round(cfg.crestFrac * 100);
+    const isRight = cfg.crestFrac > 0.5;
+    document.getElementById('stat-crest').textContent = crestPct + '% of cycle';
+    document.getElementById('stat-crest').style.color = isRight ? '#3fb950' : '#f85149';
+    document.getElementById('stat-rise').textContent = crestPct + '% of cycle';
+    document.getElementById('stat-fall').textContent = (100 - crestPct) + '% of cycle';
+  } else {
+    document.getElementById('stat-crest').textContent = '— not yet —';
+    document.getElementById('stat-crest').style.color = '#7d8590';
+    document.getElementById('stat-rise').textContent = '— TBD —';
+    document.getElementById('stat-fall').textContent = '— TBD —';
+  }
+}
+
+function togglePlay() {
+  animRunning = !animRunning;
+  const btn = document.getElementById('play-btn');
+  if (animRunning) {
+    btn.textContent = '⏸ Pause';
+    btn.className = 'ctrl-btn playing';
+    animId = requestAnimationFrame(animate);
+  } else {
+    cancelAnimationFrame(animId);
+    btn.textContent = '▶ Play';
+    btn.className = 'ctrl-btn paused';
+  }
+}
+
+function restartAnim() {
+  cancelAnimationFrame(animId);
+  animFrame = 0;
+  currentCandles = generateCandles(currentCfg, CANDLE_COUNT);
+  animRunning = true;
+  document.getElementById('play-btn').textContent = '⏸ Pause';
+  document.getElementById('play-btn').className = 'ctrl-btn playing';
+  animId = requestAnimationFrame(animate);
+}
+
+function switchScenario(sc) {
+  cancelAnimationFrame(animId);
+
+  // Update tabs
+  document.getElementById('tab-bull').className = 'tab ' + (sc === 'bull' ? 'active-bull' : '');
+  document.getElementById('tab-bear').className = 'tab ' + (sc === 'bear' ? 'active-bear' : '');
+
+  // Update signal badge
+  const badge = document.getElementById('signal-badge');
+  const sigType = document.getElementById('sig-type');
+  const sigSub = document.getElementById('sig-sub');
+  const annotBox = document.getElementById('annotation-box');
+  const stepsBox = document.getElementById('steps-box');
+
+  if (sc === 'bull') {
+    badge.className = 'signal-badge bull';
+    sigType.textContent = 'RIGHT';
+    sigSub.textContent = 'Crest in second half → BULLISH TREND';
+    annotBox.className = 'annotation-box bull';
+    annotBox.innerHTML = '<strong>Right Translation → Trade with the bulls.</strong> The crest falls in the second half, meaning price spent most of the cycle RISING. Underlying trend is UP. Buy dips near the trough. Hold through minor pullbacks.';
+    stepsBox.innerHTML = `
+      <div class="step"><div class="step-num bull">1</div><div class="step-text"><strong>Identify trough.</strong> Swing low = trough 1. Count candles forward from there.</div></div>
+      <div class="step"><div class="step-num bull">2</div><div class="step-text"><strong>Mark midpoint.</strong> Half the cycle period. Draw a vertical line there.</div></div>
+      <div class="step"><div class="step-num bull">3</div><div class="step-text"><strong>Peak after midpoint?</strong> If yes → Right translation confirmed.</div></div>
+      <div class="step"><div class="step-num bull">4</div><div class="step-text"><strong>Buy the next trough.</strong> Higher lows confirm bull trend. Each dip is a buying opportunity.</div></div>`;
+  } else {
+    badge.className = 'signal-badge bear';
+    sigType.textContent = 'LEFT';
+    sigSub.textContent = 'Crest in first half → BEARISH TREND';
+    annotBox.className = 'annotation-box bear';
+    annotBox.innerHTML = '<strong>Left Translation → Sell into strength.</strong> The crest falls in the first half — price peaked early and is spending most of the cycle FALLING. Trend is DOWN. Avoid buying. Each rally is a selling opportunity.';
+    stepsBox.innerHTML = `
+      <div class="step"><div class="step-num bear">1</div><div class="step-text"><strong>Identify trough.</strong> Mark the cycle start. Watch where the subsequent peak forms.</div></div>
+      <div class="step"><div class="step-num bear">2</div><div class="step-text"><strong>Mark midpoint.</strong> If the peak arrives BEFORE this line — left translation warning.</div></div>
+      <div class="step"><div class="step-num bear">3</div><div class="step-text"><strong>Peak before midpoint?</strong> Confirmed left translation = bear cycle.</div></div>
+      <div class="step"><div class="step-num bear">4</div><div class="step-text"><strong>Sell into each rally.</strong> Lower highs confirm bear trend. Next trough likely LOWER than the last.</div></div>`;
+  }
+
+  initScenario(sc);
+  animRunning = true;
+  document.getElementById('play-btn').textContent = '⏸ Pause';
+  document.getElementById('play-btn').className = 'ctrl-btn playing';
+  animId = requestAnimationFrame(animate);
+}
+
+// =============================================
+// RESIZE HANDLING
+// =============================================
+function resizeCanvas() {
+  const wrap = canvas.parentElement;
+  const w = wrap.clientWidth;
+  canvas.width = w;
+  canvas.height = Math.round(w * 0.52);
+  drawChart(currentCandles, animFrame, currentCfg);
+}
+
+window.addEventListener('resize', () => { resizeCanvas(); });
+resizeCanvas();
+
+// =============================================
+// INIT
+// =============================================
+initScenario('bull');
+animId = requestAnimationFrame(animate);
+</script>
+</body>
+</html>
