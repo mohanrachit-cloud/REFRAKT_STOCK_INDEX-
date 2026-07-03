@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tax Calculator — Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#FAF7F2; --ink:#1C1917; --gold:#C9A227; --line:#E4DCCB;
+    --sage:#6B8F71; --clay:#B5654A; --slate:#5B6B73; --plum:#6B4C6B;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); }
+  nav { position:sticky; top:0; z-index:10; background:var(--ink); color:var(--cream); display:flex; align-items:center; justify-content:space-between; padding:13px 28px; border-bottom:1px solid var(--gold); }
+  .nav-left { display:flex; align-items:center; gap:10px; }
+  .brand { font-family:'Playfair Display',serif; font-weight:700; font-size:16px; }
+  .breadcrumb-pill { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.04em; background:rgba(201,162,39,.15); color:var(--gold); padding:6px 14px; border-radius:999px; }
+  .portal-link { color:var(--cream); font-size:12px; text-decoration:none; border:1px solid rgba(255,255,255,.25); padding:6px 12px; border-radius:4px; }
+  .portal-link:hover { border-color:var(--gold); color:var(--gold); }
+  header.page-head { background:var(--ink); color:var(--cream); padding:26px 32px; }
+  .track-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--slate); margin:0 0 6px; }
+  h1 { font-family:'Playfair Display',serif; font-weight:700; font-size:28px; margin:0; }
+  main { max-width:920px; margin:0 auto; padding:40px 24px 80px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:4px; padding:28px 28px 8px; margin-bottom:24px; transition:box-shadow .15s; }
+  .card:hover { box-shadow:0 4px 14px rgba(0,0,0,.06); }
+  label { display:block; font-size:13px; font-weight:500; margin-bottom:6px; margin-top:18px; }
+  select, input { width:100%; padding:10px 12px; font-family:'DM Mono',monospace; font-size:15px; border:1px solid var(--line); border-radius:3px; background:var(--cream); color:var(--ink); }
+  button { margin:24px 0 20px; width:100%; padding:13px; background:var(--ink); color:var(--cream); border:none; border-radius:3px; font-weight:500; font-size:14px; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; }
+  button:hover { background:#000; }
+  .result { border-top:1px solid var(--line); padding-top:20px; margin-top:4px; }
+  .row { display:flex; justify-content:space-between; padding:8px 0; font-family:'DM Mono',monospace; font-size:14px; }
+  .row span:first-child { color:#666; }
+  .row.big { font-size:20px; font-weight:500; color:var(--clay); }
+  .notice { font-size:12px; background:#FBF1DD; border:1px solid var(--gold); border-radius:3px; padding:10px 14px; margin-top:20px; color:#6b5a14; }
+  footer { text-align:center; font-size:12px; color:#999; padding:28px 24px 40px; font-family:'DM Mono',monospace; border-top:1px solid var(--line); margin-top:20px; }
+  footer a { color:var(--gold); text-decoration:none; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12Z" stroke="#C9A227" stroke-width="1.5"/><path d="M12 2V22" stroke="#C9A227" stroke-width="1"/></svg>
+    <span class="brand">Refrakt</span>
+  </div>
+  <div class="breadcrumb-pill">Finance-OS / 02_Tools_Live / Tax Calculator</div>
+  <a class="portal-link" href="../master-dashboard/index.html">Portal Home</a>
+</nav>
+<header class="page-head">
+  <p class="track-label">D9 · Tool · F-Track</p>
+  <h1>Tax Calculator</h1>
+</header>
+<main>
+  <div class="card">
+    <label for="incomeType">Income Type</label>
+    <select id="incomeType" onchange="toggleFields()">
+      <option value="stcg">Equity — Short-Term Capital Gains (STCG)</option>
+      <option value="ltcg">Equity — Long-Term Capital Gains (LTCG)</option>
+      <option value="fno">F&O — Non-Speculative Business Income</option>
+    </select>
+
+    <label for="gain">Gain Amount (₹)</label>
+    <input type="number" id="gain" value="0">
+
+    <div id="slabField" style="display:none">
+      <label for="slabRate">Applicable Slab Rate (%)</label>
+      <input type="number" id="slabRate" value="30">
+    </div>
+
+    <button onclick="calc()">Estimate Tax</button>
+
+    <div class="result" id="result" style="display:none">
+      <div class="row" id="exemptRow"><span>Exemption Applied</span><span id="exempt">—</span></div>
+      <div class="row"><span>Taxable Amount</span><span id="taxable">—</span></div>
+      <div class="row"><span>Rate Applied</span><span id="rate">—</span></div>
+      <div class="row big"><span>Estimated Tax</span><span id="tax">—</span></div>
+    </div>
+
+    <div class="notice">Rates reflect post-Budget 2024 equity capital gains rules (STCG 20%, LTCG 12.5% above ₹1.25L exemption) as understood in 2026. F&O is taxed at your applicable slab rate as non-speculative business income — set it manually above. Per the curriculum brief, every calc here defaults to assuming the 30% slab. Tax law changes; verify current rates before filing.</div>
+  </div>
+</main>
+<footer>Dummy template — does not account for surcharge, cess, or set-off of losses. For estimation only. · <a href="../master-dashboard/index.html">← Portal Home</a></footer>
+<script>
+function toggleFields() {
+  const type = document.getElementById('incomeType').value;
+  document.getElementById('slabField').style.display = type === 'fno' ? 'block' : 'none';
+}
+function calc() {
+  const type = document.getElementById('incomeType').value;
+  const gain = parseFloat(document.getElementById('gain').value) || 0;
+  let taxable = gain, rate = 0, exempt = 0, rateLabel = '';
+
+  if (type === 'stcg') {
+    rate = 0.20;
+    rateLabel = '20% (STCG equity)';
+  } else if (type === 'ltcg') {
+    exempt = Math.min(gain, 125000);
+    taxable = Math.max(gain - 125000, 0);
+    rate = 0.125;
+    rateLabel = '12.5% (LTCG equity, above ₹1.25L exemption)';
+  } else {
+    rate = (parseFloat(document.getElementById('slabRate').value) || 30) / 100;
+    rateLabel = (rate * 100).toFixed(1) + '% (slab — F&O business income)';
+  }
+
+  const tax = taxable * rate;
+
+  document.getElementById('exemptRow').style.display = type === 'ltcg' ? 'flex' : 'none';
+  document.getElementById('exempt').textContent = '₹' + exempt.toFixed(2);
+  document.getElementById('taxable').textContent = '₹' + taxable.toFixed(2);
+  document.getElementById('rate').textContent = rateLabel;
+  document.getElementById('tax').textContent = '₹' + tax.toFixed(2);
+  document.getElementById('result').style.display = 'block';
+}
+</script>
+</body>
+</html>

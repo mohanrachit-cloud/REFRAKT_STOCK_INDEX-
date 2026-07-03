@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Equity Core Mechanics — Rachit 2026 | Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark:#141413; --light:#faf9f5; --midgray:#b0aea5; --lightgray:#e8e6dc;
+  --orange:#d97757; --orange-dark:#b3603f; --orange-bg:#f5e6df;
+  --blue:#6a9bcc; --blue-dark:#4a7396; --blue-bg:#e9eef4;
+  --green:#788c5d; --green-dark:#5f7049; --green-bg:#eef1e8;
+  --white:#ffffff;
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--light); font-family:'Lora',Georgia,serif; color:var(--dark); line-height:1.68; }
+nav { position:sticky; top:0; z-index:20; background:var(--dark); color:var(--light); display:flex; align-items:center; justify-content:space-between; padding:13px 28px; border-bottom:1px solid var(--orange); }
+.nav-left { display:flex; align-items:center; gap:10px; }
+.nav-left svg { display:block; }
+.brand { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:16px; letter-spacing:.01em; }
+.breadcrumb-pill { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.03em; background:rgba(217,119,87,.18); color:var(--orange); padding:6px 14px; border-radius:999px; }
+.portal-link { color:var(--light); font-size:12px; text-decoration:none; border:1px solid rgba(250,249,245,.25); padding:6px 12px; border-radius:4px; font-family:'Poppins',Arial,sans-serif; }
+.portal-link:hover { border-color:var(--orange); color:var(--orange); }
+header.page-head { background:var(--dark); color:var(--light); padding:34px 32px 28px; }
+.track-label { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); margin:0 0 8px; font-weight:600; }
+h1 { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:32px; margin:0 0 8px; color:var(--light); }
+.page-sub { font-family:'Lora',Georgia,serif; font-size:14px; color:var(--lightgray); max-width:640px; margin:0 0 18px; }
+.meta-row { display:flex; gap:10px; flex-wrap:wrap; }
+.meta-chip { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.02em; color:var(--orange); border:1px solid rgba(217,119,87,.4); padding:5px 11px; border-radius:999px; }
+.suite-nav { max-width:920px; margin:0 auto; padding:16px 24px 0; display:flex; gap:8px; flex-wrap:wrap; }
+.suite-pill { font-family:'Poppins',Arial,sans-serif; font-size:11.5px; text-decoration:none; padding:7px 13px; border-radius:999px; border:1px solid var(--lightgray); color:var(--dark); background:var(--white); }
+.suite-pill.active { background:var(--dark); color:var(--light); border-color:var(--dark); }
+.suite-pill:hover:not(.active) { border-color:var(--orange); color:var(--orange-dark); }
+main { max-width:920px; margin:0 auto; padding:28px 24px 90px; }
+.toc-card { background:var(--white); border:1px solid var(--lightgray); border-radius:4px; padding:22px 26px; margin-bottom:36px; }
+.toc-card h2 { margin:0 0 12px; font-size:13px; text-transform:uppercase; letter-spacing:.12em; font-family:'Poppins',Arial,sans-serif; color:var(--blue-dark); border:none; font-weight:600; }
+.toc-list { columns:2; column-gap:28px; margin:0; padding:0; list-style:none; }
+.toc-list li { break-inside:avoid; margin-bottom:7px; }
+.toc-list a { color:var(--dark); text-decoration:none; font-size:13.5px; font-family:'Lora',Georgia,serif; }
+.toc-list a:hover { color:var(--orange-dark); }
+.toc-list .n { font-family:'Poppins',Arial,sans-serif; color:var(--orange); margin-right:6px; font-size:11px; }
+.part-banner { background:var(--dark); color:var(--light); padding:12px 20px; margin:52px 0 22px; display:flex; align-items:baseline; gap:14px; border-radius:3px; scroll-margin-top:70px; }
+.part-banner:first-of-type { margin-top:0; }
+.part-num { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); white-space:nowrap; font-weight:600; }
+.part-title { font-family:'Poppins',Arial,sans-serif; font-size:17px; font-weight:600; }
+h2 { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:19px; margin:30px 0 12px; color:var(--dark); border-bottom:1px solid var(--lightgray); padding-bottom:8px; }
+h3.inline-head { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:15.5px; margin:22px 0 8px; color:var(--dark); }
+p { font-size:14.5px; margin:0 0 12px; font-family:'Lora',Georgia,serif; }
+p.tagline { font-style:italic; color:var(--midgray); font-size:13px; text-align:center; margin:8px 0; }
+strong { font-weight:700; }
+.callout { border-left:3px solid var(--orange); background:var(--orange-bg); padding:16px 20px; margin:16px 0 22px; border-radius:0 4px 4px 0; }
+.callout p { font-size:13.5px; margin-bottom:10px; font-family:'Lora',Georgia,serif; }
+.callout p:last-child { margin-bottom:0; }
+.callout-lead, .callout p > strong:first-child { color:var(--dark); }
+.callout-warn { border-left-color:var(--orange-dark); background:var(--orange-bg); }
+.callout-rule { border-left-color:var(--green); background:var(--green-bg); }
+.callout-note { border-left-color:var(--blue); background:var(--blue-bg); }
+.table-wrap { overflow-x:auto; margin:16px 0 24px; border:1px solid var(--lightgray); border-radius:4px; }
+table { border-collapse:collapse; width:100%; font-size:13px; }
+thead tr { background:var(--dark); color:var(--light); }
+th { text-align:left; padding:10px 14px; font-family:'Poppins',Arial,sans-serif; font-weight:500; font-size:11.5px; letter-spacing:.02em; text-transform:uppercase; white-space:nowrap; }
+th strong { font-weight:500; }
+td { padding:9px 14px; border-top:1px solid var(--lightgray); vertical-align:top; font-size:13px; font-family:'Lora',Georgia,serif; }
+tbody tr:nth-child(even) { background:var(--lightgray); }
+td strong { font-family:'Poppins',Arial,sans-serif; font-weight:500; color:var(--dark); }
+footer { text-align:center; font-size:12px; color:var(--midgray); padding:28px 24px 40px; font-family:'Poppins',Arial,sans-serif; border-top:1px solid var(--lightgray); margin-top:20px; }
+footer a { color:var(--orange); text-decoration:none; }
+footer .cross-links { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:12px; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12Z" stroke="#d97757" stroke-width="1.5"/><path d="M12 2V22" stroke="#d97757" stroke-width="1"/></svg>
+    <span class="brand">Refrakt</span>
+  </div>
+  <div class="breadcrumb-pill">Finance-OS / 01_Curriculum / A1 · Equities</div>
+  <a class="portal-link" href="../../../02_Tools_Live/master-dashboard/index.html">Portal Home</a>
+</nav>
+<header class="page-head">
+  <p class="track-label">A1 · Asset Classes · Equities</p>
+  <h1>Equity — Core Mechanics</h1>
+  <p class="page-sub">What owning a share actually means, how shares are born (IPO) and traded (secondary market), order types, T+1 settlement, circuit limits, and market timings.</p>
+  <div class="meta-row"><span class="meta-chip">₹60,000 Equity Allocation</span><span class="meta-chip">Platform: Zerodha Kite</span><span class="meta-chip">Settlement: T+1</span><span class="meta-chip">2026 Edition</span></div>
+</header>
+<div class="suite-nav"><a class="suite-pill" href="a1_equities_index.html">Equity Hub</a><a class="suite-pill active" href="a1_core_mechanics.html">Core Mechanics</a><a class="suite-pill" href="a1_market_structure.html">Market Structure</a><a class="suite-pill" href="a1_corporate_actions.html">Corporate Actions</a></div>
+<main>
+  <div class="toc-card">
+    <h2>Contents</h2>
+    <ul class="toc-list"><li><a href="#part1"><span class="n">01</span>What Owning a Share Actually Means</a></li></ul>
+  </div>
+  <div class="part-banner" id="part1"><span class="part-num">Part 01</span><span class="part-title">What Owning a Share Actually Means</span></div>
+<h2>1.1  The Bakery Analogy — Ownership in One Story</h2>
+<div class="callout callout-note"><p><strong>THE BAKERY ANALOGY:</strong> A bakery is worth ₹10,00,000 and is cut into 1,00,000 equal slices — each slice is a SHARE, priced at ₹10. Buy 100 slices for ₹1,000 and you own 0.1% of the bakery — every oven, every recipe, every rupee of future profit, proportionally. The bakery doesn't need to know your name or ask permission to keep baking. Your slice is a permanent, transferable claim on the business, not a loan to it. Own a bond and the bakery owes you money. Own a share and you ARE the bakery, fractionally, forever, until you sell your slice to someone else.</p></div>
+<p>Equity is ownership. Not a promise, not a loan, not a coupon — a proportional legal claim on a company's assets and future profits. This is the single fact every other concept in this track builds on.</p>
+<h2>1.2  Two Rights That Come With the Slice</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>Voting Rights</strong></th><th><strong>Economic Rights</strong></th></tr></thead><tbody><tr><td>One vote per share at the AGM (Annual General Meeting) — director appointments, mergers, major decisions</td><td>Dividends when declared, plus the right to the company's growing net worth reflected in share price</td></tr><tr><td>Retail holders rarely swing outcomes alone — promoters typically hold 40-70%+</td><td>This is where 99% of retail return actually comes from</td></tr><tr><td>Still matters: low promoter holding + high public float = your vote has more relative weight</td><td>Capital gains on sale is the other major return channel</td></tr></tbody></table></div>
+<h2>1.3  Primary Market — Where Shares Are Born</h2>
+<div class="callout callout-warn"><p><strong>THE IPO PIPELINE:</strong> A private company wants public capital. It files a DRHP (Draft Red Herring Prospectus) with SEBI — a full disclosure document: financials, risk factors, how the money will be used. SEBI reviews, then the company opens a BOOK BUILDING window: a PRICE BAND (e.g. ₹95-₹100) is set, and investors bid within that band across 3-5 days. Retail category gets a reserved allocation (currently ₹2L max per retail application, UPI-based blocked-amount mechanism — money isn't debited until allotment). If oversubscribed, allotment is via lottery for retail. Shares LIST on NSE/BSE on a fixed date — first-day trading discovers the market price, which can open well above or below the issue price.</p></div>
+<p><strong>Application:</strong> Rachit applies for an IPO at the ₹100 upper price band, requests 100 shares (₹10,000 blocked via UPI mandate, not debited). If allotted, shares land in his demat account on listing day; if not, the block releases automatically — no manual refund chase needed like the pre-2016 system.</p>
+<h2>1.4  Secondary Market — Where Shares Trade After Listing</h2>
+<p>Once listed, shares change hands between investors on the exchange — the company itself is no longer party to the transaction. NSE and BSE are the two venues; NSE carries the deeper liquidity for nearly every large/mid-cap name.</p>
+<p>### Order Types on Zerodha Kite</p>
+<div class="table-wrap"><table><thead><tr><th><strong>Order Type</strong></th><th><strong>What It Does</strong></th><th><strong>When to Use</strong></th></tr></thead><tbody><tr><td>Market Order</td><td>Executes immediately at the best available price</td><td>Speed matters more than exact price; liquid large-caps</td></tr><tr><td>Limit Order</td><td>Executes only at your specified price or better</td><td>Price control matters; illiquid or volatile stocks</td></tr><tr><td>SL (Stop-Loss Limit)</td><td>Triggers a LIMIT order once a trigger price is hit</td><td>Precise exit price control, risk of no-fill in fast markets</td></tr><tr><td>SL-M (Stop-Loss Market)</td><td>Triggers a MARKET order once a trigger price is hit</td><td>Guaranteed exit, price control sacrificed</td></tr><tr><td>GTT (Good Till Triggered)</td><td>Standing order that persists across days until triggered or cancelled</td><td>Set-and-forget stop-loss or target without daily re-entry</td></tr></tbody></table></div>
+<div class="callout callout-rule"><p><strong>THE ORDER BOOK — BID/ASK DEPTH:</strong> Every stock has a live order book: BUYERS stacked on the BID side (highest price first), SELLERS stacked on the ASK/OFFER side (lowest price first). The gap between best bid and best ask = the SPREAD. Tight spread (₹0.05 on a ₹500 stock) = high liquidity, easy entry/exit. Wide spread = illiquid, your market order can "walk the book" and fill at a worse average price than you expected. Kite's 5-depth window shows the top 5 price levels on each side — always glance at it before firing a market order on anything outside the top 100 stocks by volume.</p></div>
+<h2>1.5  Settlement — T+1 and What Actually Happens After You Click Buy</h2>
+<p>India moved to T+1 rolling settlement (trade date plus 1 working day) in 2023 — among the fastest settlement cycles globally.</p>
+<div class="table-wrap"><table><thead><tr><th><strong>Day</strong></th><th><strong>What Happens</strong></th></tr></thead><tbody><tr><td>T (Trade Day)</td><td>You buy/sell. Trade is executed and recorded by the exchange.</td></tr><tr><td>T+1</td><td>Pay-in (buyer's funds, seller's shares) and pay-out (shares credited to buyer's demat, funds credited to seller's bank) settle via the clearing corporation.</td></tr></tbody></table></div>
+<p>Your demat account (via a Depository Participant — Zerodha routes through CDSL) is the electronic locker holding your actual share certificates in dematerialised form. No paper certificates change hands; the transfer is a ledger entry between two demat accounts, cleared through the exchange's clearing corporation as an intermediary guarantor — neither party can default on the other mid-trade.</p>
+<h2>1.6  Circuit Limits — The Exchange's Seatbelt</h2>
+<div class="callout callout-note"><p><strong>CIRCUIT BREAKERS:</strong> Every stock has a daily price band — typically 5%, 10%, or 20% above/below the previous close, set by the exchange based on the stock's volatility profile. Hit the UPPER CIRCUIT and no more buy orders can execute above that price — the stock is frozen at the ceiling until sellers appear or the next session. Hit the LOWER CIRCUIT and the mirror happens on the sell side. Separately, INDEX-WIDE circuit breakers exist for Nifty/Sensex moving 10%/15%/20% intraday — these HALT THE ENTIRE MARKET for a cooling-off period, a mechanism used exactly twice in the last decade (2020 COVID crash being the most recent). A stock hitting its circuit doesn't mean you're safe from further loss — it means you may be LOCKED IN, unable to exit, while the underlying business news keeps getting worse.</p></div>
+<h2>1.7  Market Timings</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>Session</strong></th><th><strong>Time (IST)</strong></th><th><strong>Purpose</strong></th></tr></thead><tbody><tr><td>Pre-open</td><td>9:00 – 9:08 AM</td><td>Orders collected, no execution; used to discover a fair opening price</td></tr><tr><td>Price discovery</td><td>9:08 – 9:12 AM</td><td>Algorithm matches orders to set the opening price</td></tr><tr><td>Buffer</td><td>9:12 – 9:15 AM</td><td>Transition window</td></tr><tr><td>Normal market</td><td>9:15 AM – 3:30 PM</td><td>Continuous trading</td></tr><tr><td>Closing session</td><td>3:30 – 3:40 PM</td><td>Closing price determined from last 30 minutes' weighted average</td></tr></tbody></table></div>
+</main>
+<footer>
+  <div class="cross-links"><a href="a1_market_structure.html">Market Structure →</a><a href="a1_corporate_actions.html">Corporate Actions →</a><a href="../../../02_Tools_Live/master-dashboard/index.html">← Portal Home</a></div>
+  This is the mechanics layer — what a share is and how trades actually settle. For indices/market-cap/FII-DII see Market Structure; for dividends/splits/bonus/buybacks see Corporate Actions.
+</footer>
+</body>
+</html>

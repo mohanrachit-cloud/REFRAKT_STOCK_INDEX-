@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Candlestick Pattern Reference — Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#FAF7F2; --ink:#1C1917; --gold:#C9A227; --line:#E4DCCB;
+    --sage:#6B8F71; --clay:#B5654A; --slate:#5B6B73; --plum:#6B4C6B;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); }
+  nav { position:sticky; top:0; z-index:10; background:var(--ink); color:var(--cream); display:flex; align-items:center; justify-content:space-between; padding:13px 28px; border-bottom:1px solid var(--gold); }
+  .nav-left { display:flex; align-items:center; gap:10px; }
+  .brand { font-family:'Playfair Display',serif; font-weight:700; font-size:16px; }
+  .breadcrumb-pill { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.04em; background:rgba(201,162,39,.15); color:var(--gold); padding:6px 14px; border-radius:999px; }
+  .portal-link { color:var(--cream); font-size:12px; text-decoration:none; border:1px solid rgba(255,255,255,.25); padding:6px 12px; border-radius:4px; }
+  .portal-link:hover { border-color:var(--gold); color:var(--gold); }
+  header.page-head { background:var(--ink); color:var(--cream); padding:26px 32px; }
+  .track-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin:0 0 6px; }
+  h1 { font-family:'Playfair Display',serif; font-weight:700; font-size:28px; margin:0; }
+  main { max-width:920px; margin:0 auto; padding:40px 24px 80px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; }
+  .pattern-card { background:#fff; border:1px solid var(--line); border-radius:4px; padding:20px; transition:box-shadow .15s; }
+  .pattern-card:hover { box-shadow:0 4px 14px rgba(0,0,0,.06); }
+  .pattern-card h3 { font-family:'Playfair Display',serif; font-size:18px; margin:0 0 4px; }
+  .bias { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:2px 8px; border-radius:10px; display:inline-block; margin-bottom:10px; }
+  .bias.bullish { background:#E8EFE9; color:var(--sage); }
+  .bias.bearish { background:#F3E4DD; color:var(--clay); }
+  .bias.neutral { background:#EAEDEE; color:var(--slate); }
+  .pattern-card p { font-size:13px; line-height:1.5; color:#444; margin:0; }
+  footer { text-align:center; font-size:12px; color:#999; padding:28px 24px 40px; font-family:'DM Mono',monospace; border-top:1px solid var(--line); margin-top:20px; }
+  footer a { color:var(--gold); text-decoration:none; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12Z" stroke="#C9A227" stroke-width="1.5"/><path d="M12 2V22" stroke="#C9A227" stroke-width="1"/></svg>
+    <span class="brand">Refrakt</span>
+  </div>
+  <div class="breadcrumb-pill">Finance-OS / 02_Tools_Live / Candlestick App</div>
+  <a class="portal-link" href="../master-dashboard/index.html">Portal Home</a>
+</nav>
+<header class="page-head">
+  <p class="track-label">D2 · Tool · B2 Companion</p>
+  <h1>Candlestick Pattern Reference</h1>
+</header>
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+<footer>Dummy template — placeholder pattern set. Real V1/V2 app is already live on GitHub Pages; swap in full B2_Candlestick module content here once ported. · <a href="../master-dashboard/index.html">← Portal Home</a></footer>
+<script>
+const patterns = [
+  { name: 'Bullish Engulfing', bias: 'bullish', desc: 'Small bearish candle followed by a larger bullish candle that fully engulfs it. Signals a potential reversal at the bottom of a downtrend.' },
+  { name: 'Bearish Engulfing', bias: 'bearish', desc: 'Small bullish candle followed by a larger bearish candle that fully engulfs it. Signals a potential reversal at the top of an uptrend.' },
+  { name: 'Hammer', bias: 'bullish', desc: 'Small body near the top of the range with a long lower wick. Found after a downtrend; suggests buyers stepped in.' },
+  { name: 'Shooting Star', bias: 'bearish', desc: 'Small body near the bottom of the range with a long upper wick. Found after an uptrend; suggests sellers stepped in.' },
+  { name: 'Doji', bias: 'neutral', desc: 'Open and close nearly equal. Signals indecision — context (trend, volume) determines what follows.' },
+  { name: 'Morning Star', bias: 'bullish', desc: 'Three-candle pattern: long bearish, small-bodied middle candle, long bullish. Bottom reversal signal.' },
+  { name: 'Evening Star', bias: 'bearish', desc: 'Three-candle pattern: long bullish, small-bodied middle candle, long bearish. Top reversal signal.' },
+  { name: 'Spinning Top', bias: 'neutral', desc: 'Small body with upper and lower wicks of similar length. Indecision after a strong move.' }
+];
+
+const grid = document.getElementById('grid');
+patterns.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'pattern-card';
+  card.innerHTML = `<h3>${p.name}</h3><span class="bias ${p.bias}">${p.bias}</span><p>${p.desc}</p>`;
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>

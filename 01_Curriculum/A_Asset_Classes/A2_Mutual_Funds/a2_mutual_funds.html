@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mutual Funds Masterclass — A2 | Refrakt Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#141413;--bg2:#1f1e1c;--bg3:#26241f;--bg4:#2e2b26;
+  --border:#3a3835;--text:#faf9f5;--muted:#b0aea5;
+  --gold:#d97757;--golddim:rgba(217,119,87,.12);
+  --bull:#788c5d;--bear:#b3503f;--blue:#6a9bcc;
+  --purple:#6a9bcc;--teal:#788c5d;--orange:#b3603f;
+  --pink:#c9614f;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family: 'Poppins', Arial, sans-serif;line-height:1.6;}
+
+/* ── NAV ── */
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.logo-text{font-weight:800;font-size:16px;color:var(--gold);letter-spacing:1px;}
+.breadcrumb{font-family: Consolas, Menlo, monospace;font-size:12px;color:var(--muted);}
+.breadcrumb a{color:var(--gold);text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+
+/* ── HERO ── */
+.hero{padding:52px 40px 40px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(217,119,87,.07),transparent 70%);}
+.hero::after{content:'';position:absolute;bottom:-40px;left:200px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(106,155,204,.05),transparent 70%);}
+.chapter-tag{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+.hero h1{font-size:clamp(30px,5vw,52px);font-weight:800;line-height:1.1;margin-bottom:14px;}
+.hero h1 span{color:var(--gold);}
+.hero-sub{color:var(--muted);font-size:15px;max-width:580px;line-height:1.75;margin-bottom:28px;}
+.toc-pills{display:flex;gap:8px;flex-wrap:wrap;}
+.toc-pill{font-family: Consolas, Menlo, monospace;font-size:11px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all .2s;}
+.toc-pill:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ── PROGRESS BAR ── */
+.progress-strip{background:var(--bg2);border-bottom:1px solid var(--border);padding:16px 40px;display:flex;align-items:center;gap:16px;}
+.progress-label{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.prog-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--orange));border-radius:2px;width:0%;transition:width .6s ease;}
+.prog-pct{font-family: Consolas, Menlo, monospace;font-size:12px;color:var(--gold);min-width:36px;text-align:right;}
+
+/* ── MAIN LAYOUT ── */
+.main{max-width:900px;margin:0 auto;padding:48px 24px 80px;}
+
+/* ── SECTION ── */
+.section{margin-bottom:72px;animation:fadeUp .5s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.sec-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:28px;}
+.sec-num{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--gold);background:var(--golddim);border:1px solid rgba(217,119,87,.4);border-radius:4px;padding:4px 10px;letter-spacing:1px;white-space:nowrap;margin-top:4px;}
+.sec-header-text h2{font-size:24px;font-weight:800;margin-bottom:4px;}
+.sec-header-text p{color:var(--muted);font-size:14px;}
+
+/* ── CONCEPT CARDS ── */
+.concept-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:24px 0;}
+@media(max-width:680px){.concept-grid{grid-template-columns:1fr;}}
+.concept-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.cc-icon{font-size:22px;margin-bottom:10px;}
+.cc-label{font-family: Consolas, Menlo, monospace;font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.cc-title{font-size:15px;font-weight:700;margin-bottom:6px;}
+.cc-body{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* ── PROSE ── */
+.prose{color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:16px;}
+.prose strong{color:var(--text);}
+
+/* ── CALLOUT ── */
+.callout{border-left:3px solid var(--gold);background:var(--golddim);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;font-size:14px;color:var(--text);line-height:1.7;}
+.callout strong{color:var(--gold);}
+.callout-blue{border-left-color:var(--blue);background:rgba(106,155,204,.08);}
+.callout-blue strong{color:var(--blue);}
+.callout-bull{border-left-color:var(--bull);background:rgba(120,140,93,.08);}
+.callout-bull strong{color:var(--bull);}
+.callout-bear{border-left-color:var(--bear);background:rgba(179,80,63,.08);}
+.callout-bear strong{color:var(--bear);}
+.callout-purple{border-left-color:var(--purple);background:rgba(106,155,204,.08);}
+.callout-purple strong{color:var(--purple);}
+.callout-orange{border-left-color:var(--orange);background:rgba(179,96,63,.08);}
+.callout-orange strong{color:var(--orange);}
+
+/* ── ANALOGY BOX ── */
+.analogy{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin:20px 0;position:relative;}
+.analogy::before{content:'💡 ANALOGY';font-family: Consolas, Menlo, monospace;font-size:10px;color:var(--gold);letter-spacing:2px;display:block;margin-bottom:10px;}
+.analogy p{font-size:14px;line-height:1.75;color:var(--text);}
+
+/* ── FUND TYPE TABLE ── */
+.fund-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:13px;}
+.fund-table th{font-family: Consolas, Menlo, monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);background:var(--bg2);padding:10px 14px;border-bottom:2px solid var(--border);text-align:left;}
+.fund-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--muted);vertical-align:top;}
+.fund-table tr:hover td{background:var(--bg2);color:var(--text);}
+.badge{font-family: Consolas, Menlo, monospace;font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;}
+.badge-bull{background:rgba(120,140,93,.15);color:var(--bull);border:1px solid rgba(120,140,93,.3);}
+.badge-bear{background:rgba(179,80,63,.15);color:var(--bear);border:1px solid rgba(179,80,63,.3);}
+.badge-neutral{background:rgba(106,155,204,.15);color:var(--blue);border:1px solid rgba(106,155,204,.3);}
+.badge-gold{background:var(--golddim);color:var(--gold);border:1px solid rgba(217,119,87,.3);}
+.badge-purple{background:rgba(106,155,204,.15);color:var(--purple);border:1px solid rgba(106,155,204,.3);}
+
+/* ── NAV CALCULATOR ── */
+.calc-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;margin:24px 0;}
+.calc-title{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;}
+@media(max-width:560px){.calc-row{grid-template-columns:1fr;}}
+.calc-field label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;font-family: Consolas, Menlo, monospace;}
+.calc-field input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:14px;font-family: 'Poppins', Arial, sans-serif;outline:none;transition:border-color .2s;}
+.calc-field input:focus{border-color:var(--gold);}
+.calc-result{background:var(--bg3);border-radius:8px;padding:16px;text-align:center;margin-top:16px;}
+.calc-result .cr-label{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.calc-result .cr-val{font-size:28px;font-weight:800;color:var(--gold);}
+.calc-result .cr-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+.calc-btn{width:100%;margin-top:12px;padding:10px;background:var(--gold);color:#141413;font-weight:700;font-family: 'Poppins', Arial, sans-serif;font-size:14px;border:none;border-radius:6px;cursor:pointer;transition:opacity .2s;}
+.calc-btn:hover{opacity:.85;}
+
+/* ── SIP VISUALISER ── */
+.sip-visual{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;margin:24px 0;}
+.sip-title{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+.sip-controls{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+.sip-control{display:flex;flex-direction:column;gap:4px;min-width:150px;}
+.sip-control label{font-size:12px;color:var(--muted);font-family: Consolas, Menlo, monospace;}
+.sip-control input[type=range]{accent-color:var(--teal);width:100%;}
+.sip-control span{font-size:14px;font-weight:700;color:var(--teal);}
+.sip-bars{display:flex;align-items:flex-end;gap:4px;height:160px;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:8px;}
+.sip-bar-wrap{display:flex;flex-direction:column;align-items:center;flex:1;}
+.sip-bar-invest{background:var(--blue);border-radius:2px 2px 0 0;min-height:2px;transition:height .4s;}
+.sip-bar-gain{background:var(--teal);border-radius:2px 2px 0 0;min-height:2px;transition:height .4s;}
+.sip-bar-label{font-size:9px;color:var(--muted);font-family: Consolas, Menlo, monospace;margin-top:6px;}
+.sip-legend{display:flex;gap:16px;font-size:12px;color:var(--muted);}
+.sip-legend span{display:flex;align-items:center;gap:6px;}
+.sip-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;}
+.sip-totals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:16px;}
+.sip-total-card{background:var(--bg3);border-radius:6px;padding:12px;}
+.sip-total-card .stc-label{font-size:10px;font-family: Consolas, Menlo, monospace;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.sip-total-card .stc-val{font-size:18px;font-weight:800;margin-top:4px;}
+
+/* ── BUCKET DIAGRAM ── */
+.buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0;}
+@media(max-width:620px){.buckets{grid-template-columns:1fr;}}
+.bucket{border-radius:10px;padding:20px;border:1px solid;position:relative;overflow:hidden;}
+.bucket::after{content:'';position:absolute;bottom:-20px;right:-20px;width:80px;height:80px;border-radius:50%;opacity:.1;}
+.bucket-emergency{border-color:rgba(106,155,204,.4);background:rgba(106,155,204,.05);}
+.bucket-emergency::after{background:var(--blue);}
+.bucket-medium{border-color:rgba(217,119,87,.4);background:rgba(217,119,87,.05);}
+.bucket-medium::after{background:var(--gold);}
+.bucket-growth{border-color:rgba(120,140,93,.4);background:rgba(120,140,93,.05);}
+.bucket-growth::after{background:var(--bull);}
+.bucket-icon{font-size:28px;margin-bottom:10px;}
+.bucket-label{font-family: Consolas, Menlo, monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.bucket-title{font-size:16px;font-weight:800;margin-bottom:8px;}
+.bucket-items{font-size:12px;color:var(--muted);line-height:1.8;}
+.bucket-items li{list-style:none;padding-left:14px;position:relative;}
+.bucket-items li::before{content:'→';position:absolute;left:0;color:var(--gold);}
+.bucket-horizon{font-family: Consolas, Menlo, monospace;font-size:11px;margin-top:10px;padding:4px 8px;border-radius:4px;display:inline-block;}
+
+/* ── PHILOSOPHY CARDS ── */
+.philosophy-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+@media(max-width:600px){.philosophy-grid{grid-template-columns:1fr;}}
+.phil-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.phil-avatar{font-size:32px;margin-bottom:8px;}
+.phil-name{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.phil-title{font-size:15px;font-weight:800;margin-bottom:10px;}
+.phil-rules{list-style:none;padding:0;}
+.phil-rules li{font-size:13px;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;line-height:1.6;}
+.phil-rules li:last-child{border-bottom:none;}
+.phil-rules li span.rule-num{font-family: Consolas, Menlo, monospace;font-size:10px;color:var(--gold);min-width:20px;}
+
+/* ── TAX TABLE ── */
+.tax-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:24px 0;}
+.tax-card-header{background:var(--bg3);padding:14px 20px;font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;}
+.tax-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border);}
+.tax-row:last-child{border-bottom:none;}
+.tax-row.header{background:var(--bg3);}
+.tax-cell{padding:12px 16px;font-size:13px;color:var(--muted);}
+.tax-cell.label{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--text);}
+.tax-cell.highlight{color:var(--gold);font-weight:700;}
+
+/* ── METRIC CARD ── */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+@media(max-width:560px){.metrics-grid{grid-template-columns:1fr;}}
+.metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;}
+.metric-name{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--purple);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.metric-def{font-size:14px;font-weight:700;margin-bottom:6px;}
+.metric-body{font-size:12px;color:var(--muted);line-height:1.65;}
+.metric-tag{display:inline-block;font-family: Consolas, Menlo, monospace;font-size:10px;padding:2px 8px;border-radius:4px;margin-top:8px;}
+
+/* ── QUIZ ── */
+.quiz-block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;margin:32px 0;}
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.quiz-badge{font-family: Consolas, Menlo, monospace;font-size:10px;padding:4px 12px;border-radius:20px;background:var(--golddim);color:var(--gold);border:1px solid rgba(217,119,87,.4);letter-spacing:1px;text-transform:uppercase;}
+.quiz-title{font-size:16px;font-weight:800;}
+.quiz-q{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.quiz-q:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.quiz-q-num{font-family: Consolas, Menlo, monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:8px;}
+.quiz-q-text{font-size:15px;font-weight:600;margin-bottom:14px;line-height:1.5;}
+.quiz-options{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{padding:12px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;color:var(--muted);transition:all .2s;display:flex;align-items:center;gap:12px;background:var(--bg3);}
+.quiz-opt:hover:not(.locked){border-color:var(--gold);color:var(--text);}
+.quiz-opt.correct{border-color:var(--bull);background:rgba(120,140,93,.1);color:var(--bull);}
+.quiz-opt.wrong{border-color:var(--bear);background:rgba(179,80,63,.1);color:var(--bear);}
+.quiz-opt.locked{cursor:default;}
+.opt-letter{font-family: Consolas, Menlo, monospace;font-size:11px;width:22px;height:22px;border-radius:4px;background:var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.quiz-explanation{margin-top:10px;padding:10px 14px;background:var(--bg);border-radius:6px;font-size:13px;color:var(--muted);display:none;line-height:1.65;}
+.quiz-explanation.show{display:block;}
+.quiz-score{text-align:center;padding:20px;display:none;}
+.quiz-score.show{display:block;}
+.quiz-score .qs-num{font-size:40px;font-weight:800;color:var(--gold);}
+.quiz-score .qs-label{font-size:14px;color:var(--muted);margin-top:4px;}
+.quiz-score .qs-msg{margin-top:12px;font-size:14px;color:var(--text);}
+
+/* ── DIVIDER ── */
+.sec-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:64px 0;}
+
+/* ── FOOTER ── */
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 40px;display:flex;justify-content:space-between;align-items:center;}
+.footer-back{font-family: Consolas, Menlo, monospace;font-size:12px;color:var(--gold);text-decoration:none;border:1px solid rgba(217,119,87,.3);padding:6px 16px;border-radius:4px;transition:all .2s;}
+.footer-back:hover{background:var(--golddim);}
+.footer-copy{font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--muted);}
+
+/* ── TIPS LIST ── */
+.tips-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;margin:20px 0;}
+.tips-list li{display:flex;gap:14px;align-items:flex-start;font-size:14px;color:var(--muted);padding:14px 16px;background:var(--bg2);border-radius:8px;border:1px solid var(--border);line-height:1.65;}
+.tips-list li .tip-icon{font-size:20px;flex-shrink:0;}
+.tips-list li strong{color:var(--text);}
+
+/* ── COMPARISON CARDS ── */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+@media(max-width:560px){.compare-grid{grid-template-columns:1fr;}}
+.compare-card{border-radius:10px;padding:20px;border:1px solid;}
+.compare-card.direct{border-color:rgba(120,140,93,.4);background:rgba(120,140,93,.05);}
+.compare-card.regular{border-color:rgba(179,80,63,.4);background:rgba(179,80,63,.05);}
+.compare-card h3{font-size:16px;font-weight:800;margin-bottom:12px;}
+.compare-card.direct h3{color:var(--bull);}
+.compare-card.regular h3{color:var(--bear);}
+.compare-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--muted);}
+.compare-row:last-child{border-bottom:none;}
+.compare-row strong{color:var(--text);}
+
+/* ── SCROLL INDICATOR ── */
+.scroll-hint{display:flex;justify-content:center;padding:12px;color:var(--muted);font-size:13px;font-family: Consolas, Menlo, monospace;letter-spacing:1px;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav>
+  <div class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <polygon points="14,2 26,9 26,21 14,26 2,19 2,7" stroke="#d97757" stroke-width="1.5" fill="none"/>
+      <polygon points="14,7 21,11 21,19 14,22 7,18 7,10" fill="rgba(217,119,87,0.15)" stroke="#d97757" stroke-width="1"/>
+      <circle cx="14" cy="14" r="3" fill="#d97757"/>
+    </svg>
+    <span class="logo-text">REFRAKT</span>
+  </div>
+  <div class="breadcrumb">
+    <a href="../../../02_Tools_Live/master-dashboard/index.html">← Portal Home</a>
+    <span> › A2 Mutual Funds</span>
+  </div>
+</nav>
+
+<!-- ═══════════════ PROGRESS ═══════════════ -->
+<div class="progress-strip">
+  <span class="progress-label">Progress</span>
+  <div class="prog-track"><div class="prog-fill" id="globalProg"></div></div>
+  <span class="prog-pct" id="globalPct">0%</span>
+</div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<div class="hero">
+  <div class="chapter-tag">MODULE A2 · ASSETS TRACK · INDIA EDITION</div>
+  <h1>Mutual Funds —<br><span>The Complete Playbook</span></h1>
+  <p class="hero-sub">From what a mutual fund actually is, to building a portfolio that runs on autopilot — powered by Shankar Nath's discipline and Monika Halan's money box wisdom. Chai served, jargon filtered out.</p>
+  <div class="toc-pills">
+    <a href="#s1" class="toc-pill">01 · What is a MF?</a>
+    <a href="#s2" class="toc-pill">02 · How It Works</a>
+    <a href="#s3" class="toc-pill">03 · Fund Types</a>
+    <a href="#s4" class="toc-pill">04 · SIP vs Lumpsum</a>
+    <a href="#s5" class="toc-pill">05 · Direct vs Regular</a>
+    <a href="#s6" class="toc-pill">06 · Halan's Money Box</a>
+    <a href="#s7" class="toc-pill">07 · Key Metrics</a>
+    <a href="#s8" class="toc-pill">08 · Shankar Nath Rules</a>
+    <a href="#s9" class="toc-pill">09 · MF Taxation</a>
+    <a href="#s10" class="toc-pill">10 · Tips & Traps</a>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<div class="main">
+
+<!-- ─────────────── SECTION 1 ─────────────── -->
+<section class="section" id="s1">
+  <div class="sec-header">
+    <span class="sec-num">01</span>
+    <div class="sec-header-text">
+      <h2>What Is a Mutual Fund?</h2>
+      <p>The concept, the structure, the why.</p>
+    </div>
+  </div>
+
+  <p class="prose">A <strong>mutual fund</strong> is a professionally managed investment vehicle that pools money from thousands of investors and deploys it across a basket of stocks, bonds, or other assets — based on a predefined investment objective. You own units of the fund, not the underlying stocks directly.</p>
+
+  <div class="analogy">
+    <p><strong>The Neighbourhood Dabba System:</strong> Imagine 200 people in a colony each pitching in ₹500/month to hire a professional caterer. Each person gets a fair share of every meal — you don't cook, you don't buy groceries, and your ₹500 gets you exposure to a 10-course meal you couldn't have afforded alone. The caterer (fund manager) decides what to cook (which stocks to buy). Your money gets diversification. That's a mutual fund. The dabba = the fund. The caterer = the fund manager. Your contribution = your units.</p>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="cc-icon">🧑‍🍳</div>
+      <div class="cc-label">Fund Manager</div>
+      <div class="cc-title">The Caterer</div>
+      <div class="cc-body">A SEBI-regulated professional who decides which securities to buy/sell inside the fund, targeting a specific objective.</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-icon">🎫</div>
+      <div class="cc-label">Units</div>
+      <div class="cc-title">Your Share of the Dabba</div>
+      <div class="cc-body">When you invest ₹5,000 in a fund with NAV ₹50, you get 100 units. Units represent proportional ownership.</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-icon">🏛️</div>
+      <div class="cc-label">AMC</div>
+      <div class="cc-title">The Kitchen</div>
+      <div class="cc-body">Asset Management Company — the company that operates the fund (eg: HDFC AMC, SBI MF, Mirae Asset). They manage your money for a fee.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Key Players in the MF Ecosystem:</strong><br>
+    <strong>SEBI</strong> = The food inspector (regulator) · <strong>AMFI</strong> = Association of Mutual Funds in India (self-regulatory body) · <strong>Trustee</strong> = Watchdog over the AMC · <strong>Custodian</strong> = Vault that holds all the securities
+  </div>
+
+  <p class="prose">India has over <strong>₹50 lakh crore</strong> in mutual fund AUM as of 2024 — managed by 44 AMCs offering thousands of schemes. You're entering a massive, regulated, transparent market.</p>
+
+  <!-- QUIZ 1 -->
+  <div class="quiz-block" id="quiz1">
+    <div class="quiz-header">
+      <span class="quiz-badge">Quiz · Section 01</span>
+      <span class="quiz-title">Test Your Foundations</span>
+    </div>
+
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q1 of 3</div>
+      <div class="quiz-q-text">When you invest ₹10,000 in a mutual fund at NAV of ₹25, how many units do you receive?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> 25 units</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> 400 units</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> 2,50,000 units</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> 10 units</div>
+      </div>
+      <div class="quiz-explanation">✅ 10,000 ÷ 25 = 400 units. Units = Amount ÷ NAV. Simple as cutting a pizza — ₹10k pizza, ₹25 per slice = 400 slices.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q2 of 3</div>
+      <div class="quiz-q-text">Which body directly REGULATES mutual funds in India?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> RBI</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> AMFI</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> SEBI</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Finance Ministry</div>
+      </div>
+      <div class="quiz-explanation">✅ SEBI (Securities and Exchange Board of India) is the regulator. AMFI is the trade association — think of SEBI as the police and AMFI as the RWA.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="a">
+      <div class="quiz-q-num">Q3 of 3</div>
+      <div class="quiz-q-text">A mutual fund's NAV dropped from ₹100 to ₹90. If you hold 500 units, what is your current value?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> ₹45,000</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> ₹50,000</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> ₹55,000</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> ₹90</div>
+      </div>
+      <div class="quiz-explanation">✅ 500 units × ₹90 = ₹45,000. Your portfolio fell by ₹5,000 — painful, but the number of units you hold didn't change.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ─────────────── SECTION 2 ─────────────── -->
+<section class="section" id="s2">
+  <div class="sec-header">
+    <span class="sec-num">02</span>
+    <div class="sec-header-text">
+      <h2>How the Engine Works</h2>
+      <p>NAV, AUM, expense ratio — the actual mechanics.</p>
+    </div>
+  </div>
+
+  <p class="prose"><strong>NAV (Net Asset Value)</strong> is the per-unit price of the fund, calculated daily after market close. Think of it as the MRP of one unit of your fund.</p>
+
+  <div class="analogy">
+    <p><strong>The Rental Flat Analogy:</strong> A building worth ₹1 crore is divided into 10,000 equal shares. Each share is worth ₹1,000 — that's your NAV. If the building's value goes up to ₹1.2 crore, each share is now ₹1,200. You didn't do anything — the building (underlying assets) did the work. That's exactly how NAV moves.</p>
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>NAV Formula:</strong> NAV = (Total Assets of Fund − Liabilities) ÷ Total Units Outstanding<br><br>
+    A higher NAV doesn't mean expensive. A fund at NAV ₹500 isn't "costlier" than one at NAV ₹20. What matters is the <strong>% return</strong>, not the absolute NAV price. This is the #1 myth new investors fall for.
+  </div>
+
+  <div class="calc-box">
+    <div class="calc-title">🧮 NAV Calculator</div>
+    <div class="calc-row">
+      <div class="calc-field"><label>Total Fund Assets (₹ Crore)</label><input type="number" id="nav-assets" value="500" min="1"></div>
+      <div class="calc-field"><label>Liabilities (₹ Crore)</label><input type="number" id="nav-liab" value="5" min="0"></div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-field"><label>Total Units Outstanding (Crore)</label><input type="number" id="nav-units" value="10" min="0.1" step="0.1"></div>
+      <div class="calc-field"><label>Your Units Held</label><input type="number" id="nav-my-units" value="1000" min="1"></div>
+    </div>
+    <button class="calc-btn" onclick="calcNAV()">Calculate NAV & Portfolio Value</button>
+    <div class="calc-result" id="nav-result" style="display:none">
+      <div class="cr-label">Fund NAV</div>
+      <div class="cr-val" id="nav-out">—</div>
+      <div class="cr-sub" id="nav-portfolio">—</div>
+    </div>
+  </div>
+
+  <p class="prose">The <strong>Expense Ratio</strong> is the annual fee the AMC charges, expressed as a % of AUM. A 1.5% expense ratio on ₹1 lakh means you're paying ₹1,500/year — deducted daily from NAV invisibly. It's the silent killer of long-term returns.</p>
+
+  <div class="callout callout-bear">
+    <strong>The Compounding Cost:</strong> A 1% higher expense ratio over 20 years on ₹10 lakh can erode roughly ₹8–12 lakh in wealth. That's not a small leak — that's a broken pipe. Direct plans (lower expense) vs Regular plans (higher expense) is literally this exact trade-off.
+  </div>
+
+  <!-- QUIZ 2 -->
+  <div class="quiz-block" id="quiz2">
+    <div class="quiz-header">
+      <span class="quiz-badge">Quiz · Section 02</span>
+      <span class="quiz-title">NAV & Mechanics</span>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q1 of 3</div>
+      <div class="quiz-q-text">A fund has assets of ₹200 crore, liabilities of ₹2 crore, and 10 crore units outstanding. What is the NAV?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> ₹20</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> ₹200</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> ₹19.80</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> ₹22</div>
+      </div>
+      <div class="quiz-explanation">✅ (200 − 2) ÷ 10 = ₹19.80. Assets minus liabilities first, then divide by units.</div>
+    </div>
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q2 of 3</div>
+      <div class="quiz-q-text">Fund A has NAV ₹500, Fund B has NAV ₹20. Which is a better "buy"?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Fund B — cheaper NAV means more units</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Cannot be determined from NAV alone — look at returns and quality</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Fund A — higher NAV means better fund</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> NAV above ₹100 is overpriced always</div>
+      </div>
+      <div class="quiz-explanation">✅ NAV alone tells you nothing about value. A fund at ₹500 NAV might have started at ₹10 (excellent compounder) while ₹20 NAV might have started at ₹30 (declining). Judge by % returns, risk metrics, and portfolio quality.</div>
+    </div>
+    <div class="quiz-q" data-correct="d">
+      <div class="quiz-q-num">Q3 of 3</div>
+      <div class="quiz-q-text">The Expense Ratio is charged:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Only when you exit the fund</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Monthly as a direct deduction from your bank</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Only on profits</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Daily, deducted invisibly from NAV before it's published</div>
+      </div>
+      <div class="quiz-explanation">✅ The expense ratio is baked into the NAV daily. You never see it as a line item — but it quietly compounds against you. A 0.5% vs 1.5% expense ratio difference is MASSIVE over 15 years.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ─────────────── SECTION 3 ─────────────── -->
+<section class="section" id="s3">
+  <div class="sec-header">
+    <span class="sec-num">03</span>
+    <div class="sec-header-text">
+      <h2>The Fund Family Tree</h2>
+      <p>Every type of mutual fund you'll ever need to know.</p>
+    </div>
+  </div>
+
+  <p class="prose">SEBI categorises all mutual funds into clear buckets. Here's the full taxonomy — your reference bible:</p>
+
+  <table class="fund-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Subcategory</th>
+        <th>Invests In</th>
+        <th>Risk</th>
+        <th>Ideal Horizon</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="5" style="background:var(--bg3);font-family: Consolas, Menlo, monospace;font-size:10px;color:var(--gold);letter-spacing:1px;padding:8px 14px;">EQUITY FUNDS</td></tr>
+      <tr>
+        <td>Large Cap</td><td>Top 100 companies</td><td>Blue-chip stocks (TCS, Reliance)</td>
+        <td><span class="badge badge-neutral">MEDIUM</span></td><td>5+ yrs</td>
+      </tr>
+      <tr>
+        <td>Mid Cap</td><td>101–250 ranked companies</td><td>Growth companies</td>
+        <td><span class="badge badge-bear">HIGH</span></td><td>7+ yrs</td>
+      </tr>
+      <tr>
+        <td>Small Cap</td><td>251+ ranked companies</td><td>Emerging businesses</td>
+        <td><span class="badge badge-bear">VERY HIGH</span></td><td>10+ yrs</td>
+      </tr>
+      <tr>
+        <td>Flexi Cap</td><td>Any market cap</td><td>Manager decides allocation freely</td>
+        <td><span class="badge badge-bear">HIGH</span></td><td>5+ yrs</td>
+      </tr>
+      <tr>
+        <td>Multi Cap</td><td>Min 25% each cap</td><td>Mandated across all sizes</td>
+        <td><span class="badge badge-bear">HIGH</span></td><td>5+ yrs</td>
+      </tr>
+      <tr>
+        <td>ELSS</td><td>Equity Linked Savings</td><td>Any stocks (3yr lock-in)</td>
+        <td><span class="badge badge-bear">HIGH</span></td><td>3yr (lock) + hold longer</td>
+      </tr>
+      <tr>
+        <td>Thematic/Sectoral</td><td>IT, Pharma, Banking etc</td><td>Sector-specific stocks</td>
+        <td><span class="badge badge-bear">VERY HIGH</span></td><td>7+ yrs</td>
+      </tr>
+      <tr><td colspan="5" style="background:var(--bg3);font-family: Consolas, Menlo, monospace;font-size:10px;color:var(--blue);letter-spacing:1px;padding:8px 14px;">DEBT FUNDS</td></tr>
+      <tr>
+        <td>Liquid Fund</td><td>Very short duration</td><td>T-Bills, CP (&lt; 91 days)</td>
+        <td><span class="badge badge-bull">LOW</span></td><td>1 day – 3 months</td>
+      </tr>
+      <tr>
+        <td>Ultra Short Duration</td><td>3–6 months</td><td>Short-term bonds</td>
+        <td><span class="badge badge-bull">LOW</span></td><td>3–6 months</td>
+      </tr>
+      <tr>
+        <td>Short Duration</td><td>1–3 year portfolio</td><td>Bonds &amp; debentures</td>
+        <td><span class="badge badge-neutral">LOW-MED</span></td><td>1–3 yrs</td>
+      </tr>
+      <tr>
+        <td>Corporate Bond</td><td>Min 80% in AA+ bonds</td><td>High-rated corporate debt</td>
+        <td><span class="badge badge-neutral">MEDIUM</span></td><td>2–4 yrs</td>
+      </tr>
+      <tr>
+        <td>Gilt Fund</td><td>Government securities</td><td>Zero credit risk, duration risk</td>
+        <td><span class="badge badge-neutral">MEDIUM</span></td><td>3–5 yrs</td>
+      </tr>
+      <tr><td colspan="5" style="background:var(--bg3);font-family: Consolas, Menlo, monospace;font-size:10px;color:var(--purple);letter-spacing:1px;padding:8px 14px;">HYBRID FUNDS</td></tr>
+      <tr>
+        <td>Aggressive Hybrid</td><td>65–80% equity</td><td>Stocks + bonds</td>
+        <td><span class="badge badge-bear">HIGH</span></td><td>5+ yrs</td>
+      </tr>
+      <tr>
+        <td>Balanced Hybrid</td><td>40–60% equity</td><td>Equal mix</td>
+        <td><span class="badge badge-neutral">MEDIUM</span></td><td>3–5 yrs</td>
+      </tr>
+      <tr>
+        <td>Dynamic Asset Allocation</td><td>Flexi allocation</td><td>Manager adjusts equity/debt ratio</td>
+        <td><span class="badge badge-neutral">MEDIUM</span></td><td>3–5 yrs</td>
+      </tr>
+      <tr><td colspan="5" style="background:var(--bg3);font-family: Consolas, Menlo, monospace;font-size:10px;color:var(--teal);letter-spacing:1px;padding:8px 14px;">PASSIVE FUNDS</td></tr>
+      <tr>
+        <td>Index Fund</td><td>Tracks Nifty/Sensex etc</td><td>Mirror of benchmark index</td>
+        <td><span class="badge badge-neutral">MEDIUM</span></td><td>7+ yrs</td>
+      </tr>
+      <tr>
+        <td>ETF</td><td>Exchange Traded Fund</td><td>Trades like stock on exchange</td>
+        <td><span class="badge badge-neutral">MEDIUM</span></td><td>5+ yrs</td>
+      </tr>
+      <tr>
+        <td>Fund of Funds</td><td>Invests in other MFs</td><td>Other mutual funds</td>
+        <td><span class="badge badge-neutral">MEDIUM</span></td><td>5+ yrs</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-purple">
+    <strong>ELSS — Tax Saving with Equity Power:</strong> Under Section 80C, you can save up to ₹1.5 lakh/year in ELSS and get a tax deduction. With your 30% slab, that's ₹45,000 saved in taxes. The 3-year lock-in is the shortest among all 80C options (PPF = 15 yrs, NSC = 5 yrs). ELSS is equity — full market risk, full market return potential.
+  </div>
+
+  <!-- QUIZ 3 -->
+  <div class="quiz-block" id="quiz3">
+    <div class="quiz-header">
+      <span class="quiz-badge">Quiz · Section 03</span>
+      <span class="quiz-title">Fund Types Decoded</span>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q1 of 4</div>
+      <div class="quiz-q-text">You need a place to park your emergency fund for 1 month while earning better than a savings account. Which fund category fits?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Small Cap Fund</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Gilt Fund</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Liquid Fund</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> ELSS</div>
+      </div>
+      <div class="quiz-explanation">✅ Liquid funds invest in instruments with &lt;91 day maturity — very safe, highly liquid, and return slightly more than savings accounts. Perfect emergency buffer.</div>
+    </div>
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q2 of 4</div>
+      <div class="quiz-q-text">An ELSS fund has a mandatory lock-in of:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> 5 years</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> 3 years</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> 1 year</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> 15 years</div>
+      </div>
+      <div class="quiz-explanation">✅ 3 years — the shortest lock-in under 80C. But experts suggest staying invested much longer since it's equity.</div>
+    </div>
+    <div class="quiz-q" data-correct="d">
+      <div class="quiz-q-num">Q3 of 4</div>
+      <div class="quiz-q-text">What is the KEY difference between a Flexi-cap and a Multi-cap fund?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Flexi-cap invests only in large caps</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Multi-cap is only for HNIs</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Both are identical</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Multi-cap must hold min 25% in each cap; Flexi-cap manager decides freely</div>
+      </div>
+      <div class="quiz-explanation">✅ Multi-cap has SEBI-mandated minimum 25% each in large, mid, and small caps. Flexi-cap managers can freely allocate — often hiding in large caps when markets are volatile.</div>
+    </div>
+    <div class="quiz-q" data-correct="a">
+      <div class="quiz-q-num">Q4 of 4</div>
+      <div class="quiz-q-text">A Nifty 50 Index Fund's goal is to:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Replicate the returns of the Nifty 50 index</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Beat the Nifty 50 every year</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Invest only in the top 10 Nifty companies</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Give fixed 12% annual returns</div>
+      </div>
+      <div class="quiz-explanation">✅ Index funds passively mirror the benchmark — no stock-picking. Low cost, zero manager bias. Shankar Nath swears by them for most retail investors.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ─────────────── SECTION 4 ─────────────── -->
+<section class="section" id="s4">
+  <div class="sec-header">
+    <span class="sec-num">04</span>
+    <div class="sec-header-text">
+      <h2>SIP vs Lumpsum</h2>
+      <p>The great debate — and why it's mostly settled.</p>
+    </div>
+  </div>
+
+  <p class="prose">A <strong>SIP (Systematic Investment Plan)</strong> is investing a fixed amount every month regardless of market levels. A <strong>Lumpsum</strong> is deploying a large amount at once. Both have a place — the question is when.</p>
+
+  <div class="analogy">
+    <p><strong>The Grocery Shopping Analogy:</strong> SIP = buying 1 kg of onions every week regardless of price. Sometimes ₹30/kg, sometimes ₹80/kg — your average cost settles somewhere in between. Lumpsum = buying 52 kg all at once in November. If prices drop in December, you overpaid. If they rise, you won big. SIP removes the timing gamble. This averaging effect is called <strong>Rupee Cost Averaging (RCA)</strong>.</p>
+  </div>
+
+  <!-- SIP VISUALISER -->
+  <div class="sip-visual">
+    <div class="sip-title">⚡ SIP Compounding Visualiser</div>
+    <div class="sip-controls">
+      <div class="sip-control">
+        <label>Monthly SIP (₹)</label>
+        <input type="range" id="sip-amount" min="1000" max="20000" step="500" value="5000">
+        <span id="sip-amount-val">₹5,000</span>
+      </div>
+      <div class="sip-control">
+        <label>Duration (Years)</label>
+        <input type="range" id="sip-years" min="3" max="30" step="1" value="10">
+        <span id="sip-years-val">10 years</span>
+      </div>
+      <div class="sip-control">
+        <label>Expected Return (% p.a.)</label>
+        <input type="range" id="sip-rate" min="6" max="18" step="0.5" value="12">
+        <span id="sip-rate-val">12%</span>
+      </div>
+    </div>
+    <div class="sip-bars" id="sip-chart"></div>
+    <div class="sip-legend">
+      <span><i style="background:var(--blue)"></i>Amount Invested</span>
+      <span><i style="background:var(--teal)"></i>Wealth Gained</span>
+    </div>
+    <div class="sip-totals">
+      <div class="sip-total-card">
+        <div class="stc-label">Total Invested</div>
+        <div class="stc-val" id="sip-invested" style="color:var(--blue)">—</div>
+      </div>
+      <div class="sip-total-card">
+        <div class="stc-label">Corpus Value</div>
+        <div class="stc-val" id="sip-corpus" style="color:var(--gold)">—</div>
+      </div>
+      <div class="sip-total-card">
+        <div class="stc-label">Wealth Gained</div>
+        <div class="stc-val" id="sip-gain" style="color:var(--teal)">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-bull">
+    <strong>Shankar Nath's SIP Commandment:</strong> "Market crash? Keep the SIP running. That's not a loss — that's a sale you're taking advantage of." When Nifty drops 20%, your fixed SIP buys more units. Those cheap units explode in value during the recovery. Stopping a SIP during a crash is like leaving the buffet right when the best dishes are being served.
+  </div>
+
+  <div class="callout callout-blue">
+    <strong>When Lumpsum Makes Sense:</strong> You just got a bonus, received a maturity payout, or the market just corrected 25%+. If you have a clear long-term horizon (10+ years) and can stomach volatility, lumpsum can outperform SIP statistically — because you deploy capital earlier and compounding starts sooner. Combine both for best results: SIP for salary, Lumpsum for windfalls.
+  </div>
+
+  <!-- QUIZ 4 -->
+  <div class="quiz-block" id="quiz4">
+    <div class="quiz-header">
+      <span class="quiz-badge">Quiz · Section 04</span>
+      <span class="quiz-title">SIP vs Lumpsum</span>
+    </div>
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q1 of 3</div>
+      <div class="quiz-q-text">The main benefit of SIP over Lumpsum investing is:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Guaranteed higher returns</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Rupee Cost Averaging — removes timing risk</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Tax advantages</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> SIP gives more units always</div>
+      </div>
+      <div class="quiz-explanation">✅ SIP's superpower is RCA — you buy more units when prices are low, fewer when high. Over time, your average cost is smoothed out. No timing required.</div>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q2 of 3</div>
+      <div class="quiz-q-text">Nifty drops 30% due to a global crash. Your SIP instruction is active. What's the best action?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Pause SIP to wait for market recovery</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Redeem all units immediately</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Continue SIP — even consider a lumpsum top-up</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Switch to a debt fund immediately</div>
+      </div>
+      <div class="quiz-explanation">✅ A crash is a discount sale on quality assets. Your SIP buys more units at lower prices. Advanced move: top up with a lumpsum if you have dry powder. The worst thing to do is pause.</div>
+    </div>
+    <div class="quiz-q" data-correct="d">
+      <div class="quiz-q-num">Q3 of 3</div>
+      <div class="quiz-q-text">₹5,000/month SIP at 12% return for 20 years gives approximately:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> ₹12 lakh</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> ₹24 lakh</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> ₹35 lakh</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> ₹50 lakh+</div>
+      </div>
+      <div class="quiz-explanation">✅ At 12% for 20 years, ₹5,000/month SIP grows to approximately ₹49–50 lakh. You invested only ₹12 lakh (240 months × ₹5,000). The remaining ₹37+ lakh is pure compounding magic. This is why Einstein allegedly called compound interest the 8th wonder.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ─────────────── SECTION 5 ─────────────── -->
+<section class="section" id="s5">
+  <div class="sec-header">
+    <span class="sec-num">05</span>
+    <div class="sec-header-text">
+      <h2>Direct vs Regular Plans</h2>
+      <p>The single most important choice you'll make in MF investing.</p>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <p><strong>The Estate Agent Analogy:</strong> Buying a flat directly from the builder = <strong>Direct Plan</strong>. Buying through a broker who adds their commission on top = <strong>Regular Plan</strong>. Same flat, same building, different price. The broker isn't evil — they provide a service. But if you don't need their hand-holding, why pay for it? The difference is the commission (distributor trail fee), which quietly reduces your NAV every single year.</p>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-card direct">
+      <h3>✅ Direct Plan</h3>
+      <div class="compare-row"><span>Expense Ratio</span><strong>0.1% – 0.8%</strong></div>
+      <div class="compare-row"><span>How to Buy</span><strong>AMC website, Zerodha Coin, MFCentral, CAMS</strong></div>
+      <div class="compare-row"><span>Advice Included</span><strong>No — self-directed</strong></div>
+      <div class="compare-row"><span>NAV</span><strong>Higher (no commission drag)</strong></div>
+      <div class="compare-row"><span>Best For</span><strong>Informed investors with clear goals</strong></div>
+      <div class="compare-row"><span>20yr Impact (₹10L)</span><strong>₹15–20L MORE corpus</strong></div>
+    </div>
+    <div class="compare-card regular">
+      <h3>⚠️ Regular Plan</h3>
+      <div class="compare-row"><span>Expense Ratio</span><strong>1.0% – 2.0%</strong></div>
+      <div class="compare-row"><span>How to Buy</span><strong>Banks, MFD agents, insurance advisors</strong></div>
+      <div class="compare-row"><span>Advice Included</span><strong>Yes (distributor guidance)</strong></div>
+      <div class="compare-row"><span>NAV</span><strong>Lower (commission deducted)</strong></div>
+      <div class="compare-row"><span>Best For</span><strong>Beginners needing hand-holding</strong></div>
+      <div class="compare-row"><span>20yr Impact (₹10L)</span><strong>₹15–20L LESS corpus</strong></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Where to Buy Direct Plans in India:</strong><br>
+    🔵 <strong>Zerodha Coin</strong> (your broker — zero commission, great UI) · <strong>MFCentral</strong> (CAMS + KFintech's official platform) · <strong>AMC Websites directly</strong> (eg: hdfcfund.com) · <strong>Groww, Paytm Money</strong> (free direct plans) · <strong>CAMS Online</strong> for servicing multiple AMCs
+  </div>
+
+  <!-- QUIZ 5 -->
+  <div class="quiz-block" id="quiz5">
+    <div class="quiz-header">
+      <span class="quiz-badge">Quiz · Section 05</span>
+      <span class="quiz-title">Direct vs Regular</span>
+    </div>
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q1 of 2</div>
+      <div class="quiz-q-text">Direct and Regular plans of the SAME fund invest in:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Different stocks — Direct is better quality</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Identical portfolio — only expense ratio differs</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Direct plans are riskier</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Regular plans have SEBI protection, Direct don't</div>
+      </div>
+      <div class="quiz-explanation">✅ Exact same portfolio, exact same fund manager, exact same stocks. The ONLY difference is the expense ratio — Regular plans pay a trail commission to the distributor, which reduces your NAV daily.</div>
+    </div>
+    <div class="quiz-q" data-correct="d">
+      <div class="quiz-q-num">Q2 of 2</div>
+      <div class="quiz-q-text">Rachit invests ₹1 lakh each in Direct (1% expense ratio) and Regular (2% expense ratio) versions of the same fund. After 25 years at 14% gross return, the difference in corpus will be approximately:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> ₹25,000</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> ₹3 lakh</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> ₹10 lakh</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> ₹20–30 lakh+</div>
+      </div>
+      <div class="quiz-explanation">✅ A 1% annual fee difference compounds massively. Over 25 years, the difference can exceed ₹20–30 lakh on a ₹1L investment. This is why Shankar Nath calls regular plans "a slow bleed tax you chose voluntarily."</div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ─────────────── SECTION 6 ─────────────── -->
+<section class="section" id="s6">
+  <div class="sec-header">
+    <span class="sec-num">06</span>
+    <div class="sec-header-text">
+      <h2>Monika Halan's Money Box System</h2>
+      <p>The 3-bucket framework from <em>Let's Talk Mutual Funds</em> — elegant, brutal, effective.</p>
+    </div>
+  </div>
+
+  <p class="prose">Monika Halan's core thesis: <strong>most Indians are financially insecure not because they don't earn enough, but because they haven't built the right structure.</strong> Before you invest a single rupee in equity, you need the foundations. Her Money Box framework:</p>
+
+  <div class="buckets">
+    <div class="bucket bucket-emergency">
+      <div class="bucket-icon">🛡️</div>
+      <div class="bucket-label" style="color:var(--blue)">Box 1 · Emergency</div>
+      <div class="bucket-title">The Moat</div>
+      <ul class="bucket-items">
+        <li>6–12 months of expenses</li>
+        <li>Liquid fund or savings account</li>
+        <li>Term life insurance (20x income)</li>
+        <li>Health insurance (self + family)</li>
+        <li>Critical illness cover</li>
+      </ul>
+      <span class="bucket-horizon badge badge-neutral">Immediate access</span>
+    </div>
+    <div class="bucket bucket-medium">
+      <div class="bucket-icon">⚖️</div>
+      <div class="bucket-label" style="color:var(--gold)">Box 2 · Medium Term</div>
+      <div class="bucket-title">The Buffer</div>
+      <ul class="bucket-items">
+        <li>Goals in 2–5 years</li>
+        <li>Debt funds, hybrid funds</li>
+        <li>FDs for capital preservation</li>
+        <li>Car, vacation, education</li>
+        <li>Balanced advantage funds</li>
+      </ul>
+      <span class="bucket-horizon badge badge-gold">2–5 year horizon</span>
+    </div>
+    <div class="bucket bucket-growth">
+      <div class="bucket-icon">🚀</div>
+      <div class="bucket-label" style="color:var(--bull)">Box 3 · Long Term</div>
+      <div class="bucket-title">The Engine</div>
+      <ul class="bucket-items">
+        <li>Goals in 7+ years</li>
+        <li>Equity mutual funds (flexi/index)</li>
+        <li>ELSS for tax saving</li>
+        <li>NPS for retirement</li>
+        <li>Corpus building, wealth creation</li>
+      </ul>
+      <span class="bucket-horizon badge badge-bull">7–30 year horizon</span>
+    </div>
+  </div>
+
+  <div class="callout callout-bear">
+    <strong>Halan's Hard Truth #1:</strong> If you don't have term insurance and health insurance, you have NO right to invest in equity mutual funds. One hospital bill or one death in the family will wipe out your entire portfolio. Box 1 must be FULL before Box 3 gets a single rupee.
+  </div>
+
+  <div class="callout callout-bull">
+    <strong>Halan's Simple Portfolio Prescription:</strong> For most salaried Indians — 1 large cap index fund + 1 flexi cap fund + 1 ELSS (for 80C). Total: 3 funds. Not 25. Not 40. Three. A boring portfolio that stays invested longer beats a complex one managed emotionally.
+  </div>
+
+  <!-- QUIZ 6 -->
+  <div class="quiz-block" id="quiz6">
+    <div class="quiz-header">
+      <span class="quiz-badge">Quiz · Section 06</span>
+      <span class="quiz-title">Halan's Framework</span>
+    </div>
+    <div class="quiz-q" data-correct="a">
+      <div class="quiz-q-num">Q1 of 3</div>
+      <div class="quiz-q-text">According to Monika Halan's Money Box, what must be done BEFORE investing in equity funds?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Build emergency fund + get term & health insurance</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Pick the top-rated 5-star fund on Value Research</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Have at least ₹5 lakh to invest at once</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Open a demat account first</div>
+      </div>
+      <div class="quiz-explanation">✅ Box 1 before Box 3. Emergency fund (6–12 months expenses) + adequate term life + health insurance. This is non-negotiable in Halan's framework.</div>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q2 of 3</div>
+      <div class="quiz-q-text">You're saving for a car purchase in 3 years. Which box does this goal belong to?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Box 1 — Emergency</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Box 3 — Long Term Growth</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Box 2 — Medium Term</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> No box — use FD only</div>
+      </div>
+      <div class="quiz-explanation">✅ 3 years = medium term = Box 2. Use debt or hybrid funds — not equity (too volatile for a 3-year horizon). You cannot afford a 30% crash when you need that money in 36 months.</div>
+    </div>
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q3 of 3</div>
+      <div class="quiz-q-text">Halan recommends how many funds for a "simple, effective" Indian salaried portfolio?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> 10–15 funds for diversification</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> 3 funds — index + flexi cap + ELSS</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> 1 fund — pick the best and go all in</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> 20 funds across all categories</div>
+      </div>
+      <div class="quiz-explanation">✅ Simple wins. 3 well-chosen funds, consistently funded, left alone for decades = more wealth than 20 funds managed anxiously. Over-diversification in MFs is just confusion with extra steps.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ─────────────── SECTION 7 ─────────────── -->
+<section class="section" id="s7">
+  <div class="sec-header">
+    <span class="sec-num">07</span>
+    <div class="sec-header-text">
+      <h2>Reading the Scoreboard</h2>
+      <p>Key metrics to evaluate any mutual fund — before you trust your money to it.</p>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-name">Alpha (α)</div>
+      <div class="metric-def">Excess return over benchmark</div>
+      <div class="metric-body">If Nifty 50 returns 12% and your fund returns 15%, alpha = +3%. It measures the fund manager's skill. Positive alpha = value added. Zero alpha = might as well have bought an index fund cheaper.</div>
+      <span class="metric-tag" style="background:rgba(120,140,93,.15);color:var(--bull)">Higher = Better</span>
+    </div>
+    <div class="metric-card">
+      <div class="metric-name">Beta (β)</div>
+      <div class="metric-def">Volatility vs the market</div>
+      <div class="metric-body">Beta of 1.2 = fund moves 20% more than the market. Nifty up 10% → fund up 12%. Nifty down 10% → fund down 12%. Higher beta = more amplified swings. Small cap funds typically have beta &gt;1.</div>
+      <span class="metric-tag" style="background:rgba(106,155,204,.15);color:var(--purple)">Risk indicator</span>
+    </div>
+    <div class="metric-card">
+      <div class="metric-name">Sharpe Ratio</div>
+      <div class="metric-def">Return per unit of risk taken</div>
+      <div class="metric-body">Sharpe = (Fund Return − Risk Free Rate) ÷ Standard Deviation. A fund with 16% return and high volatility might have lower Sharpe than a 13% return, steady fund. Think: miles per litre efficiency, not just top speed.</div>
+      <span class="metric-tag" style="background:rgba(217,119,87,.15);color:var(--gold)">Above 1 = Good</span>
+    </div>
+    <div class="metric-card">
+      <div class="metric-name">Standard Deviation</div>
+      <div class="metric-def">Consistency of returns</div>
+      <div class="metric-body">Low SD = fund returns are consistent month to month. High SD = returns swing wildly. A fund returning 12% with SD of 5% is far more reliable than one returning 14% with SD of 18%.</div>
+      <span class="metric-tag" style="background:rgba(106,155,204,.15);color:var(--blue)">Lower = Smoother ride</span>
+    </div>
+    <div class="metric-card">
+      <div class="metric-name">Expense Ratio</div>
+      <div class="metric-def">Annual cost of the fund</div>
+      <div class="metric-body">Expressed as % of AUM. Deducted daily from NAV. Direct equity funds: 0.5–1.2%. Index funds: 0.05–0.2%. Anything above 1.5% for equity is questionable unless alpha justifies it.</div>
+      <span class="metric-tag" style="background:rgba(179,80,63,.15);color:var(--bear)">Lower = Better always</span>
+    </div>
+    <div class="metric-card">
+      <div class="metric-name">Portfolio Turnover</div>
+      <div class="metric-def">How often stocks are replaced</div>
+      <div class="metric-body">High turnover = frequent buying/selling inside the fund = higher transaction costs = can hurt returns. Low turnover funds tend to be more conviction-driven. Excessive churning is often a red flag.</div>
+      <span class="metric-tag" style="background:rgba(179,96,63,.15);color:var(--orange)">Lower = More conviction</span>
+    </div>
+    <div class="metric-card">
+      <div class="metric-name">AUM Size</div>
+      <div class="metric-def">Total assets under management</div>
+      <div class="metric-body">Very large AUM in small cap = problem. Fund can't exit positions without moving the market against itself (liquidity issue). For large/index funds, bigger AUM = more stable. For small cap, cap fund size carefully.</div>
+      <span class="metric-tag" style="background:rgba(120,140,93,.15);color:var(--teal)">Context dependent</span>
+    </div>
+    <div class="metric-card">
+      <div class="metric-name">Sortino Ratio</div>
+      <div class="metric-def">Like Sharpe, but only penalises downside volatility</div>
+      <div class="metric-body">Better metric than Sharpe for equity funds. Sharpe penalises upside volatility too (you don't mind that!). Sortino focuses only on the bad swings. Higher Sortino = manager protects downside well.</div>
+      <span class="metric-tag" style="background:rgba(106,155,204,.15);color:var(--purple)">Above 1 = Excellent</span>
+    </div>
+  </div>
+
+  <div class="callout callout-orange">
+    <strong>Where to find these metrics:</strong> Value Research Online (valueresearchonline.com) and Morningstar India are your go-to scorecards. Also check AMC factsheets (monthly PDF releases) for portfolio composition, top holdings, sector allocation, and all risk metrics. Make this a monthly 10-minute ritual.
+  </div>
+
+  <!-- QUIZ 7 -->
+  <div class="quiz-block" id="quiz7">
+    <div class="quiz-header">
+      <span class="quiz-badge">Quiz · Section 07</span>
+      <span class="quiz-title">Metrics Mastery</span>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q1 of 3</div>
+      <div class="quiz-q-text">Fund A: 15% return, Sharpe 0.6. Fund B: 13% return, Sharpe 1.2. Which is the better risk-adjusted choice?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Fund A — higher absolute return</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Cannot be determined</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Fund B — higher risk-adjusted return</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Equal — return difference is small</div>
+      </div>
+      <div class="quiz-explanation">✅ Fund B takes less risk per unit of return earned. Sharpe 1.2 vs 0.6 means Fund B is twice as efficient at generating returns per risk unit. Fund A might be taking wild bets to get that extra 2%.</div>
+    </div>
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q2 of 3</div>
+      <div class="quiz-q-text">A small cap fund has AUM of ₹30,000 crore. Why might this be a concern?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Larger AUM means lower returns guaranteed</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Very large AUM makes it hard to exit small cap positions without moving prices against the fund</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> SEBI doesn't allow small cap funds above ₹10,000 crore</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> No concern — bigger is always better</div>
+      </div>
+      <div class="quiz-explanation">✅ Small cap stocks have limited liquidity. A ₹30,000 crore fund trying to exit a small cap position will flood the market and push prices down against itself. This is the "size trap" — a fund that grew too big for its own strategy.</div>
+    </div>
+    <div class="quiz-q" data-correct="a">
+      <div class="quiz-q-num">Q3 of 3</div>
+      <div class="quiz-q-text">Alpha of +5% means:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Fund outperformed its benchmark by 5%</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Fund charged 5% expense ratio</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Fund was 5x more volatile than the index</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> NAV grew by exactly 5%</div>
+      </div>
+      <div class="quiz-explanation">✅ Alpha = excess return vs benchmark. +5% alpha = pure fund manager skill (or luck — sustain it over 5+ years to be sure). This is what you're paying active fund management fees for.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ─────────────── SECTION 8 ─────────────── -->
+<section class="section" id="s8">
+  <div class="sec-header">
+    <span class="sec-num">08</span>
+    <div class="sec-header-text">
+      <h2>Shankar Nath's Investing Philosophy</h2>
+      <p>The discipline blueprint that beats most fund managers.</p>
+    </div>
+  </div>
+
+  <p class="prose">Shankar Nath (Groww's former head of investor education) built a philosophy around one radical idea: <strong>the average investor's biggest enemy is themselves, not the market.</strong> His framework is goal-based, boring, consistent, and spectacularly effective.</p>
+
+  <div class="philosophy-grid">
+    <div class="phil-card">
+      <div class="phil-avatar">🎯</div>
+      <div class="phil-name">Shankar Nath</div>
+      <div class="phil-title">Goal-Based Investing Rules</div>
+      <ul class="phil-rules">
+        <li><span class="rule-num">01</span> Every SIP must have a named goal. Nameless SIPs get killed in crashes.</li>
+        <li><span class="rule-num">02</span> Never try to time the market. Even full-time fund managers fail at this regularly.</li>
+        <li><span class="rule-num">03</span> Direct plans, always. No exceptions for the informed investor.</li>
+        <li><span class="rule-num">04</span> Index funds for core (70%), satellite active funds for rest (30%).</li>
+        <li><span class="rule-num">05</span> Step-up SIP every year by 10%. Salary grew? SIP grows too.</li>
+        <li><span class="rule-num">06</span> Review annually — not monthly. Checking daily NAV is noise, not signal.</li>
+        <li><span class="rule-num">07</span> Don't chase last year's top performer. That fund has already had its run.</li>
+      </ul>
+    </div>
+    <div class="phil-card">
+      <div class="phil-avatar">📚</div>
+      <div class="phil-name">Monika Halan</div>
+      <div class="phil-title">Let's Talk MF — Core Rules</div>
+      <ul class="phil-rules">
+        <li><span class="rule-num">01</span> Insurance before investment — always, always, always.</li>
+        <li><span class="rule-num">02</span> A simple portfolio of 3 funds beats 20-fund complexity every time.</li>
+        <li><span class="rule-num">03</span> Equity only for goals 7+ years away. Full stop.</li>
+        <li><span class="rule-num">04</span> Rebalance once a year — don't over-tinker.</li>
+        <li><span class="rule-num">05</span> Past performance is just a story — not a guarantee.</li>
+        <li><span class="rule-num">06</span> Avoid NFOs (New Fund Offers) — no track record = pure gamble.</li>
+        <li><span class="rule-num">07</span> Know WHY you're invested before you look at returns.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-gold" style="border-left-color:var(--gold);background:var(--golddim);">
+    <strong>The Step-Up SIP Power Move:</strong> Start with ₹5,000/month at age 22. Increase by 10% every year (₹5,500 year 2, ₹6,050 year 3...). By age 52, you're investing ₹87,000/month with a corpus crossing ₹10+ crore. This single habit — simply stepping up with income — is Shankar Nath's most potent wealth-building tool. It requires zero market knowledge. Just discipline.
+  </div>
+
+  <!-- QUIZ 8 -->
+  <div class="quiz-block" id="quiz8">
+    <div class="quiz-header">
+      <span class="quiz-badge">Quiz · Section 08</span>
+      <span class="quiz-title">Philosophy Check</span>
+    </div>
+    <div class="quiz-q" data-correct="d">
+      <div class="quiz-q-num">Q1 of 3</div>
+      <div class="quiz-q-text">A mutual fund was the #1 performer in its category last year. According to both Shankar Nath and Monika Halan, what should you do?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Immediately put all your money in it</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> It'll definitely be #1 next year too</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Avoid it — being #1 is a red flag</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Be cautious — past performance is not a reliable predictor. Check consistency over 5+ years.</div>
+      </div>
+      <div class="quiz-explanation">✅ The #1 fund of any given year is often driven by a specific market cycle or sector bet. Chasing last year's winner is one of the most reliable ways to underperform. Both experts emphasize 5–10 year consistency, not 1-year sprints.</div>
+    </div>
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q2 of 3</div>
+      <div class="quiz-q-text">Shankar Nath's core portfolio model for retail investors allocates approximately:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> 100% in small cap funds for maximum returns</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> ~70% in index funds, ~30% in selective active funds</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> 50% equity, 50% gold always</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Equal split across 15 different fund categories</div>
+      </div>
+      <div class="quiz-explanation">✅ Core-satellite approach: index fund as the bedrock (low cost, market return), with a few active funds for potential alpha. This minimizes cost while keeping upside potential.</div>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q3 of 3</div>
+      <div class="quiz-q-text">You're 28, investing ₹8,000/month SIP. When should you ideally review your MF portfolio?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Daily — check NAV every morning</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Weekly — markets change fast</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Annually — rebalance and step up SIP</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Only when a fund crashes 40%</div>
+      </div>
+      <div class="quiz-explanation">✅ Annual review = check goal progress, rebalance if allocation drifted (eg: equity grew from 70% to 85%), step up SIP with raise. Daily checking creates anxiety and impulsive decisions — both wealth destroyers.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ─────────────── SECTION 9 ─────────────── -->
+<section class="section" id="s9">
+  <div class="sec-header">
+    <span class="sec-num">09</span>
+    <div class="sec-header-text">
+      <h2>The Taxman Cometh</h2>
+      <p>MF taxation in India — the full picture including your 30% slab.</p>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <p><strong>The Harvest Analogy:</strong> You've grown tomatoes (mutual fund returns) in your garden. The government takes a cut when you sell (redeem). How much they take depends on two things: (1) how long you grew the tomatoes (holding period) and (2) whether they're red juicy equity tomatoes or debt tomatoes. Short growth = higher tax. Long growth = lower tax. This is by design — to encourage long-term investing.</p>
+  </div>
+
+  <div class="tax-card">
+    <div class="tax-card-header" style="color:var(--bull)">EQUITY FUNDS (65%+ equity allocation)</div>
+    <div class="tax-row header">
+      <div class="tax-cell label">Holding Period</div>
+      <div class="tax-cell label">Tax Type</div>
+      <div class="tax-cell label">Tax Rate</div>
+    </div>
+    <div class="tax-row">
+      <div class="tax-cell">Less than 1 year</div>
+      <div class="tax-cell">STCG (Short Term Capital Gains)</div>
+      <div class="tax-cell highlight">15% flat</div>
+    </div>
+    <div class="tax-row">
+      <div class="tax-cell">1 year or more</div>
+      <div class="tax-cell">LTCG (Long Term Capital Gains)</div>
+      <div class="tax-cell highlight">10% above ₹1 lakh exemption</div>
+    </div>
+  </div>
+
+  <div class="tax-card">
+    <div class="tax-card-header" style="color:var(--blue)">DEBT FUNDS (less than 65% equity)</div>
+    <div class="tax-row header">
+      <div class="tax-cell label">Holding Period</div>
+      <div class="tax-cell label">Tax Type</div>
+      <div class="tax-cell label">Tax Rate</div>
+    </div>
+    <div class="tax-row">
+      <div class="tax-cell">Any holding period</div>
+      <div class="tax-cell">Treated as income (post Apr 2023)</div>
+      <div class="tax-cell highlight">Added to income → 30% for you</div>
+    </div>
+  </div>
+
+  <div class="tax-card">
+    <div class="tax-card-header" style="color:var(--gold)">ELSS FUNDS</div>
+    <div class="tax-row">
+      <div class="tax-cell">3-year lock-in (min)</div>
+      <div class="tax-cell">LTCG post lock-in</div>
+      <div class="tax-cell highlight">10% above ₹1 lakh + 80C deduction benefit on investment</div>
+    </div>
+  </div>
+
+  <div class="callout callout-orange">
+    <strong>The Rachit Calculation — Debt Fund Trap:</strong> Post April 2023, debt funds lost their indexation benefit. In your 30% slab, ALL debt fund gains are taxed at 30% regardless of holding period. This makes high-quality FDs (taxed similarly) or direct equity/hybrid exposure more efficient for your bracket. Review any debt fund positions accordingly.
+  </div>
+
+  <div class="callout callout-bull">
+    <strong>₹1 Lakh LTCG Exemption Hack:</strong> Equity fund gains up to ₹1 lakh/year are completely tax-free. Strategy: redeem gains just under ₹1 lakh each year and reinvest — this resets your cost basis and harvests tax-free profits annually. Called <strong>"Tax Harvesting"</strong> — a legitimate, legal wealth optimization move.
+  </div>
+
+  <!-- QUIZ 9 -->
+  <div class="quiz-block" id="quiz9">
+    <div class="quiz-header">
+      <span class="quiz-badge">Quiz · Section 09</span>
+      <span class="quiz-title">Tax Intelligence</span>
+    </div>
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q1 of 3</div>
+      <div class="quiz-q-text">You bought equity fund units in June 2023 and sold in August 2024 (14 months). Tax applicable on gains?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> 15% STCG</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> 10% LTCG (above ₹1 lakh)</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> 30% as per your income slab</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Zero tax always on MFs</div>
+      </div>
+      <div class="quiz-explanation">✅ Held over 12 months = LTCG territory. 10% flat on gains EXCEEDING ₹1 lakh. If your total gains were ₹80,000 — zero tax (under exemption). ₹1.5 lakh gain = 10% on ₹50,000 = ₹5,000 tax.</div>
+    </div>
+    <div class="quiz-q" data-correct="d">
+      <div class="quiz-q-num">Q2 of 3</div>
+      <div class="quiz-q-text">Post April 2023, debt mutual fund gains for someone in the 30% tax bracket are taxed at:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> 10% LTCG after 3 years</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> 20% with indexation</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Nil — debt funds are tax-free</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> 30% — added to income regardless of holding period</div>
+      </div>
+      <div class="quiz-explanation">✅ The 2023 budget changed this completely. Debt fund gains are now part of your income — taxed at your slab rate. At 30%, this kills the advantage debt funds had. Consider direct bonds or equity-hybrid funds instead.</div>
+    </div>
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q3 of 3</div>
+      <div class="quiz-q-text">What is "Tax Harvesting" in the context of equity mutual funds?</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Selling all funds during a market crash</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> A SEBI-mandated scheme for tax rebates</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Annually redeeming gains under ₹1 lakh (tax-free) and reinvesting to reset cost basis</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Switching from equity to debt to avoid tax</div>
+      </div>
+      <div class="quiz-explanation">✅ Since equity LTCG up to ₹1 lakh is tax-free annually, you can systematically book gains near that limit and reinvest — legally harvesting tax-free profits and resetting your cost basis higher every year. Elegant. Legal. Smart.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"></div>
+
+<!-- ─────────────── SECTION 10 ─────────────── -->
+<section class="section" id="s10">
+  <div class="sec-header">
+    <span class="sec-num">10</span>
+    <div class="sec-header-text">
+      <h2>The Playbook — Tips, Tricks & Traps</h2>
+      <p>The edge that separates informed investors from the herd.</p>
+    </div>
+  </div>
+
+  <ul class="tips-list">
+    <li>
+      <span class="tip-icon">⚡</span>
+      <div><strong>Start stupidly small.</strong> ₹500/month SIP beats zero forever. The cost of waiting for "the right time" or "enough money" is always higher than the cost of starting imperfect. Compounding doesn't wait for you.</div>
+    </li>
+    <li>
+      <span class="tip-icon">🚫</span>
+      <div><strong>Avoid NFOs (New Fund Offers) obsessively.</strong> Banks push NFOs because commissions are highest on new launches. An NFO at ₹10 NAV is NOT cheaper than an existing fund at ₹200 NAV. They have zero track record. You're buying a restaurant before the first meal is served.</div>
+    </li>
+    <li>
+      <span class="tip-icon">📊</span>
+      <div><strong>The 5-Year Consistency Rule.</strong> Before picking an active fund, check if it beat its benchmark consistently for 5 rolling years — not just 1-year or 3-year trailing returns. Rolling returns remove timing bias completely.</div>
+    </li>
+    <li>
+      <span class="tip-icon">🔄</span>
+      <div><strong>Rebalancing = Automatic Buy Low Sell High.</strong> If your 70/30 equity-debt target drifts to 85/15 after a bull run, rebalancing books equity profits and buys more debt. Next crash? Reverse rebalance. This is disciplined, systematic, and brilliant.</div>
+    </li>
+    <li>
+      <span class="tip-icon">🏆</span>
+      <div><strong>Top Holdings Check.</strong> Before investing in any equity fund, check its top 10 holdings in the factsheet. If it looks like a clone of the Nifty 50, you're paying active fund charges for an expensive index fund. Demand differentiation.</div>
+    </li>
+    <li>
+      <span class="tip-icon">💀</span>
+      <div><strong>Overlap Analysis.</strong> Owning 5 large cap funds is not diversification — you've bought the same 50 stocks five times. Use tools like Morningstar's portfolio overlap checker or Groww's overlap tool. Consolidate ruthlessly.</div>
+    </li>
+    <li>
+      <span class="tip-icon">🧊</span>
+      <div><strong>The SWP Exit Strategy.</strong> Systematic Withdrawal Plan (SWP) — when you reach your goal, don't redeem all at once. Set up a SWP to withdraw a fixed amount monthly. This continues compounding on the remaining corpus. Retiree's best friend.</div>
+    </li>
+    <li>
+      <span class="tip-icon">🎯</span>
+      <div><strong>XIRR vs CAGR — Know the Difference.</strong> CAGR works for lump sums. For SIPs (multiple cash flows), use XIRR. XIRR accounts for the timing of each SIP instalment. Your MF app shows XIRR — that's the real return on YOUR SIP, not the fund's marketing number.</div>
+    </li>
+    <li>
+      <span class="tip-icon">📅</span>
+      <div><strong>Nomination + Joint Holding.</strong> Set nominees on every fund folio. Use MFCentral to consolidate. One of the most overlooked hygiene steps — your family should be able to access your investments if something happens to you.</div>
+    </li>
+    <li>
+      <span class="tip-icon">🔥</span>
+      <div><strong>Know Your Exit Load.</strong> Most equity funds charge 1% exit load if redeemed within 1 year. Liquid funds charge within 7 days. Check before you redeem — an impulsive exit during a crash plus exit load plus STCG is a triple punishment.</div>
+    </li>
+  </ul>
+
+  <div class="callout callout-purple">
+    <strong>The Rachit-Specific Playbook:</strong> Starting capital under ₹1L + 30% tax slab + Zerodha Coin access. Suggested immediate action stack:<br><br>
+    1️⃣ Emergency buffer → Liquid Fund on Coin (₹15k — already in your plan)<br>
+    2️⃣ ELSS SIP → ₹12,500/month (max out ₹1.5L 80C, save ₹45K tax/year)<br>
+    3️⃣ Core → Nifty 50 Index Fund Direct (₹2,000–3,000/month SIP)<br>
+    4️⃣ Satellite → Flexi-cap or Mid-cap Direct (₹1,000–2,000/month)<br>
+    5️⃣ Existing → Motilal Oswal Midcap — keep, set annual review date.
+  </div>
+
+  <!-- FINAL QUIZ -->
+  <div class="quiz-block" id="quiz10">
+    <div class="quiz-header">
+      <span class="quiz-badge">Final Quiz · Section 10</span>
+      <span class="quiz-title">The Grand Finale — 5 Questions</span>
+    </div>
+
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q1 of 5</div>
+      <div class="quiz-q-text">XIRR is used instead of CAGR for SIP returns because:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> XIRR is always higher than CAGR</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> CAGR is only for debt funds</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> SIPs involve multiple cash flows at different times — XIRR accounts for this accurately</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> SEBI mandates XIRR for all reporting</div>
+      </div>
+      <div class="quiz-explanation">✅ CAGR assumes one investment at one point in time. SIPs invest at 12 different points per year. XIRR is the internal rate of return that accounts for the timing of each specific cash flow — far more accurate for measuring your real SIP performance.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="b">
+      <div class="quiz-q-num">Q2 of 5</div>
+      <div class="quiz-q-text">You have 8 large cap funds across different AMCs. This is an example of:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Excellent diversification</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Di-worse-ification — massive portfolio overlap, higher complexity, no real diversification</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> A standard professional portfolio strategy</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Compulsory for tax planning</div>
+      </div>
+      <div class="quiz-explanation">✅ Large cap funds all buy the same top 100 companies. 8 of them = 8x the cost, 8x the admin, 0x extra diversification. This is "di-worse-ification" — a Peter Lynch term. 2-3 well-chosen funds across different categories is all you need.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="d">
+      <div class="quiz-q-num">Q3 of 5</div>
+      <div class="quiz-q-text">A Systematic Withdrawal Plan (SWP) is most useful for:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Investing during market dips automatically</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Tax-loss harvesting</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Switching between fund houses</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Creating a regular income stream from corpus while remaining balance keeps compounding</div>
+      </div>
+      <div class="quiz-explanation">✅ SWP = reverse SIP. You withdraw a fixed amount monthly — the remaining units keep growing. A ₹1 crore corpus on SWP at 12% annual growth can provide ₹50,000/month indefinitely while the principal stays intact. This is passive income architecture.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="a">
+      <div class="quiz-q-num">Q4 of 5</div>
+      <div class="quiz-q-text">Exit load of 1% applies in most equity funds if redeemed within:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> 1 year</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> 3 years</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> 6 months</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> Exit load doesn't exist in direct plans</div>
+      </div>
+      <div class="quiz-explanation">✅ Standard equity fund exit load = 1% if redeemed within 12 months. After 1 year, typically nil. Liquid funds have a 7-day exit load. Always check the SID (Scheme Information Document) before investing.</div>
+    </div>
+
+    <div class="quiz-q" data-correct="c">
+      <div class="quiz-q-num">Q5 of 5</div>
+      <div class="quiz-q-text">In your 30% tax slab, the most tax-efficient way to grow wealth over 15 years in mutual funds is:</div>
+      <div class="quiz-options">
+        <div class="quiz-opt" data-val="a"><span class="opt-letter">A</span> Debt funds — safe and predictable</div>
+        <div class="quiz-opt" data-val="b"><span class="opt-letter">B</span> Regular plan large cap fund</div>
+        <div class="quiz-opt" data-val="c"><span class="opt-letter">C</span> Direct equity funds (index + flexi) held 7+ years — LTCG at 10% vs your 30% income slab</div>
+        <div class="quiz-opt" data-val="d"><span class="opt-letter">D</span> FDs — guaranteed returns taxed at 30%</div>
+      </div>
+      <div class="quiz-explanation">✅ At 30% slab, equity MFs held long-term are taxed at just 10% LTCG (on gains above ₹1L). Debt funds? 30%. FDs? 30%. The tax advantage of long-term equity MFs for high-income earners is MASSIVE — the government is literally subsidising your equity wealth building.</div>
+    </div>
+
+    <div class="quiz-score" id="quiz10-score">
+      <div class="qs-num" id="quiz10-scorenum">—</div>
+      <div class="qs-label">out of 5 correct</div>
+      <div class="qs-msg" id="quiz10-msg">—</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ COMPLETION BANNER ═══════════════ -->
+<div style="background:var(--bg2);border:1px solid rgba(217,119,87,.4);border-radius:12px;padding:32px;text-align:center;margin:32px 0;" id="completionBanner" style="display:none">
+  <div style="font-size:40px;margin-bottom:12px;">🏆</div>
+  <div style="font-family: Consolas, Menlo, monospace;font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Module A2 Complete</div>
+  <div style="font-size:22px;font-weight:800;margin-bottom:8px;">Mutual Funds — Certified 🇮🇳</div>
+  <div style="font-size:14px;color:var(--muted);max-width:500px;margin:0 auto;">You now understand how the MF machine works, how to pick funds intelligently, how to build a portfolio Halan would approve of, and how to invest with Shankar Nath's discipline. Next up: A3 Bonds Deep Dive or B5 MACD.</div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <a href="../../../02_Tools_Live/master-dashboard/index.html" class="footer-back">← Back to Portal Home</a>
+  <span class="footer-copy">REFRAKT STUDIOS · A2 Mutual Funds · 2026</span>
+</footer>
+
+<script>
+// ── NAV Calculator ──
+function calcNAV(){
+  const assets=parseFloat(document.getElementById('nav-assets').value)||0;
+  const liab=parseFloat(document.getElementById('nav-liab').value)||0;
+  const units=parseFloat(document.getElementById('nav-units').value)||1;
+  const myUnits=parseFloat(document.getElementById('nav-my-units').value)||0;
+  const nav=((assets-liab)/units).toFixed(2);
+  const portfolio=(nav*myUnits).toFixed(0);
+  document.getElementById('nav-out').textContent='\u20B9'+nav;
+  document.getElementById('nav-portfolio').textContent='Your portfolio value: \u20B9'+Number(portfolio).toLocaleString('en-IN');
+  document.getElementById('nav-result').style.display='block';
+}
+
+// ── SIP Visualiser ──
+function formatCr(n){
+  if(n>=10000000)return '\u20B9'+(n/10000000).toFixed(2)+'Cr';
+  if(n>=100000)return '\u20B9'+(n/100000).toFixed(1)+'L';
+  return '\u20B9'+Math.round(n).toLocaleString('en-IN');
+}
+function updateSIP(){
+  const amount=parseInt(document.getElementById('sip-amount').value);
+  const years=parseInt(document.getElementById('sip-years').value);
+  const rate=parseFloat(document.getElementById('sip-rate').value)/100/12;
+  document.getElementById('sip-amount-val').textContent='\u20B9'+amount.toLocaleString('en-IN');
+  document.getElementById('sip-years-val').textContent=years+' years';
+  document.getElementById('sip-rate-val').textContent=(rate*12*100).toFixed(1)+'%';
+  const months=years*12;
+  const corpus=amount*((Math.pow(1+rate,months)-1)/rate)*(1+rate);
+  const invested=amount*months;
+  const gain=corpus-invested;
+  document.getElementById('sip-invested').textContent=formatCr(invested);
+  document.getElementById('sip-corpus').textContent=formatCr(corpus);
+  document.getElementById('sip-gain').textContent=formatCr(gain);
+  // Build bar chart
+  const chart=document.getElementById('sip-chart');
+  chart.innerHTML='';
+  const steps=Math.min(years,15);
+  let maxCorpus=0;
+  const data=[];
+  for(let y=1;y<=steps;y++){
+    const yMonths=Math.round(y*(months/steps));
+    const c=amount*((Math.pow(1+rate,yMonths)-1)/rate)*(1+rate);
+    const i=amount*yMonths;
+    data.push({c,i,g:c-i,yr:Math.round(y*(years/steps))});
+    if(c>maxCorpus)maxCorpus=c;
+  }
+  const H=140;
+  data.forEach(d=>{
+    const wrap=document.createElement('div');
+    wrap.className='sip-bar-wrap';
+    const investH=Math.max(2,Math.round((d.i/maxCorpus)*H));
+    const gainH=Math.max(2,Math.round((d.g/maxCorpus)*H));
+    wrap.innerHTML=`<div class="sip-bar-gain" style="height:${gainH}px"></div><div class="sip-bar-invest" style="height:${investH}px"></div><div class="sip-bar-label">Yr ${d.yr}</div>`;
+    chart.appendChild(wrap);
+  });
+}
+document.getElementById('sip-amount').addEventListener('input',updateSIP);
+document.getElementById('sip-years').addEventListener('input',updateSIP);
+document.getElementById('sip-rate').addEventListener('input',updateSIP);
+updateSIP();
+
+// ── Quiz Engine ──
+let totalAnswered=0;
+let totalCorrect=0;
+const totalQuestions=document.querySelectorAll('.quiz-q').length;
+
+document.querySelectorAll('.quiz-q').forEach(function(q){
+  const correct=q.dataset.correct;
+  const opts=q.querySelectorAll('.quiz-opt');
+  const exp=q.querySelector('.quiz-explanation');
+  opts.forEach(function(opt){
+    opt.addEventListener('click',function(){
+      if(q.classList.contains('answered'))return;
+      q.classList.add('answered');
+      totalAnswered++;
+      opts.forEach(function(o){o.classList.add('locked');});
+      if(opt.dataset.val===correct){
+        opt.classList.add('correct');
+        totalCorrect++;
+      }else{
+        opt.classList.add('wrong');
+        opts.forEach(function(o){if(o.dataset.val===correct)o.classList.add('correct');});
+      }
+      if(exp)exp.classList.add('show');
+      updateProgress();
+    });
+  });
+});
+
+function updateProgress(){
+  const pct=Math.round((totalAnswered/totalQuestions)*100);
+  document.getElementById('globalProg').style.width=pct+'%';
+  document.getElementById('globalPct').textContent=pct+'%';
+  if(totalAnswered===totalQuestions){
+    document.getElementById('completionBanner').style.display='block';
+    document.getElementById('completionBanner').scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+
+// Final quiz score
+(function(){
+  const finalQ=document.getElementById('quiz10');
+  if(!finalQ)return;
+  const qs=finalQ.querySelectorAll('.quiz-q');
+  let ans=0;let corr=0;
+  function checkFinal(){
+    const allDone=Array.from(qs).every(function(q){return q.classList.contains('answered');});
+    if(!allDone)return;
+    corr=Array.from(qs).filter(function(q){return q.classList.contains('answered');}).reduce(function(acc,q){
+      const correct=q.dataset.correct;
+      const chosen=q.querySelector('.quiz-opt.correct');
+      return acc+(chosen?1:0);
+    },0);
+    const score=document.getElementById('quiz10-score');
+    const scoreNum=document.getElementById('quiz10-scorenum');
+    const msg=document.getElementById('quiz10-msg');
+    let c=0;
+    qs.forEach(function(q){if(q.querySelector('.quiz-opt[data-val="'+q.dataset.correct+'"].correct'))c++;});
+    scoreNum.textContent=c;
+    const msgs=['Keep grinding — review the sections and retry!','Good start — revisit metrics and taxation sections.','Solid foundation — you understand MF basics well.','Strong! You think like an informed investor now.','Perfect score! Shankar Nath would approve. 🏆'];
+    msg.textContent=msgs[Math.min(c,4)];
+    score.classList.add('show');
+  }
+  qs.forEach(function(q){
+    q.addEventListener('click',function(){setTimeout(checkFinal,200);});
+  });
+})();
+</script>
+</body>
+</html>

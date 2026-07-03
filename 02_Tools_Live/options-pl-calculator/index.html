@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Options P&L Calculator — Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#FAF7F2; --ink:#1C1917; --gold:#C9A227; --line:#E4DCCB;
+    --sage:#6B8F71; --clay:#B5654A; --slate:#5B6B73; --plum:#6B4C6B;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); }
+  nav { position:sticky; top:0; z-index:10; background:var(--ink); color:var(--cream); display:flex; align-items:center; justify-content:space-between; padding:13px 28px; border-bottom:1px solid var(--gold); }
+  .nav-left { display:flex; align-items:center; gap:10px; }
+  .brand { font-family:'Playfair Display',serif; font-weight:700; font-size:16px; }
+  .breadcrumb-pill { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.04em; background:rgba(201,162,39,.15); color:var(--gold); padding:6px 14px; border-radius:999px; }
+  .portal-link { color:var(--cream); font-size:12px; text-decoration:none; border:1px solid rgba(255,255,255,.25); padding:6px 12px; border-radius:4px; }
+  .portal-link:hover { border-color:var(--gold); color:var(--gold); }
+  header.page-head { background:var(--ink); color:var(--cream); padding:26px 32px; }
+  .track-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--plum); margin:0 0 6px; }
+  h1 { font-family:'Playfair Display',serif; font-weight:700; font-size:28px; margin:0; }
+  main { max-width:920px; margin:0 auto; padding:40px 24px 80px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:4px; padding:28px 28px 8px; margin-bottom:24px; transition:box-shadow .15s; }
+  .card:hover { box-shadow:0 4px 14px rgba(0,0,0,.06); }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:0 20px; }
+  label { display:block; font-size:13px; font-weight:500; margin-bottom:6px; margin-top:18px; }
+  select, input { width:100%; padding:10px 12px; font-family:'DM Mono',monospace; font-size:15px; border:1px solid var(--line); border-radius:3px; background:var(--cream); color:var(--ink); }
+  select:focus, input:focus { outline:2px solid var(--gold); outline-offset:1px; }
+  button { margin:24px 0 20px; width:100%; padding:13px; background:var(--plum); color:var(--cream); border:none; border-radius:3px; font-weight:500; font-size:14px; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; }
+  button:hover { background:#54395a; }
+  .result { border-top:1px solid var(--line); padding-top:20px; margin-top:4px; }
+  .row { display:flex; justify-content:space-between; padding:8px 0; font-family:'DM Mono',monospace; font-size:14px; }
+  .row span:first-child { color:#666; }
+  .row.big { font-size:22px; font-weight:500; }
+  .row.big.profit { color:var(--sage); }
+  .row.big.loss { color:var(--clay); }
+  footer { text-align:center; font-size:12px; color:#999; padding:28px 24px 40px; font-family:'DM Mono',monospace; border-top:1px solid var(--line); margin-top:20px; }
+  footer a { color:var(--gold); text-decoration:none; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12Z" stroke="#C9A227" stroke-width="1.5"/><path d="M12 2V22" stroke="#C9A227" stroke-width="1"/></svg>
+    <span class="brand">Refrakt</span>
+  </div>
+  <div class="breadcrumb-pill">Finance-OS / 02_Tools_Live / Options P&L Calculator</div>
+  <a class="portal-link" href="../master-dashboard/index.html">Portal Home</a>
+</nav>
+<header class="page-head">
+  <p class="track-label">D7 · Tool · Options</p>
+  <h1>Options P&L Calculator</h1>
+</header>
+<main>
+  <div class="card">
+    <div class="grid">
+      <div>
+        <label for="optType">Option Type</label>
+        <select id="optType">
+          <option value="CE">Call (CE)</option>
+          <option value="PE">Put (PE)</option>
+        </select>
+      </div>
+      <div>
+        <label for="position">Position</label>
+        <select id="position">
+          <option value="long">Buy (Long)</option>
+          <option value="short">Sell (Short)</option>
+        </select>
+      </div>
+      <div>
+        <label for="strike">Strike Price (₹)</label>
+        <input type="number" id="strike" value="0" step="0.05">
+      </div>
+      <div>
+        <label for="premium">Premium Paid/Received (₹)</label>
+        <input type="number" id="premium" value="0" step="0.05">
+      </div>
+      <div>
+        <label for="spot">Spot Price at Expiry (₹)</label>
+        <input type="number" id="spot" value="0" step="0.05">
+      </div>
+      <div>
+        <label for="lotSize">Lot Size</label>
+        <input type="number" id="lotSize" value="1">
+      </div>
+    </div>
+
+    <button onclick="calc()">Calculate P&L</button>
+
+    <div class="result" id="result" style="display:none">
+      <div class="row"><span>Intrinsic Value at Expiry</span><span id="intrinsic">—</span></div>
+      <div class="row"><span>Breakeven Price</span><span id="breakeven">—</span></div>
+      <div class="row big" id="pnlRow"><span>Net P&L</span><span id="pnl">—</span></div>
+    </div>
+  </div>
+</main>
+<footer>Dummy template — premium/lot conventions vary by underlying (index vs stock). Verify against Sensibull before live use. · <a href="../master-dashboard/index.html">← Portal Home</a></footer>
+<script>
+function calc() {
+  const type = document.getElementById('optType').value;
+  const pos = document.getElementById('position').value;
+  const strike = parseFloat(document.getElementById('strike').value) || 0;
+  const premium = parseFloat(document.getElementById('premium').value) || 0;
+  const spot = parseFloat(document.getElementById('spot').value) || 0;
+  const lot = parseFloat(document.getElementById('lotSize').value) || 1;
+
+  let intrinsic = type === 'CE' ? Math.max(spot - strike, 0) : Math.max(strike - spot, 0);
+  let breakeven = type === 'CE' ? strike + premium : strike - premium;
+
+  let perUnitPnl = pos === 'long' ? (intrinsic - premium) : (premium - intrinsic);
+  let totalPnl = perUnitPnl * lot;
+
+  document.getElementById('intrinsic').textContent = '₹' + intrinsic.toFixed(2);
+  document.getElementById('breakeven').textContent = '₹' + breakeven.toFixed(2);
+  const pnlEl = document.getElementById('pnl');
+  const pnlRow = document.getElementById('pnlRow');
+  pnlEl.textContent = (totalPnl >= 0 ? '+₹' : '−₹') + Math.abs(totalPnl).toFixed(2);
+  pnlRow.classList.remove('profit', 'loss');
+  pnlRow.classList.add(totalPnl >= 0 ? 'profit' : 'loss');
+
+  document.getElementById('result').style.display = 'block';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Curriculum Tracker — Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:  #FAF7F2;
+  --beige:  #F5F0E8;
+  --beige2: #EDE8DF;
+  --beige3: #E4DDD1;
+  --white:  #FFFFFF;
+  --ink:    #1C1917;
+  --ink2:   #44403C;
+  --ink3:   #78716C;
+  --ink4:   #A8A29E;
+  --rule:   rgba(28,25,23,0.10);
+  --gold:   #C9A227;
+  --gold2:  #E3B341;
+  --gold-bg:#F5EDDB;
+  --gold-mid:#D9C28A;
+  --sage:     #4A7C59; --sage-bg:  #EBF2ED; --sage-mid: #C5DCC9;
+  --clay:     #A85C3A; --clay-bg:  #F5EAE4; --clay-mid: #E0BAA8;
+  --slate:    #3B5A7A; --slate-bg: #E7EEF5; --slate-mid:#AFC4D6;
+  --plum:     #6B4580; --plum-bg:  #EFE8F5; --plum-mid: #C9ADDA;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--cream); font-family:'DM Sans',sans-serif; font-weight:400; color:var(--ink); }
+
+nav { background:var(--beige); border-bottom:1px solid var(--rule); padding:12px 40px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:8px; }
+.logo-text { font-family:'DM Mono',monospace; font-weight:500; font-size:14px; color:var(--ink); letter-spacing:0.12em; }
+.bc-sep { color:var(--ink4); font-size:14px; }
+.bc-pill { font-family:'DM Mono',monospace; font-size:11px; background:var(--gold-bg); border:1px solid var(--gold-mid); color:var(--gold); padding:3px 10px; border-radius:20px; text-decoration:none; }
+.bc-current { font-family:'DM Mono',monospace; font-size:11px; color:var(--ink3); }
+
+header.hero { max-width:920px; margin:0 auto; padding:48px 40px 32px; border-bottom:1px solid var(--rule); }
+.eyebrow { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin:0 0 16px; }
+h1 { font-family:'Playfair Display',serif; font-weight:900; font-size:clamp(32px,5vw,48px); margin:0 0 10px; color:var(--ink); line-height:1.05; }
+.hero-sub { font-family:'DM Sans',sans-serif; font-weight:300; font-size:14.5px; color:var(--ink3); max-width:640px; line-height:1.8; margin:0 0 24px; }
+.hero-meta { display:flex; gap:20px; flex-wrap:wrap; border-top:1px solid var(--rule); padding-top:20px; font-family:'DM Mono',monospace; font-size:11px; color:var(--ink3); }
+
+.controls { position:sticky; top:49px; z-index:90; background:var(--cream); border-bottom:1px solid var(--rule); padding:14px 40px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.filter-btn { font-family:'DM Sans',sans-serif; font-weight:500; font-size:12px; padding:7px 15px; border-radius:999px; border:1px solid var(--rule); background:var(--white); color:var(--ink2); cursor:pointer; }
+.filter-btn.active { background:var(--ink); color:var(--cream); border-color:var(--ink); }
+.filter-btn:hover:not(.active) { border-color:var(--gold-mid); }
+#searchInput { margin-left:auto; font-family:'DM Sans',sans-serif; font-size:13px; padding:8px 14px; border:1px solid var(--rule); border-radius:6px; min-width:220px; background:var(--white); color:var(--ink); }
+#searchInput:focus { outline:none; border-color:var(--gold-mid); }
+
+main { max-width:920px; margin:0 auto; padding:32px 40px 100px; }
+.track { margin-bottom:48px; }
+.track.all-hidden { display:none; }
+
+.track-bar { background:var(--ink); color:var(--cream); padding:10px 20px; border-radius:6px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+.track-badge { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold2); }
+.track-title { font-family:'DM Sans',sans-serif; font-weight:600; font-size:13px; color:var(--cream); text-transform:uppercase; letter-spacing:0.06em; }
+.track-meta { margin-left:auto; font-family:'DM Mono',monospace; font-size:10.5px; color:rgba(250,247,242,0.65); display:flex; align-items:center; gap:10px; }
+.track-progress { width:90px; height:5px; background:rgba(250,247,242,0.2); border-radius:3px; overflow:hidden; }
+.track-progress-bar { height:100%; }
+.track-desc { font-size:12.5px; color:var(--ink3); margin:0 0 14px; font-family:'DM Sans',sans-serif; font-weight:300; max-width:640px; line-height:1.6; }
+
+.modules-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:14px; }
+.module-card { background:var(--white); border:1px solid var(--rule); border-radius:8px; padding:16px; text-decoration:none; color:var(--ink); display:block; position:relative; transition:box-shadow .15s, border-color .15s; }
+.module-card.linkable:hover { box-shadow:0 4px 16px rgba(28,25,23,0.08); border-color:var(--beige3); }
+.module-card.hidden { display:none; }
+.card-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; }
+.card-id { font-family:'DM Mono',monospace; font-size:10px; color:var(--ink4); letter-spacing:0.06em; }
+.card-status-pill { font-family:'DM Mono',monospace; font-size:9px; font-weight:500; padding:3px 9px; border-radius:3px; text-transform:uppercase; letter-spacing:0.03em; }
+.card-name { font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px; margin-bottom:6px; }
+.card-note { font-size:11.5px; color:var(--ink3); line-height:1.55; font-family:'DM Sans',sans-serif; font-weight:300; }
+.card-next-badge { position:absolute; top:-8px; right:10px; background:var(--slate); color:var(--white); font-family:'DM Mono',monospace; font-size:9px; font-weight:500; padding:2px 8px; border-radius:999px; }
+
+.sessions-toggle { font-family:'DM Mono',monospace; font-size:11px; color:var(--gold); cursor:pointer; margin-top:14px; display:inline-block; user-select:none; }
+.sessions-toggle:hover { text-decoration:underline; }
+.sessions-grid { display:none; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:10px; margin-top:12px; }
+.sessions-grid.open { display:grid; }
+.session-card { background:var(--gold-bg); border:1px solid var(--gold-mid); border-radius:6px; padding:12px 14px; }
+.session-title { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; margin-bottom:4px; color:var(--ink); }
+.session-date { font-family:'DM Mono',monospace; font-size:9.5px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:5px; }
+.session-desc { font-size:11px; color:var(--ink2); line-height:1.5; font-family:'DM Sans',sans-serif; font-weight:300; }
+
+#emptyState { display:none; text-align:center; padding:60px 0; color:var(--ink4); font-family:'DM Sans',sans-serif; }
+
+footer { border-top:1px solid var(--rule); padding:24px 40px; text-align:center; font-family:'DM Mono',monospace; font-size:11px; color:var(--ink4); }
+footer a { color:var(--gold); text-decoration:none; }
+footer a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">
+    <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+      <polygon points="14,2 26,24 2,24" fill="none" stroke="#C9A227" stroke-width="1.5"/>
+      <polygon points="14,8 22,22 6,22" fill="rgba(201,162,39,0.15)" stroke="#C9A227" stroke-width="1"/>
+    </svg>
+    <span class="logo-text">REFRAKT</span>
+  </div>
+  <span class="bc-sep">›</span>
+  <a href="../02_Tools_Live/master-dashboard/index.html" class="bc-pill">← Portal Home</a>
+  <span class="bc-sep">›</span>
+  <span class="bc-current">Curriculum Tracker</span>
+</nav>
+<header class="hero">
+  <p class="eyebrow">Refrakt Studios · Finance-OS</p>
+  <h1>Curriculum Tracker</h1>
+  <p class="hero-sub">Track A (Asset Classes) is fully built and accurately reflected below. Tracks B–G are carried forward from the prior tracker, unverified this pass — flagged, not silently resolved.</p>
+  <div class="hero-meta">
+    <span>Capital: ₹1L · 30% Tax Slab</span><span>·</span>
+    <span>Platform: Zerodha Kite · TradingView</span><span>·</span>
+    <span>Updated 2026-07-02</span>
+  </div>
+</header>
+<div class="controls">
+  <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+  <button class="filter-btn" onclick="setFilter('done', this)">Done</button>
+  <button class="filter-btn" onclick="setFilter('active', this)">Active</button>
+  <button class="filter-btn" onclick="setFilter('next', this)">Next Up</button>
+  <button class="filter-btn" onclick="setFilter('pending', this)">Pending</button>
+  <button class="filter-btn" onclick="setFilter('live', this)">Live</button>
+  <input id="searchInput" type="text" placeholder="Search modules..." oninput="applyFilters()">
+</div>
+<main id="main">
+  <div id="emptyState">No modules match this filter/search.</div>
+</main>
+<footer>
+  Refrakt Studios · Bibles: Murphy · O'Neil · Supersedes refrakt_curriculum_map.html (archived, not deleted) ·
+  <a href="../01_Curriculum/A_Asset_Classes/a_asset_classes_index.html">Track A Hub</a> ·
+  <a href="../02_Tools_Live/master-dashboard/index.html">Portal Home</a>
+</footer>
+<script>
+const TRACKS = [{"code": "A", "label": "Asset Classes", "color": "#C9A227", "description": "The instruments you will trade and invest in. Fully built as of 2026-07-02.", "modules": [{"id": "A1", "name": "Equities", "status": "done", "note": "4 pages live: Core Mechanics, Market Structure, Corporate Actions + hub.", "href": "../01_Curriculum/A_Asset_Classes/A1_Equities/a1_equities_index.html"}, {"id": "A2", "name": "Mutual Funds", "status": "done", "note": "Full module. Interactive content, Motilal Midcap as running example. Retrofitted 07-02.", "href": "../01_Curriculum/A_Asset_Classes/A2_Mutual_Funds/a2_mutual_funds.html"}, {"id": "A3", "name": "Bonds", "status": "done", "note": "Lending vs owning, coupon/yield/YTM, rate-price relationship, Indian bond menu, credit ratings.", "href": "../01_Curriculum/A_Asset_Classes/A3_Bonds/a3_bonds.html"}, {"id": "A4", "name": "Futures", "status": "done", "note": "Full masterclass: margin, MTM, cost of carry, rollover, currency futures, inter-market signal.", "href": "../01_Curriculum/A_Asset_Classes/A4_Futures/a4_futures_masterclass.html"}, {"id": "A5", "name": "Options", "status": "active", "note": "4 resources live (Foundations/Handbook/Strategies/Reference tool). Quiz still pending — will run live in chat, not static HTML.", "href": "../01_Curriculum/A_Asset_Classes/A5_Options/a5_options_index.html"}, {"id": "A6", "name": "Commodities", "status": "done", "note": "MCX mechanics, honest capital-feasibility check, reading commodities as macro signal.", "href": "../01_Curriculum/A_Asset_Classes/A6-A9_Commodities_Forex_Crypto_REITs/a6_commodities.html"}, {"id": "A7", "name": "Forex", "status": "done", "note": "What's legal to trade, USD/INR drivers, Rupee as equity signal. Mechanics live in Futures.", "href": "../01_Curriculum/A_Asset_Classes/A6-A9_Commodities_Forex_Crypto_REITs/a7_forex.html"}, {"id": "A8", "name": "Crypto", "status": "done", "note": "BTC/ETH theses, custody risk, Indian 30% flat tax + 1% TDS + no loss offset.", "href": "../01_Curriculum/A_Asset_Classes/A6-A9_Commodities_Forex_Crypto_REITs/a8_crypto.html"}, {"id": "A9", "name": "REITs", "status": "done", "note": "India's 4 listed REITs, SEBI 90% payout rule, multi-component tax treatment.", "href": "../01_Curriculum/A_Asset_Classes/A6-A9_Commodities_Forex_Crypto_REITs/a9_reits.html"}]}, {"code": "B", "label": "Technical & Fundamental Analysis", "color": "#3B5A7A", "description": "How to read markets — indicators, charts, patterns, fundamentals. Carried forward from the prior tracker, not re-verified this pass.", "modules": [{"id": "B1", "name": "TA Foundation", "status": "done", "note": "Murphy's 3 premises: prices discount everything, prices move in trends, history repeats."}, {"id": "B1a", "name": "Dow Theory", "status": "pending", "note": "Gap identified. Theory of market phases, averages must confirm."}, {"id": "B2", "name": "Candlestick Patterns", "status": "done", "note": "Complete. App built (V1+V2) and live on GitHub Pages portal."}, {"id": "B3", "name": "Chart Patterns", "status": "active", "note": "Partial. H&S, flags, triangles covered. Continuation patterns pending."}, {"id": "B3a", "name": "Fibonacci Retracement", "status": "live", "note": "Tool built and live on portal. Elliott-Fibonacci combined tool deployed."}, {"id": "B4", "name": "RSI", "status": "done", "note": "Full deep-dive. Overbought/oversold, divergence, failure swings on Nifty."}, {"id": "B5", "name": "MACD", "status": "next", "note": "NEXT SCHEDULED MODULE. MACD line, signal line, histogram. Murphy Chapter locked."}, {"id": "B6", "name": "Volume Analysis", "status": "pending", "note": "Not started. Volume precedes price — Murphy."}, {"id": "B6a", "name": "Long-Term Charts", "status": "pending", "note": "Gap identified. Monthly/weekly chart reading discipline."}, {"id": "B7", "name": "Moving Averages", "status": "pending", "note": "Not started. 20/50/200 EMA/SMA framework."}, {"id": "B8", "name": "Bollinger Bands", "status": "pending", "note": "Not started. Volatility envelope around moving average."}, {"id": "B9", "name": "Stochastic Oscillator", "status": "pending", "note": "Not started."}, {"id": "B10", "name": "Fundamental Analysis", "status": "active", "note": "6-bucket framework partial. 50–60 indicators total, top 15 prioritised. DCF pending."}, {"id": "B11", "name": "Intermarket Analysis", "status": "pending", "note": "Not started. Bonds, stocks, commodities, currencies interplay — Murphy."}, {"id": "B12", "name": "Point & Figure Charts", "status": "pending", "note": "Gap identified. Price-only charts, noise elimination."}, {"id": "B13", "name": "Elliott Wave Theory", "status": "live", "note": "Tool live on portal. 5-wave impulse, 3-wave correction framework."}, {"id": "B14", "name": "Time Cycles", "status": "live", "note": "Tool live on portal. Seasonal patterns, cycle identification."}, {"id": "B15", "name": "Computers & Trading Systems", "status": "pending", "note": "Gap identified. System testing, optimisation, curve-fitting pitfalls."}]}, {"code": "C", "label": "Execution & Strategy", "color": "#4A7C59", "description": "How to actually trade — platforms, risk, sizing, strategy. Carried forward, not re-verified this pass.", "modules": [{"id": "C1", "name": "Zerodha Kite", "status": "done", "note": "Platform walkthrough complete. Order types, GTT, basket orders."}, {"id": "C2", "name": "TradingView", "status": "done", "note": "Charting setup complete. Indicators, alerts, Nifty workspace configured."}, {"id": "C3", "name": "Position Sizing", "status": "active", "note": "Audit found the D1 calculator is a dummy template, not wired to real capital rules — flagged, not yet closed."}, {"id": "C4", "name": "Risk Management", "status": "done", "note": "2% rule, R:R ratios, stop-loss discipline. Applied to ₹1L capital."}, {"id": "C5", "name": "Trade Journal", "status": "pending", "note": "Not started. Critical for pattern recognition over time."}, {"id": "C6", "name": "Options Strategies", "status": "done", "note": "Strategy masterclass + live payoff-visualiser tool both complete as of 07-02."}, {"id": "C7", "name": "Futures Mechanics", "status": "done", "note": "Full masterclass complete — margin, MTM, rollover, currency futures entry point."}, {"id": "C8", "name": "Expiry Mechanics", "status": "done", "note": "Weekly vs monthly. Theta acceleration, expiry-day behaviour, settlement."}]}, {"code": "D", "label": "Tools Built", "color": "#6B4580", "description": "Every tool deployed to the Refrakt GitHub Pages portal. Carried forward, not re-verified this pass — D1 audit flagged below.", "modules": [{"id": "D1", "name": "Position Size Calculator", "status": "active", "note": "EXISTS but footer literally reads \"dummy template — wire in actual capital allocation logic before going live.\" Not launch-ready."}, {"id": "D2", "name": "Candlestick Pattern App", "status": "live", "note": "V1 + V2 live on portal. 40+ patterns from Murphy with trade signals."}, {"id": "D3", "name": "Master Dashboard", "status": "live", "note": "Portal hub live. Now links to the Track A curriculum hub directly."}, {"id": "D4", "name": "Trade Journal (tool)", "status": "active", "note": "File exists but contradicts C5 'pending' status in the old tracker — needs the same audit D1 got."}, {"id": "D7", "name": "Options P&L Calculator", "status": "active", "note": "Exists, not yet audited against real capital rules."}, {"id": "D8", "name": "MF Tracker", "status": "live", "note": "Interactive SIP calculator, NAV tracker, category explorer."}, {"id": "D9", "name": "Tax Calculator", "status": "active", "note": "Exists, not yet audited against real capital rules."}, {"id": "D10", "name": "Bonds Calculator", "status": "pending", "note": "Not built. Yield-to-maturity, duration, price-yield curve."}, {"id": "D11", "name": "Strategies Reference", "status": "live", "note": "Real 904-line payoff visualiser deployed 07-02, replacing a dummy stub."}]}, {"code": "E", "label": "Psychology & Behaviour", "color": "#A85C3A", "description": "The hardest part — managing your own brain while trading. Carried forward, not re-verified this pass.", "modules": [{"id": "E1", "name": "Emotional Neutrality", "status": "done", "note": "FOMO, revenge trading, anchoring bias. Pre-trade checklist logic."}, {"id": "E2", "name": "Behavioural Finance", "status": "pending", "note": "Not started. Kahneman, loss aversion, cognitive biases framework."}, {"id": "E3", "name": "Van Tharp Framework", "status": "pending", "note": "Not started. Position sizing as the primary variable in trading success."}]}, {"code": "F", "label": "Tax Architecture", "color": "#44403C", "description": "Keeping what you make. 30% slab always factored in. Carried forward, not re-verified this pass.", "modules": [{"id": "F1", "name": "Equity Tax (STCG/LTCG)", "status": "active", "note": "Partial. STCG at 15%, LTCG at 10% above ₹1L. 30% slab embedded."}, {"id": "F2", "name": "F&O Tax (Business Income)", "status": "pending", "note": "Not started. F&O as non-speculative business income — complex filing."}, {"id": "F3", "name": "Mutual Fund Tax", "status": "active", "note": "Partial. Equity vs debt MF tax treatment covered."}, {"id": "F4", "name": "Bonds Tax", "status": "active", "note": "Partial. Interest as income, capital gains on bonds. Cross-reference the new A3 Bonds module."}, {"id": "F5", "name": "Passive Income Architecture", "status": "pending", "note": "Not started. Refrakt Studios revenue + trading income structure."}, {"id": "F6", "name": "Emergency Fund Setup", "status": "done", "note": "Done. ₹15k overnight fund buffer always maintained."}]}, {"code": "G", "label": "Critical Gaps", "color": "#A8A29E", "description": "Important topics identified as missing — need to be filled. Carried forward, not re-verified this pass.", "modules": [{"id": "G1", "name": "Portfolio Construction", "status": "pending", "note": "Not started. Asset allocation, rebalancing, correlation management."}, {"id": "G2", "name": "Behavioural Finance (deep)", "status": "pending", "note": "Not started. Beyond E2 — systemic market irrationality."}, {"id": "G3", "name": "Market Cycles", "status": "pending", "note": "Not started. Howard Marks + Ray Dalio cycle frameworks."}, {"id": "G4", "name": "Full Tax Architecture", "status": "pending", "note": "Not started. Integrated F1-F5 into a single tax-efficient structure."}, {"id": "G5", "name": "Capital Allocation Framework", "status": "pending", "note": "Not started. When to deploy, when to sit in cash, position limits."}, {"id": "G6", "name": "News Catalyst Reading", "status": "pending", "note": "Not started. How to interpret news-driven price action without reacting."}]}];
+const SESSIONS = {"A": [{"title": "Refrakt Options Masterclass — Pass 1 Shell", "date": "Apr 23", "desc": "Foundation layer. ITM/ATM/OTM cinema analogy, all 4 Greeks, options chain visual, Max Pain."}, {"title": "Building Pass 2 of the Refrakt Options Masterclass", "date": "Apr 26", "desc": "Second-pass expansion — strategies, deeper Greeks, expiry mechanics."}, {"title": "Nifty 50 Options Analysis for Learning", "date": "Apr 22", "desc": "Live options chain breakdown, strike selection logic, OI interpretation, PCR reading exercise."}, {"title": "Crypto Masterclass Foundation & Asset Architecture", "date": "Apr 21", "desc": "Bitcoin/ETH fundamentals, custody, Indian regulatory context."}, {"title": "Interactive Mutual Funds Learning Capsule", "date": "Apr 16", "desc": "Full MF module — categories, NAV, SIP math, tax; Motilal Midcap as example."}, {"title": "Moving from Bonds to Options Trading", "date": "Apr 21", "desc": "Risk profile comparison — bonds passivity vs options active allocation."}, {"title": "Futures & Options on Bonds", "date": "Apr 15", "desc": "Bond derivatives intro — interest rate futures mechanics, yield-price relationship."}, {"title": "Equity + Bonds + Commodities + Forex + REITs build-out", "date": "Jul 2", "desc": "Full Track A completed this session — 5 new modules authored from scratch, 4 retrofitted to Anthropic brand."}], "B": [{"title": "Technical Analysis — B1 Foundation", "date": "—", "desc": "Murphy's core premise: prices discount everything, trends, history repeats."}, {"title": "Murphy Candlestick Patterns — App Build", "date": "—", "desc": "Interactive candlestick tool, v1 + v2 shipped to GitHub Pages."}, {"title": "RSI Deep Dive — B4", "date": "—", "desc": "Overbought/oversold, divergence, failure swings on Nifty."}], "C": [{"title": "Options Expiry Mechanics — C8", "date": "—", "desc": "Weekly vs monthly expiry, theta acceleration in final 3 days, settlement."}, {"title": "Risk Management Foundation — C4", "date": "—", "desc": "2% rule, stop-loss discipline, risk-reward ratios on ₹1L capital base."}], "D": [{"title": "Murphy Candlestick App — D2", "date": "—", "desc": "40+ patterns, v1+v2 on GitHub Pages."}, {"title": "Master Dashboard — D3", "date": "—", "desc": "Central portal hub, nav system, Refrakt logo. Now links to Track A hub."}, {"title": "Strategies Reference replaces dummy stub", "date": "Jul 2", "desc": "904-line real payoff visualiser deployed, resolving a 2-session-old conflict."}], "E": [{"title": "Emotional Neutrality in Trading — E1", "date": "—", "desc": "FOMO, revenge trading, anchoring bias, pre-trade checklist."}], "F": [{"title": "Equity Tax Framework — F1", "date": "—", "desc": "30% slab throughout. STCG/LTCG on equity, F&O as business income."}], "G": []};
+const STATUS_CONFIG = {"done": {"label": "Done", "color": "#4A7C59"}, "active": {"label": "Active", "color": "#C9A227"}, "pending": {"label": "Pending", "color": "#A8A29E"}, "next": {"label": "Next Up", "color": "#3B5A7A"}, "live": {"label": "Live ✦", "color": "#4A7C59"}};
+
+let currentFilter = 'all';
+
+function buildUI() {
+  const main = document.getElementById('main');
+  main.querySelectorAll('.track').forEach(t => t.remove());
+
+  TRACKS.forEach(track => {
+    const section = document.createElement('div');
+    section.className = 'track';
+    section.id = 'track-' + track.code;
+
+    const doneCount = track.modules.filter(m => m.status === 'done' || m.status === 'live').length;
+    const pct = Math.round((doneCount / track.modules.length) * 100);
+    const sessions = SESSIONS[track.code] || [];
+
+    section.innerHTML = `
+      <div class="track-bar">
+        <div class="track-badge">${track.code}-TRACK</div>
+        <div class="track-title">${track.label}</div>
+        <div class="track-meta">
+          ${doneCount}/${track.modules.length} done &middot; ${pct}%
+          <div class="track-progress"><div class="track-progress-bar" style="width:${pct}%; background:${track.color};"></div></div>
+        </div>
+      </div>
+      <p class="track-desc">${track.description}</p>
+      <div class="modules-grid" id="grid-${track.code}"></div>
+      ${sessions.length ? `<span class="sessions-toggle" onclick="toggleSessions('${track.code}', this)">+ ${sessions.length} session note(s)</span><div class="sessions-grid" id="sessions-${track.code}"></div>` : ''}
+    `;
+    main.insertBefore(section, main.querySelector('#emptyState'));
+
+    const grid = section.querySelector('#grid-' + track.code);
+    track.modules.forEach(mod => {
+      const s = STATUS_CONFIG[mod.status] || STATUS_CONFIG.pending;
+      const isLink = !!mod.href;
+      const card = document.createElement(isLink ? 'a' : 'div');
+      card.className = 'module-card' + (isLink ? ' linkable' : '');
+      if (isLink) card.href = mod.href;
+      card.dataset.status = mod.status;
+      card.dataset.text = (mod.id + ' ' + mod.name + ' ' + mod.note).toLowerCase();
+      card.innerHTML = `
+        ${mod.status === 'next' ? '<div class="card-next-badge">Next Up</div>' : ''}
+        <div class="card-top">
+          <div class="card-id">${mod.id}</div>
+          <div class="card-status-pill" style="background:${s.color}22; color:${s.color};">${s.label}</div>
+        </div>
+        <div class="card-name">${mod.name}${isLink ? ' &rarr;' : ''}</div>
+        <div class="card-note">${mod.note}</div>
+      `;
+      grid.appendChild(card);
+    });
+
+    if (sessions.length) {
+      const sgrid = section.querySelector('#sessions-' + track.code);
+      sessions.forEach(s => {
+        const c = document.createElement('div');
+        c.className = 'session-card';
+        c.innerHTML = `<div class="session-title">${s.title}</div><div class="session-date">${s.date}</div><div class="session-desc">${s.desc}</div>`;
+        sgrid.appendChild(c);
+      });
+    }
+  });
+}
+
+function toggleSessions(code, el) {
+  const g = document.getElementById('sessions-' + code);
+  g.classList.toggle('open');
+  el.textContent = g.classList.contains('open') ? '- hide sessions' : '+ ' + (SESSIONS[code]||[]).length + ' session note(s)';
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+  let totalVisible = 0;
+  document.querySelectorAll('.track').forEach(track => {
+    const cards = track.querySelectorAll('.module-card');
+    let trackVisible = 0;
+    cards.forEach(card => {
+      const statusMatch = currentFilter === 'all' || card.dataset.status === currentFilter;
+      const searchMatch = !searchTerm || card.dataset.text.includes(searchTerm);
+      if (statusMatch && searchMatch) { card.classList.remove('hidden'); trackVisible++; totalVisible++; }
+      else { card.classList.add('hidden'); }
+    });
+    track.classList.toggle('all-hidden', trackVisible === 0);
+  });
+  document.getElementById('emptyState').style.display = totalVisible === 0 ? 'block' : 'none';
+}
+
+buildUI();
+</script>
+</body>
+</html>

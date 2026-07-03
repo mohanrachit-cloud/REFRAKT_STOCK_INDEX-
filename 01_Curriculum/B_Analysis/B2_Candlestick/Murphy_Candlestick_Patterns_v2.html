@@ -1,0 +1,2865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japanese Candlestick Patterns — Murphy Chapter 12</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #1c2128;
+  --bg4: #21262d;
+  --border: #30363d;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --bull: #26a641;
+  --bull-light: #3fb950;
+  --bull-bg: rgba(38,166,65,0.08);
+  --bear: #da3633;
+  --bear-light: #f85149;
+  --bear-bg: rgba(218,54,51,0.08);
+  --gold: #e3b341;
+  --gold-bg: rgba(227,179,65,0.08);
+  --blue: #388bfd;
+  --blue-bg: rgba(56,139,253,0.08);
+  --purple: #bc8cff;
+  --teal: #39d353;
+  --wick: #8b949e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.hero {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 60px 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(56,139,253,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--blue);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #e6edf3 0%, #8b949e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 620px;
+  line-height: 1.7;
+}
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--bull-light);
+  font-family: 'JetBrains Mono', monospace;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* NAV */
+.nav {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 14px 20px;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: 'JetBrains Mono', monospace;
+}
+.nav a:hover { color: var(--text); }
+.nav a.bull { border-bottom-color: var(--bull); color: var(--bull-light); }
+.nav a.bear { border-bottom-color: var(--bear); color: var(--bear-light); }
+.nav a.bull-c { border-bottom-color: var(--gold); color: var(--gold); }
+.nav a.bear-c { border-bottom-color: var(--purple); color: var(--purple); }
+.nav a.combo { border-bottom-color: var(--blue); color: var(--blue); }
+
+/* MAIN */
+main { max-width: 1400px; margin: 0 auto; padding: 40px; }
+
+/* PREMISE SECTION */
+.premise {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+.premise h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+.candle-anatomy {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.anatomy-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+.label-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+.label-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.label-name { font-weight: 600; color: var(--text); min-width: 80px; }
+.label-desc { color: var(--muted); font-size: 12px; }
+.anatomy-text p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+.anatomy-text p strong { color: var(--text); }
+
+/* SECTION HEADERS */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 48px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.section-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.badge-bull { background: var(--bull-bg); color: var(--bull-light); border: 1px solid rgba(38,166,65,0.3); }
+.badge-bear { background: var(--bear-bg); color: var(--bear-light); border: 1px solid rgba(218,54,51,0.3); }
+.badge-bull-c { background: var(--gold-bg); color: var(--gold); border: 1px solid rgba(227,179,65,0.3); }
+.badge-bear-c { background: rgba(188,140,255,0.08); color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+.badge-combo { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(56,139,253,0.3); }
+.section-title { font-size: 24px; font-weight: 700; }
+.section-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+/* PATTERN GRID */
+.pattern-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* PATTERN CARD */
+.pattern-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.pattern-card:hover {
+  border-color: var(--blue);
+  transform: translateY(-2px);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+}
+.card-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+.card-candles {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  background: var(--bg4);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+.card-chart {
+  background: #0d1117;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.chart-label {
+  position: absolute;
+  top: 6px; left: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--border);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.card-body {
+  padding: 14px 16px;
+}
+.psych {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-style: italic;
+}
+.psych strong { color: var(--text); font-style: normal; }
+
+/* WIDE CARD - for usage example */
+.usage-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.usage-header {
+  padding: 12px 20px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.usage-chart {
+  background: #0d1117;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+.usage-text {
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.usage-text strong { color: var(--text); }
+
+/* COMBO SECTION */
+.combo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: 20px;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 40px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* CATEGORY CONTEXT BANNER */
+.cat-context {
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  border-left: 4px solid;
+}
+.cat-context h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.cat-context p { font-size: 13px; line-height: 1.75; margin-bottom: 8px; }
+.cat-context p:last-child { margin-bottom: 0; }
+.cat-context strong { font-weight: 700; }
+.cat-bull { background: rgba(38,166,65,0.10); border-color: var(--bull); }
+.cat-bull h3 { color: var(--bull-light); }
+.cat-bull p { color: #a8d5b5; }
+.cat-bear { background: rgba(218,54,51,0.10); border-color: var(--bear); }
+.cat-bear h3 { color: var(--bear-light); }
+.cat-bear p { color: #e8a9a8; }
+.cat-bull-c { background: rgba(227,179,65,0.10); border-color: var(--gold); }
+.cat-bull-c h3 { color: var(--gold); }
+.cat-bull-c p { color: #e8d5a0; }
+.cat-bear-c { background: rgba(188,140,255,0.10); border-color: var(--purple); }
+.cat-bear-c h3 { color: var(--purple); }
+.cat-bear-c p { color: #d4b8f5; }
+.key-rule {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--gold);
+  background: rgba(227,179,65,0.08);
+  border: 1px solid rgba(227,179,65,0.2);
+  border-radius: 4px;
+  padding: 5px 8px;
+  margin-top: 8px;
+  line-height: 1.55;
+  display: block;
+}
+.trend-tag {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-bottom: 6px;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+.tag-bear-prior { background: rgba(218,54,51,0.15); color: var(--bear-light); border: 1px solid rgba(218,54,51,0.3); }
+.tag-bull-prior { background: rgba(38,166,65,0.15); color: var(--bull-light); border: 1px solid rgba(38,166,65,0.3); }
+.tag-bull-trend { background: rgba(227,179,65,0.15); color: var(--gold); border: 1px solid rgba(227,179,65,0.3); }
+.tag-bear-trend { background: rgba(188,140,255,0.15); color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+
+/* GRID LINES ON CHARTS */
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(48,54,61,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(48,54,61,0.3) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Murphy Chapter 12 · Module 5 Pattern Library</div>
+  <h1>Japanese Candlestick<br>Pattern Reference</h1>
+  <p class="hero-sub">Every pattern from Murphy's library — isolated anatomy, TradingView-style graphics, trader psychology, and real usage examples. Your ready reckoner for reading candles instantly.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">26</span><span class="stat-label">Bullish Reversals</span></div>
+    <div class="stat"><span class="stat-num">24</span><span class="stat-label">Bearish Reversals</span></div>
+    <div class="stat"><span class="stat-num">8</span><span class="stat-label">Bull Continuation</span></div>
+    <div class="stat"><span class="stat-num">9</span><span class="stat-label">Bear Continuation</span></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#premise">Anatomy</a>
+  <a href="#bull-rev" class="bull">↑ Bull Reversal</a>
+  <a href="#bear-rev" class="bear">↓ Bear Reversal</a>
+  <a href="#bull-con" class="bull-c">→ Bull Continuation</a>
+  <a href="#bear-con" class="bear-c">→ Bear Continuation</a>
+  <a href="#combo" class="combo">⚡ With Indicators</a>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════ -->
+<!-- PREMISE: ANATOMY -->
+<!-- ═══════════════════════════════════ -->
+<section id="premise">
+<div class="premise">
+  <h2>What is a Candlestick? — The Premise</h2>
+  <div class="candle-anatomy">
+    <div>
+      <svg width="260" height="200" viewBox="0 0 260 200">
+        <!-- Grid -->
+        <defs>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#21262d" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="260" height="200" fill="#0d1117" rx="6"/>
+        <rect width="260" height="200" fill="url(#grid)" rx="6"/>
+
+        <!-- Bull candle left -->
+        <line x1="75" y1="20" x2="75" y2="55" stroke="#26a641" stroke-width="1.5"/>
+        <rect x="57" y="55" width="36" height="90" fill="#26a641" rx="1"/>
+        <line x1="75" y1="145" x2="75" y2="178" stroke="#26a641" stroke-width="1.5"/>
+
+        <!-- Bear candle right -->
+        <line x1="185" y1="20" x2="185" y2="55" stroke="#da3633" stroke-width="1.5"/>
+        <rect x="167" y="55" width="36" height="90" fill="#da3633" rx="1"/>
+        <line x1="185" y1="145" x2="185" y2="178" stroke="#da3633" stroke-width="1.5"/>
+
+        <!-- Labels Bull -->
+        <line x1="95" y1="37" x2="130" y2="37" stroke="#8b949e" stroke-width="1" stroke-dasharray="3"/>
+        <text x="133" y="41" fill="#8b949e" font-size="9" font-family="JetBrains Mono">High</text>
+
+        <line x1="95" y1="55" x2="130" y2="55" stroke="#3fb950" stroke-width="1" stroke-dasharray="3"/>
+        <text x="133" y="59" fill="#3fb950" font-size="9" font-family="JetBrains Mono">Close</text>
+
+        <line x1="95" y1="100" x2="110" y2="100" stroke="#7d8590" stroke-width="1" stroke-dasharray="3"/>
+        <text x="113" y="104" fill="#7d8590" font-size="9" font-family="JetBrains Mono">Body</text>
+
+        <line x1="95" y1="145" x2="130" y2="145" stroke="#e6edf3" stroke-width="1" stroke-dasharray="3"/>
+        <text x="133" y="149" fill="#e6edf3" font-size="9" font-family="JetBrains Mono">Open</text>
+
+        <line x1="95" y1="163" x2="130" y2="163" stroke="#8b949e" stroke-width="1" stroke-dasharray="3"/>
+        <text x="133" y="167" fill="#8b949e" font-size="9" font-family="JetBrains Mono">Low</text>
+
+        <!-- Bull label -->
+        <text x="55" y="195" fill="#26a641" font-size="9" font-family="JetBrains Mono" font-weight="700">BULLISH</text>
+        <text x="160" y="195" fill="#da3633" font-size="9" font-family="JetBrains Mono" font-weight="700">BEARISH</text>
+
+        <!-- Labels Bear - upper wick -->
+        <line x1="167" y1="37" x2="145" y2="20" stroke="#8b949e" stroke-width="1" stroke-dasharray="3"/>
+        <!-- Bear open at top, close at bottom -->
+        <text x="40" y="59" fill="#da3633" font-size="9" font-family="JetBrains Mono">Open</text>
+        <text x="40" y="149" fill="#da3633" font-size="9" font-family="JetBrains Mono">Close</text>
+
+        <!-- Upper wick label -->
+        <text x="75" y="12" fill="#8b949e" font-size="9" font-family="JetBrains Mono" text-anchor="middle">Upper Shadow/Wick</text>
+        <!-- Lower wick label -->
+      </svg>
+      <div class="anatomy-labels">
+        <div class="label-row">
+          <div class="label-dot" style="background:#3fb950"></div>
+          <span class="label-name">Body</span>
+          <span class="label-desc">Open to Close range. Wide = strong move</span>
+        </div>
+        <div class="label-row">
+          <div class="label-dot" style="background:#8b949e"></div>
+          <span class="label-name">Upper Wick</span>
+          <span class="label-desc">Highest price reached — rejected</span>
+        </div>
+        <div class="label-row">
+          <div class="label-dot" style="background:#8b949e"></div>
+          <span class="label-name">Lower Wick</span>
+          <span class="label-desc">Lowest price reached — rejected</span>
+        </div>
+        <div class="label-row">
+          <div class="label-dot" style="background:#26a641"></div>
+          <span class="label-name">Green/Bull</span>
+          <span class="label-desc">Close ABOVE open — buyers won</span>
+        </div>
+        <div class="label-row">
+          <div class="label-dot" style="background:#da3633"></div>
+          <span class="label-name">Red/Bear</span>
+          <span class="label-desc">Close BELOW open — sellers won</span>
+        </div>
+      </div>
+    </div>
+    <div class="anatomy-text">
+      <p>A <strong>candlestick</strong> is a single visual unit that captures four pieces of data about a trading period — the <strong>Open, High, Low, and Close</strong> — in one instant. Invented by Japanese rice traders in the 18th century, centuries before Western bar charts existed.</p>
+      <p>The <strong>body</strong> (the thick rectangle) shows the distance between opening and closing price. A <strong>green body</strong> means buyers pushed price up during the period — close is above open. A <strong>red body</strong> means sellers pushed price down — close is below open.</p>
+      <p>The <strong>wicks</strong> (thin lines above and below the body) show the extremes — how high or low price reached before being rejected. Long upper wicks mean bulls tried to push higher but were rejected by sellers. Long lower wicks mean bears tried to push lower but were rejected by buyers.</p>
+      <p><strong>The key insight:</strong> Candlesticks reveal the battle between buyers and sellers in every single period. The size, shape, colour, and position of the body and wicks tells you who won, who lost, and how convincingly. Patterns across 1-5 candles reveal where the battle is turning.</p>
+      <p><strong>Murphy's rule:</strong> Candlestick signals must always be confirmed by the next candle and by volume. A pattern in isolation is a suggestion. A pattern confirmed by the next candle with expanding volume is a signal.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- BULLISH REVERSALS -->
+<!-- ═══════════════════════════════════ -->
+<section id="bull-rev">
+<div class="section-header">
+  <span class="section-badge badge-bull">↑ Bullish</span>
+  <span class="section-title">Bullish Reversal Patterns</span>
+  <span class="section-count">Appear at market BOTTOMS — signal bears losing control</span>
+</div>
+
+
+<div class="cat-context cat-bull">
+  <h3>⚠ Read This First — What "Bullish Reversal" Actually Means</h3>
+  <p><strong>Prior trend required: DOWNTREND.</strong> A bullish reversal pattern appears at the END of a falling market — a selling spree that is running out of steam. "Bullish" describes the OUTCOME not what came before. Before these patterns: bears were in control, price was falling. After these patterns: bulls take over and price begins rising.</p>
+  <p>Think of it as a tug of war. Bears have been pulling the rope (price) downward. They are getting exhausted. Bulls grab the rope and start pulling back. The moment price stops falling and starts turning up — that is the bullish reversal. You are identifying the exact candle(s) where the bears lost their grip.</p>
+  <p><strong>Murphy's non-negotiable rule:</strong> Every pattern below is meaningless unless it appears after a clear prior downtrend. A Hammer in the middle of an uptrend is noise. The same Hammer at the bottom of a 3-week selloff at a key support level is one of the most powerful signals in technical analysis. <strong>Prior trend context is the first filter — always.</strong></p>
+</div>
+
+<div class="pattern-grid">
+
+<!-- HAMMER -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Hammer</span>
+    <span class="card-candles">1 candle</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- context candles -->
+      <line x1="30" y1="15" x2="30" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="22" y="15" width="16" height="45" fill="#da3633" rx="1"/>
+      <line x1="55" y1="20" x2="55" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="47" y="20" width="16" height="40" fill="#da3633" rx="1"/>
+      <!-- HAMMER -->
+      <line x1="90" y1="20" x2="90" y2="35" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="82" y="35" width="16" height="10" fill="#26a641" rx="1"/>
+      <line x1="90" y1="45" x2="90" y2="90" stroke="#26a641" stroke-width="2"/>
+      <!-- arrow -->
+      <text x="90" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="90" y="98" fill="#3fb950" font-size="8" font-family="JetBrains Mono" text-anchor="middle">HAMMER</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Bears drove price sharply lower during the session — but bulls fought back completely, closing near the high. The long lower wick is the tell: sellers tried and failed. Bulls are awakening at a price level where buyers see value.</p>
+    <span class="key-rule">📐 Key rule: Lower wick must be at least 2× the body length. Upper wick tiny or absent. Body at the upper end of the range. Colour (green/red) is secondary — the long lower wick is the signal.</span>
+  </div>
+</div>
+
+<!-- INVERTED HAMMER -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Inverted Hammer</span>
+    <span class="card-candles">1 candle</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <line x1="30" y1="15" x2="30" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="22" y="15" width="16" height="45" fill="#da3633" rx="1"/>
+      <line x1="55" y1="20" x2="55" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="47" y="20" width="16" height="40" fill="#da3633" rx="1"/>
+      <!-- INVERTED HAMMER -->
+      <line x1="90" y1="20" x2="90" y2="55" stroke="#26a641" stroke-width="2"/>
+      <rect x="82" y="55" width="16" height="10" fill="#26a641" rx="1"/>
+      <line x1="90" y1="65" x2="90" y2="70" stroke="#26a641" stroke-width="1.5"/>
+      <text x="90" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="90" y="98" fill="#3fb950" font-size="8" font-family="JetBrains Mono" text-anchor="middle">INV. HAMMER</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Bulls attempted a rally — the long upper wick shows their effort. Bears pushed price back down but couldn't hold it. A tentative first attempt by bulls, needs next green candle to confirm the buyers are serious.</p>
+    <span class="key-rule">📐 Key rule: Upper wick must be at least 2× the body. Lower wick tiny or absent. Weaker signal than Hammer — needs a strong green confirming candle the next session to be valid.</span>
+  </div>
+</div>
+
+<!-- LONG WHITE BODY -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Long White Body</span>
+    <span class="card-candles">1 candle</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <line x1="30" y1="15" x2="30" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="22" y="15" width="16" height="45" fill="#da3633" rx="1"/>
+      <line x1="55" y1="20" x2="55" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="47" y="20" width="16" height="40" fill="#da3633" rx="1"/>
+      <!-- LONG WHITE -->
+      <line x1="90" y1="15" x2="90" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="82" y="20" width="16" height="65" fill="#26a641" rx="1"/>
+      <line x1="90" y1="85" x2="90" y2="90" stroke="#26a641" stroke-width="1.5"/>
+      <text x="90" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Buyers dominated the entire session from open to close. Decisive bullish control with little hesitation. After a downtrend, signals a powerful shift in momentum. The wider the body, the stronger the signal.</p>
+    <span class="key-rule">📐 Key rule: Body should be significantly larger than recent candles — visually dominant. Small or no wicks. After a downtrend, the sheer size of the green body shows a decisive shift in power.</span>
+  </div>
+</div>
+
+<!-- BELT HOLD BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Belt Hold (Bullish)</span>
+    <span class="card-candles">1 candle</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <line x1="30" y1="15" x2="30" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="22" y="15" width="16" height="45" fill="#da3633" rx="1"/>
+      <line x1="55" y1="20" x2="55" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="47" y="20" width="16" height="40" fill="#da3633" rx="1"/>
+      <!-- BELT HOLD: opens at low, no lower wick -->
+      <rect x="82" y="25" width="16" height="60" fill="#26a641" rx="1"/>
+      <line x1="90" y1="15" x2="90" y2="25" stroke="#26a641" stroke-width="1.5"/>
+      <text x="90" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="90" y="98" fill="#3fb950" font-size="8" font-family="JetBrains Mono" text-anchor="middle">BELT HOLD</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Opens at the low of the day with a gap down — bears appeared to be in total control. But bulls immediately took over and never looked back. No lower wick means bears had zero control after the open. Powerful reversal signal.</p>
+    <span class="key-rule">📐 Key rule: Opens at or near the low of the day with a gap down (no lower wick). Closes near the high. The absence of a lower wick is critical — it means bears had zero control after the open.</span>
+  </div>
+</div>
+
+<!-- ENGULFING BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Engulfing Pattern (Bullish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <line x1="30" y1="15" x2="30" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="22" y="15" width="16" height="45" fill="#da3633" rx="1"/>
+      <!-- small red -->
+      <line x1="65" y1="35" x2="65" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="57" y="35" width="16" height="30" fill="#da3633" rx="1"/>
+      <line x1="65" y1="65" x2="65" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <!-- BIG GREEN engulfs -->
+      <line x1="95" y1="20" x2="95" y2="25" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="87" y="25" width="16" height="60" fill="#26a641" rx="1"/>
+      <line x1="95" y1="85" x2="95" y2="90" stroke="#26a641" stroke-width="1.5"/>
+      <text x="95" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> A large green candle completely swallows the previous red candle's body. Bulls have overwhelmed bears in a single session with decisive force. The bigger the engulf, the more convincing the reversal. One of Murphy's most reliable 2-candle patterns.</p>
+    <span class="key-rule">📐 Key rule: The green candle's body must completely engulf (open below and close above) the prior red candle's body — wicks are not counted. The larger the engulf, the stronger. Ideally on above-average volume.</span>
+  </div>
+</div>
+
+<!-- HARAMI BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Harami (Bullish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <line x1="30" y1="15" x2="30" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="22" y="15" width="16" height="45" fill="#da3633" rx="1"/>
+      <!-- Big red -->
+      <line x1="65" y1="15" x2="65" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="57" y="20" width="16" height="60" fill="#da3633" rx="1"/>
+      <line x1="65" y1="80" x2="65" y2="87" stroke="#da3633" stroke-width="1.5"/>
+      <!-- small green inside -->
+      <rect x="87" y="40" width="16" height="22" fill="#26a641" rx="1"/>
+      <text x="95" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="95" y="98" fill="#3fb950" font-size="8" font-family="JetBrains Mono" text-anchor="middle">HARAMI</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> 'Harami' means pregnant in Japanese. A small green candle nestled inside a large red body. Bears are running out of steam — the market is pausing its fall. Hesitation before reversal. Less powerful than engulfing but common.</p>
+    <span class="key-rule">📐 Key rule: The second candle (green) must be entirely contained within the body of the first (large red). Think of it as the small candle fitting inside the large one. Less powerful than Engulfing — needs confirmation.</span>
+  </div>
+</div>
+
+<!-- HARAMI CROSS BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Harami Cross (Bullish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- Big red -->
+      <line x1="65" y1="15" x2="65" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="57" y="20" width="16" height="60" fill="#da3633" rx="1"/>
+      <line x1="65" y1="80" x2="65" y2="87" stroke="#da3633" stroke-width="1.5"/>
+      <!-- doji inside: horizontal line -->
+      <line x1="83" y1="50" x2="107" y2="50" stroke="#e3b341" stroke-width="2"/>
+      <line x1="95" y1="38" x2="95" y2="63" stroke="#e3b341" stroke-width="1.5"/>
+      <rect x="87" y="48" width="16" height="4" fill="#e3b341" rx="1"/>
+      <text x="95" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="95" y="98" fill="#e3b341" font-size="8" font-family="JetBrains Mono" text-anchor="middle">DOJI INSIDE</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Same as Harami but second candle is a Doji — perfectly balanced indecision. Maximum stalemate — buyers and sellers exactly matched. After a downtrend this signals total exhaustion of selling pressure. Stronger than regular Harami.</p>
+    <span class="key-rule">📐 Key rule: The second candle must be a Doji (open = close, or nearly so) contained within the prior red body. The Doji shows perfect deadlock. Stronger than regular Harami precisely because of this absolute indecision.</span>
+  </div>
+</div>
+
+<!-- PIERCING LINE -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Piercing Line</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- Big red -->
+      <line x1="65" y1="15" x2="65" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="57" y="20" width="16" height="60" fill="#da3633" rx="1"/>
+      <line x1="65" y1="80" x2="65" y2="87" stroke="#da3633" stroke-width="1.5"/>
+      <!-- Green opens below, closes above midpoint -->
+      <line x1="95" y1="75" x2="95" y2="85" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="87" y="35" width="16" height="40" fill="#26a641" rx="1"/>
+      <line x1="95" y1="28" x2="95" y2="35" stroke="#26a641" stroke-width="1.5"/>
+      <!-- midpoint line -->
+      <line x1="57" y1="50" x2="103" y2="50" stroke="#e3b341" stroke-width="1" stroke-dasharray="3"/>
+      <text x="95" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="80" y="48" fill="#e3b341" font-size="7" font-family="JetBrains Mono">MID</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Bulls gap down at open (appearing to confirm downtrend) then surge past the midpoint of the previous red candle. This reversal catches bears off guard. The 50% threshold is critical — it shows bulls have genuinely overpowered the prior session's sellers.</p>
+    <span class="key-rule">📐 Key rule: Second candle (green) must open BELOW the prior red candle's low (gap down) and close ABOVE the midpoint (50%) of the prior red body. The deeper it closes into the red body, the stronger the signal. Closing below 50% makes it an 'In Neck Line' — much weaker.</span>
+  </div>
+</div>
+
+<!-- DOJI STAR BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Doji Star (Bullish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- Red candle -->
+      <rect x="57" y="20" width="16" height="50" fill="#da3633" rx="1"/>
+      <line x1="65" y1="15" x2="65" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="65" y1="70" x2="65" y2="80" stroke="#da3633" stroke-width="1.5"/>
+      <!-- Doji below with gap -->
+      <line x1="95" y1="75" x2="95" y2="92" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="83" y1="84" x2="107" y2="84" stroke="#e3b341" stroke-width="2"/>
+      <rect x="87" y="82" width="16" height="4" fill="#e3b341" rx="1"/>
+      <text x="95" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> After a downtrend, a Doji appears with a gap down — pure indecision at a new low. Bulls and bears in a deadlock at the extreme. The market doesn't know which way to go next. Typically resolved upward at support zones when sellers are truly exhausted.</p>
+    <span class="key-rule">📐 Key rule: The Doji must gap away from the prior red candle — ideally with no overlap of bodies. The gap isolation amplifies the signal. Needs a confirming green candle to complete the reversal.</span>
+  </div>
+</div>
+
+<!-- THREE WHITE SOLDIERS -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Three White Soldiers</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- Prior red -->
+      <rect x="18" y="20" width="14" height="50" fill="#da3633" rx="1"/>
+      <!-- THREE SOLDIERS each taller -->
+      <rect x="42" y="55" width="14" height="35" fill="#26a641" rx="1"/>
+      <line x1="49" y1="52" x2="49" y2="55" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="49" y1="90" x2="49" y2="93" stroke="#26a641" stroke-width="1.5"/>
+
+      <rect x="66" y="40" width="14" height="38" fill="#26a641" rx="1"/>
+      <line x1="73" y1="37" x2="73" y2="40" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="73" y1="78" x2="73" y2="81" stroke="#26a641" stroke-width="1.5"/>
+
+      <rect x="90" y="25" width="14" height="38" fill="#26a641" rx="1"/>
+      <line x1="97" y1="22" x2="97" y2="25" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="97" y1="63" x2="97" y2="66" stroke="#26a641" stroke-width="1.5"/>
+      <text x="97" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Three consecutive long green candles, each opening within the previous body and closing progressively higher. Bulls are methodically taking control session by session — no panic, just sustained institutional buying. One of the most reliable bull reversal signals.</p>
+    <span class="key-rule">📐 Key rule: Each candle should open within the body of the prior candle (not gap up) and close near its high. Wicks should be small. Avoid if third candle shows a notably long upper wick — that indicates exhaustion and weakens the pattern.</span>
+  </div>
+</div>
+
+<!-- MORNING STAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Morning Star</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- Big red -->
+      <line x1="40" y1="12" x2="40" y2="18" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="32" y="18" width="16" height="55" fill="#da3633" rx="1"/>
+      <line x1="40" y1="73" x2="40" y2="80" stroke="#da3633" stroke-width="1.5"/>
+      <!-- Small body (star) at bottom -->
+      <rect x="72" y="80" width="16" height="10" fill="#da3633" rx="1"/>
+      <line x1="80" y1="76" x2="80" y2="80" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="80" y1="90" x2="80" y2="94" stroke="#da3633" stroke-width="1.5"/>
+      <!-- Big green -->
+      <line x1="112" y1="15" x2="112" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="104" y="20" width="16" height="50" fill="#26a641" rx="1"/>
+      <line x1="112" y1="70" x2="112" y2="76" stroke="#26a641" stroke-width="1.5"/>
+      <text x="112" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="80" y="4" fill="#e3b341" font-size="8" font-family="JetBrains Mono" text-anchor="middle">★</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Bears push down hard (candle 1), then a small star shows indecision and exhaustion at the lows — bears and bulls deadlocked (candle 2), then bulls explode upward confirming the reversal (candle 3). The turn happens in three acts: loss of momentum, hesitation, then reversal.</p>
+    <span class="key-rule">📐 Key rule: Three-candle pattern. Candle 1: large red. Candle 2: small body (star) that gaps down from candle 1 — the gap is key. Candle 3: large green that closes above the midpoint of candle 1's body. The star should not overlap candle 1's body.</span>
+  </div>
+</div>
+
+<!-- MORNING DOJI STAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Morning Doji Star</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="32" y="18" width="16" height="55" fill="#da3633" rx="1"/>
+      <line x1="40" y1="12" x2="40" y2="18" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="40" y1="73" x2="40" y2="80" stroke="#da3633" stroke-width="1.5"/>
+      <!-- DOJI star -->
+      <line x1="80" y1="73" x2="80" y2="97" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="68" y1="85" x2="92" y2="85" stroke="#e3b341" stroke-width="2"/>
+      <rect x="72" y="83" width="16" height="4" fill="#e3b341" rx="1"/>
+      <rect x="104" y="20" width="16" height="50" fill="#26a641" rx="1"/>
+      <line x1="112" y1="15" x2="112" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="112" y1="70" x2="112" y2="76" stroke="#26a641" stroke-width="1.5"/>
+      <text x="112" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Same as Morning Star but the middle candle is a Doji — perfectly balanced indecision at the lows. Stronger than Morning Star because the Doji signals total deadlock before bulls take over. Very high reliability — two independent signals in one pattern.</p>
+    <span class="key-rule">📐 Key rule: Same as Morning Star but candle 2 must be a Doji. The Doji makes this pattern MORE powerful — open equals close is absolute indecision, not just small body indecision. The gap between candle 1 and the Doji strengthens the signal.</span>
+  </div>
+</div>
+
+<!-- ABANDONED BABY BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Abandoned Baby (Bullish)</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="25" y="18" width="16" height="55" fill="#da3633" rx="1"/>
+      <line x1="33" y1="12" x2="33" y2="18" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="33" y1="73" x2="33" y2="80" stroke="#da3633" stroke-width="1.5"/>
+      <!-- isolated doji -->
+      <line x1="80" y1="83" x2="80" y2="97" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="68" y1="90" x2="92" y2="90" stroke="#e3b341" stroke-width="2"/>
+      <rect x="72" y="88" width="16" height="4" fill="#e3b341" rx="1"/>
+      <text x="80" y="2" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">GAP</text>
+      <rect x="115" y="20" width="16" height="50" fill="#26a641" rx="1"/>
+      <line x1="123" y1="15" x2="123" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="123" y1="70" x2="123" y2="76" stroke="#26a641" stroke-width="1.5"/>
+      <text x="123" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> The rarest and most powerful 3-candle reversal. The Doji gaps completely away from both surrounding candles — completely 'abandoned'. Gap-isolated indecision at the bottom followed by a gap-up green candle signals institutional capitulation followed by immediate reversal.</p>
+    <span class="key-rule">📐 Key rule: The Doji must gap away from BOTH surrounding candles with no wick overlap. This complete isolation — the Doji 'abandoned' by both neighbours — is what makes it the rarest and most powerful reversal. Extremely rare; treat it as a very high conviction signal when it appears.</span>
+  </div>
+</div>
+
+<!-- MEETING LINES BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Meeting Lines (Bullish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="52" y="20" width="16" height="55" fill="#da3633" rx="1"/>
+      <line x1="60" y1="15" x2="60" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="60" y1="75" x2="60" y2="80" stroke="#da3633" stroke-width="1.5"/>
+      <!-- Green same close level -->
+      <rect x="88" y="40" width="16" height="35" fill="#26a641" rx="1"/>
+      <line x1="96" y1="35" x2="96" y2="40" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="96" y1="75" x2="96" y2="82" stroke="#26a641" stroke-width="1.5"/>
+      <!-- meeting line -->
+      <line x1="50" y1="75" x2="110" y2="75" stroke="#e3b341" stroke-width="1" stroke-dasharray="3"/>
+      <text x="96" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="80" y="86" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">SAME CLOSE</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Both candles close at exactly the same price — bears and bulls reach a standoff at an identical point. Bulls halted the decline exactly where bears stopped last session. This price level becomes identified support. Needs confirmation from next session.</p>
+    <span class="key-rule">📐 Key rule: Both candles must close at precisely the same price level. The green candle must open below the prior red close (gap down) then close exactly at the same level. The shared close price becomes a significant support level.</span>
+  </div>
+</div>
+
+<!-- THREE INSIDE UP -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Three Inside Up</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big red -->
+      <rect x="30" y="18" width="16" height="60" fill="#da3633" rx="1"/>
+      <line x1="38" y1="13" x2="38" y2="18" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="38" y1="78" x2="38" y2="83" stroke="#da3633" stroke-width="1.5"/>
+      <!-- small green inside -->
+      <rect x="58" y="38" width="16" height="22" fill="#26a641" rx="1"/>
+      <!-- big green confirms -->
+      <rect x="86" y="20" width="16" height="45" fill="#26a641" rx="1"/>
+      <line x1="94" y1="15" x2="94" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="94" y1="65" x2="94" y2="70" stroke="#26a641" stroke-width="1.5"/>
+      <text x="94" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> A Harami (candle 1-2) confirmed by a third green candle closing above candle 1's high. The confirmation eliminates doubt — bulls have definitively taken control. Three-candle validated reversal with built-in confirmation.</p>
+    <span class="key-rule">📐 Key rule: Candles 1-2 form a valid Harami. Candle 3 must close ABOVE the high of candle 1 — this is the confirmation that the Harami was real. Without the third candle's close above candle 1's high, the pattern is unconfirmed.</span>
+  </div>
+</div>
+
+<!-- THREE OUTSIDE UP -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Three Outside Up</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- small red -->
+      <rect x="30" y="35" width="14" height="28" fill="#da3633" rx="1"/>
+      <line x1="37" y1="30" x2="37" y2="35" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="37" y1="63" x2="37" y2="68" stroke="#da3633" stroke-width="1.5"/>
+      <!-- big green engulfs -->
+      <rect x="54" y="20" width="14" height="60" fill="#26a641" rx="1"/>
+      <line x1="61" y1="15" x2="61" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="61" y1="80" x2="61" y2="85" stroke="#26a641" stroke-width="1.5"/>
+      <!-- third green higher -->
+      <rect x="78" y="12" width="14" height="38" fill="#26a641" rx="1"/>
+      <line x1="85" y1="8" x2="85" y2="12" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="85" y1="50" x2="85" y2="55" stroke="#26a641" stroke-width="1.5"/>
+      <text x="85" y="4" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> A bullish engulfing pattern (candles 1-2) confirmed by a third candle closing even higher. The engulfing was the battle for control. The third candle is the victory lap. Bulls fully in control with three candles of evidence — strongest confirmation structure.</p>
+    <span class="key-rule">📐 Key rule: Candles 1-2 form a valid Bullish Engulfing. Candle 3 must close HIGHER than candle 2's close. The engulfing was the battle — candle 3 is the confirmed victory. All three closes should be progressively higher.</span>
+  </div>
+</div>
+
+<!-- KICKING BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Kicking (Bullish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- Marubozu red (no wicks) -->
+      <rect x="48" y="25" width="18" height="55" fill="#da3633" rx="1"/>
+      <!-- Gap then Marubozu green -->
+      <rect x="86" y="15" width="18" height="55" fill="#26a641" rx="1"/>
+      <!-- gap indicator -->
+      <line x1="66" y1="50" x2="86" y2="50" stroke="#e3b341" stroke-width="1" stroke-dasharray="2"/>
+      <text x="76" y="45" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">GAP</text>
+      <text x="95" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Two Marubozu candles (no wicks) in opposite directions with a gap between them. The most violent reversal signal — complete 180-degree sentiment change. Rare but extremely reliable. The gap signals an overnight institutional repositioning of enormous scale.</p>
+    <span class="key-rule">📐 Key rule: Both candles must be Marubozu — no wicks at all. A gap must exist between them. The gap + zero wicks on both candles = extreme directional conviction in both sessions. Any wicks weaken this pattern significantly.</span>
+  </div>
+</div>
+
+<!-- HOMING PIGEON -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Homing Pigeon</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big red -->
+      <rect x="48" y="20" width="16" height="60" fill="#da3633" rx="1"/>
+      <line x1="56" y1="15" x2="56" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="56" y1="80" x2="56" y2="86" stroke="#da3633" stroke-width="1.5"/>
+      <!-- smaller red inside -->
+      <rect x="82" y="35" width="16" height="30" fill="#da3633" rx="1"/>
+      <line x1="90" y1="30" x2="90" y2="35" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="90" y1="65" x2="90" y2="70" stroke="#da3633" stroke-width="1.5"/>
+      <text x="90" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="90" y="98" fill="#3fb950" font-size="8" font-family="JetBrains Mono" text-anchor="middle">BOTH RED</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Both candles are red but the second is smaller and contained inside the first. Bears are losing momentum even while still in control. The shrinking selling pressure — visible in the smaller body — signals potential exhaustion. Needs green confirmation candle.</p>
+    <span class="key-rule">📐 Key rule: Both candles are red (bearish) — this is what distinguishes it from a standard Harami. The second smaller red candle must be fully contained within the first larger red candle's body. Bears losing momentum while still nominally in control.</span>
+  </div>
+</div>
+
+<!-- MATCHING LOW -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Matching Low</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="48" y="18" width="16" height="60" fill="#da3633" rx="1"/>
+      <line x1="56" y1="13" x2="56" y2="18" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="82" y="28" width="16" height="50" fill="#da3633" rx="1"/>
+      <line x1="90" y1="23" x2="90" y2="28" stroke="#da3633" stroke-width="1.5"/>
+      <!-- same low line -->
+      <line x1="45" y1="78" x2="105" y2="78" stroke="#e3b341" stroke-width="1.5" stroke-dasharray="3"/>
+      <text x="90" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="75" y="92" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">SAME LOW = SUPPORT</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Two red candles close at exactly the same low. Bears tried twice to push below this level and failed both times. The identical closes define a hard support floor — bulls are defending this price level with consistent aggression.</p>
+    <span class="key-rule">📐 Key rule: Both red candles must close at exactly the same low price. This double test of the same level — and failure to break below it — creates a hard floor. The shared close defines a strong support level that the market has confirmed twice.</span>
+  </div>
+</div>
+
+<!-- TRI-STAR BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Tri-Star (Bullish)</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- 3 dojis in a row at lows -->
+      <line x1="55" y1="60" x2="55" y2="85" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="43" y1="72" x2="67" y2="72" stroke="#e3b341" stroke-width="2"/>
+      <rect x="47" y="70" width="16" height="4" fill="#e3b341" rx="1"/>
+
+      <line x1="85" y1="62" x2="85" y2="88" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="73" y1="75" x2="97" y2="75" stroke="#e3b341" stroke-width="2"/>
+      <rect x="77" y="73" width="16" height="4" fill="#e3b341" rx="1"/>
+
+      <line x1="115" y1="58" x2="115" y2="83" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="103" y1="70" x2="127" y2="70" stroke="#e3b341" stroke-width="2"/>
+      <rect x="107" y="68" width="16" height="4" fill="#e3b341" rx="1"/>
+      <text x="85" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="85" y="98" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">3 DOJIS — EXTREME INDECISION</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Three consecutive Doji candles at the lows — three sessions of complete deadlock. At market bottoms, this prolonged indecision typically resolves upward as sellers are totally exhausted and buyers find the price attractive enough to absorb all remaining selling.</p>
+    <span class="key-rule">📐 Key rule: Three consecutive Doji candles. The middle Doji should ideally gap down from the first, and the third should gap up from the second — though this is rare. Three Dojis in a row at lows signals maximum exhaustion of the selling force.</span>
+  </div>
+</div>
+
+<!-- UNIQUE THREE RIVERS BOTTOM -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Unique Three Rivers Bottom</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- Long red with lower wick -->
+      <rect x="30" y="18" width="16" height="45" fill="#da3633" rx="1"/>
+      <line x1="38" y1="13" x2="38" y2="18" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="38" y1="63" x2="38" y2="82" stroke="#da3633" stroke-width="2.5"/>
+      <!-- small black body -->
+      <rect x="58" y="62" width="14" height="12" fill="#da3633" rx="1"/>
+      <line x1="65" y1="57" x2="65" y2="62" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="65" y1="74" x2="65" y2="84" stroke="#da3633" stroke-width="1.5"/>
+      <!-- small white body -->
+      <rect x="82" y="68" width="14" height="8" fill="#26a641" rx="1"/>
+      <text x="89" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Rare Japanese pattern. Three sessions of declining bears — each attempt to push lower shows less conviction. The small white candle as the third quietly signals that sellers have run out of energy. Bulls cautiously step in.</p>
+    <span class="key-rule">📐 Key rule: Candle 1 has a long lower shadow. Candle 2 is dark with a new low. Candle 3 is a small white body that does NOT make a new low. The three-session exhaustion with a small final white candle is the signal. Rare pattern — treat as moderate signal.</span>
+  </div>
+</div>
+
+<!-- CONCEALING SWALLOW -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Concealing Swallow</span>
+    <span class="card-candles">4 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- 4 candles: 2 black marubozu then 2 engulfing pattern -->
+      <rect x="15" y="30" width="13" height="40" fill="#da3633" rx="1"/>
+      <rect x="35" y="20" width="13" height="50" fill="#da3633" rx="1"/>
+      <rect x="55" y="15" width="13" height="55" fill="#da3633" rx="1"/>
+      <line x1="61" y1="70" x2="61" y2="78" stroke="#da3633" stroke-width="1.5"/>
+      <!-- big engulfing green -->
+      <rect x="80" y="10" width="14" height="75" fill="#26a641" rx="1"/>
+      <line x1="87" y1="5" x2="87" y2="10" stroke="#26a641" stroke-width="1.5"/>
+      <text x="87" y="2" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Four bearish candles — each seemingly pushing lower with conviction. Then suddenly, a large candle 'conceals' or engulfs everything. The sustained selloff finally hits a wall of buyers. Exhaustion after multiple failed attempts to go lower.</p>
+    <span class="key-rule">📐 Key rule: Four-candle pattern. First two are black Marubozu (no wicks). Third candle gaps down and makes a new low intraday but closes within candle 2's body. Fourth candle completely engulfs candle 3 including its shadows. Rare but powerful.</span>
+  </div>
+</div>
+
+<!-- STICK SANDWICH -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Stick Sandwich</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- red, green, red - outer reds same low -->
+      <rect x="30" y="20" width="16" height="55" fill="#da3633" rx="1"/>
+      <line x1="38" y1="15" x2="38" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="60" y="15" width="16" height="40" fill="#26a641" rx="1"/>
+      <line x1="68" y1="10" x2="68" y2="15" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="68" y1="55" x2="68" y2="60" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="90" y="20" width="16" height="55" fill="#da3633" rx="1"/>
+      <line x1="98" y1="15" x2="98" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <!-- same low line -->
+      <line x1="28" y1="75" x2="108" y2="75" stroke="#e3b341" stroke-width="1" stroke-dasharray="3"/>
+      <text x="98" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Two red candles with equal closing lows sandwich a green candle. The shared low level acts as concrete support — bulls defended this level twice and won once between. The green candle between is proof the floor is holding.</p>
+    <span class="key-rule">📐 Key rule: Two red candles with the same closing price, sandwiching a green candle in between. The matching red closes are the critical element — they define a concrete support level defended twice. The green candle between them confirms bulls actively defended this price.</span>
+  </div>
+</div>
+
+<!-- LADDER BOTTOM -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Ladder Bottom</span>
+    <span class="card-candles">5 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- 3 descending reds then inverted hammer then green -->
+      <rect x="10" y="20" width="12" height="30" fill="#da3633" rx="1"/>
+      <rect x="28" y="28" width="12" height="32" fill="#da3633" rx="1"/>
+      <rect x="46" y="36" width="12" height="34" fill="#da3633" rx="1"/>
+      <!-- inverted hammer -->
+      <line x1="70" y1="45" x2="70" y2="62" stroke="#da3633" stroke-width="2"/>
+      <rect x="64" y="62" width="12" height="8" fill="#da3633" rx="1"/>
+      <line x1="70" y1="70" x2="70" y2="76" stroke="#da3633" stroke-width="1.5"/>
+      <!-- green confirm -->
+      <rect x="88" y="30" width="12" height="42" fill="#26a641" rx="1"/>
+      <line x1="94" y1="25" x2="94" y2="30" stroke="#26a641" stroke-width="1.5"/>
+      <text x="94" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Three descending black candles signal sustained momentum. Then an inverted hammer shows sellers trying but failing to maintain pace — bulls pushed up intraday. Finally a large green candle confirms bulls have stepped in decisively after prolonged weakness.</p>
+    <span class="key-rule">📐 Key rule: Three consecutive black candles stepping down, then an inverted hammer (long upper wick, small body), then a confirming green candle. The inverted hammer is the warning — the next green candle is the confirmation. All five candles required.</span>
+  </div>
+</div>
+
+<!-- BREAKAWAY BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Breakaway (Bullish)</span>
+    <span class="card-candles">5 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big red, then 3 small reds/mixed, then big green -->
+      <rect x="10" y="15" width="12" height="45" fill="#da3633" rx="1"/>
+      <line x1="16" y1="10" x2="16" y2="15" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="26" y="50" width="10" height="20" fill="#da3633" rx="1"/>
+      <rect x="40" y="55" width="10" height="18" fill="#da3633" rx="1"/>
+      <rect x="54" y="52" width="10" height="15" fill="#26a641" rx="1"/>
+      <!-- big green breakaway -->
+      <rect x="72" y="20" width="14" height="52" fill="#26a641" rx="1"/>
+      <line x1="79" y1="15" x2="79" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="79" y1="72" x2="79" y2="78" stroke="#26a641" stroke-width="1.5"/>
+      <text x="79" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> After a large red candle, the market drifts sideways in small candles — selling pressure absorbed quietly. Then a large green 'breaks away' closing above the original red body. The sideways drift was accumulation — bulls were quietly loading positions during the pause.</p>
+    <span class="key-rule">📐 Key rule: Five candles. First is a large red. Next three are small candles (mix of red/green) that stay roughly in the same price zone — consolidation. Fifth is a large green that closes above the body of candle 1. The sideways drift is the key — it shows absorption of selling.</span>
+  </div>
+</div>
+
+<!-- THREE STARS IN SOUTH -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Three Stars in the South</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- decreasing red candles -->
+      <rect x="30" y="15" width="16" height="55" fill="#da3633" rx="1"/>
+      <line x1="38" y1="10" x2="38" y2="15" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="38" y1="70" x2="38" y2="80" stroke="#da3633" stroke-width="2"/>
+      <rect x="60" y="28" width="14" height="38" fill="#da3633" rx="1"/>
+      <line x1="67" y1="23" x2="67" y2="28" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="67" y1="66" x2="67" y2="74" stroke="#da3633" stroke-width="1.5"/>
+      <!-- small marubozu -->
+      <rect x="86" y="45" width="12" height="20" fill="#da3633" rx="1"/>
+      <text x="92" y="10" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="92" y="98" fill="#3fb950" font-size="7" font-family="JetBrains Mono" text-anchor="middle">SHRINKING BEARS</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-prior">Prior trend: DOWNTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Three declining red candles that get progressively smaller. Each session, the bears push lower with less force. The diminishing selling pressure — visually shrinking bodies and wicks — signals bears are running out of ammunition. A quiet, gradual reversal signal.</p>
+    <span class="key-rule">📐 Key rule: Three red candles getting progressively smaller — both in body size and in lower shadow length. Each candle's low should be higher than or equal to the prior. The shrinking pattern — like a staircase going up on the downside — shows bears diminishing with each session.</span>
+  </div>
+</div>
+
+</div><!-- /pattern-grid bullish rev -->
+
+<!-- ═══════════════════════════════════ -->
+<!-- BEARISH REVERSALS -->
+<!-- ═══════════════════════════════════ -->
+<section id="bear-rev">
+<div class="section-header">
+  <span class="section-badge badge-bear">↓ Bearish</span>
+  <span class="section-title">Bearish Reversal Patterns</span>
+  <span class="section-count">Appear at market TOPS — signal bulls losing control</span>
+</div>
+
+
+<div class="cat-context cat-bear">
+  <h3>⚠ Read This First — What "Bearish Reversal" Actually Means</h3>
+  <p><strong>Prior trend required: UPTREND.</strong> A bearish reversal pattern appears at the END of a rising market — a bull run that is running out of fuel. "Bearish" describes the OUTCOME not what came before. Before these patterns: bulls were in control, price was rising. After these patterns: bears take over and price begins falling.</p>
+  <p>The same tug of war — but now the bulls have been pulling for weeks and are exhausted. The bears grab the rope and start dragging price downward. These patterns identify the exact candle(s) where the bulls lost their grip at the top.</p>
+  <p><strong>Murphy's non-negotiable rule:</strong> A Shooting Star at the top of a 4-week rally at a known resistance level is a high-conviction sell signal. The same candle shape appearing in the middle of a downtrend is meaningless. <strong>Always identify the prior uptrend first. Then look for the pattern.</strong></p>
+</div>
+
+<div class="pattern-grid">
+
+<!-- HANGING MAN -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Hanging Man</span>
+    <span class="card-candles">1 candle</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- prior green context -->
+      <rect x="22" y="35" width="14" height="35" fill="#26a641" rx="1"/>
+      <line x1="29" y1="30" x2="29" y2="35" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="46" y="25" width="14" height="35" fill="#26a641" rx="1"/>
+      <line x1="53" y1="20" x2="53" y2="25" stroke="#26a641" stroke-width="1.5"/>
+      <!-- HANGING MAN at top -->
+      <line x1="90" y1="15" x2="90" y2="28" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="82" y="28" width="16" height="10" fill="#da3633" rx="1"/>
+      <line x1="90" y1="38" x2="90" y2="80" stroke="#da3633" stroke-width="2"/>
+      <text x="90" y="95" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="90" y="10" fill="#f85149" font-size="8" font-family="JetBrains Mono" text-anchor="middle">HANGING</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Identical shape to the Hammer — but at a market TOP. Bulls pushed up then lost control intraday, falling sharply before recovering to close near the open. The long lower wick at highs shows sellers woke up and nearly won. Context is everything: same candle, opposite meaning.</p>
+    <span class="key-rule">📐 Key rule: Identical shape to the Hammer — long lower wick at least 2× the body, small or no upper wick. BUT it appears at the TOP of an uptrend, not the bottom. This is the most important context distinction in all candlestick analysis. The same candle, completely opposite meaning.</span>
+  </div>
+</div>
+
+<!-- SHOOTING STAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Shooting Star</span>
+    <span class="card-candles">1 candle</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="22" y="40" width="14" height="35" fill="#26a641" rx="1"/>
+      <rect x="46" y="30" width="14" height="35" fill="#26a641" rx="1"/>
+      <!-- SHOOTING STAR: long upper wick at top -->
+      <line x1="90" y1="10" x2="90" y2="48" stroke="#da3633" stroke-width="2"/>
+      <rect x="82" y="48" width="16" height="10" fill="#da3633" rx="1"/>
+      <line x1="90" y1="58" x2="90" y2="63" stroke="#da3633" stroke-width="1.5"/>
+      <text x="90" y="82" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="90" y="96" fill="#f85149" font-size="8" font-family="JetBrains Mono" text-anchor="middle">SHOOTING STAR</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Bulls gap up or surge sharply during the session — the long upper wick shows the attempt. But sellers completely reject the move, pushing price back to close near the open. Bulls' best effort was decisively rejected. Classic danger sign at market tops.</p>
+    <span class="key-rule">📐 Key rule: Upper wick must be at least 2× the body length. Little or no lower wick. Body at the lower end of the range. The long upper wick shows bulls reached for new highs but were completely rejected — the rejection is the signal.</span>
+  </div>
+</div>
+
+<!-- LONG BLACK BODY -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Long Black Body</span>
+    <span class="card-candles">1 candle</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="22" y="35" width="14" height="30" fill="#26a641" rx="1"/>
+      <rect x="46" y="28" width="14" height="32" fill="#26a641" rx="1"/>
+      <!-- LONG BLACK -->
+      <line x1="90" y1="10" x2="90" y2="15" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="82" y="15" width="16" height="65" fill="#da3633" rx="1"/>
+      <line x1="90" y1="80" x2="90" y2="86" stroke="#da3633" stroke-width="1.5"/>
+      <text x="90" y="98" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Sellers dominated the entire session with conviction. After an uptrend, a long black candle signals a decisive shift in control. The wider the body, the more aggressive the selling. Volume confirmation transforms this into an extremely reliable signal.</p>
+    <span class="key-rule">📐 Key rule: Body should be significantly larger than recent candles — visually dominant. Small or no wicks. After an uptrend, the sheer size of the red body shows a decisive shift in power. Volume confirmation is especially important here.</span>
+  </div>
+</div>
+
+<!-- BELT HOLD BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Belt Hold (Bearish)</span>
+    <span class="card-candles">1 candle</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="22" y="35" width="14" height="30" fill="#26a641" rx="1"/>
+      <rect x="46" y="28" width="14" height="32" fill="#26a641" rx="1"/>
+      <!-- BEAR BELT HOLD: opens at high, no upper wick -->
+      <rect x="82" y="15" width="16" height="60" fill="#da3633" rx="1"/>
+      <line x1="90" y1="75" x2="90" y2="84" stroke="#da3633" stroke-width="1.5"/>
+      <text x="90" y="98" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Opens at the high of the day with a gap up — appears extremely bullish. But sellers took control from the very first tick and never gave bulls a chance. No upper wick = zero bullish presence after the open. Extremely bearish reversal signal.</p>
+    <span class="key-rule">📐 Key rule: Opens at or near the high of the day with a gap up (no upper wick). Falls relentlessly through the session. No upper wick = zero bullish presence after the open. The absence of an upper wick is as important as the size of the body.</span>
+  </div>
+</div>
+
+<!-- ENGULFING BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Engulfing Pattern (Bearish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="22" y="40" width="14" height="30" fill="#26a641" rx="1"/>
+      <!-- small green -->
+      <rect x="57" y="32" width="14" height="28" fill="#26a641" rx="1"/>
+      <line x1="64" y1="27" x2="64" y2="32" stroke="#26a641" stroke-width="1.5"/>
+      <!-- BIG RED engulfs -->
+      <line x1="90" y1="15" x2="90" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="82" y="20" width="16" height="65" fill="#da3633" rx="1"/>
+      <line x1="90" y1="85" x2="90" y2="90" stroke="#da3633" stroke-width="1.5"/>
+      <text x="90" y="98" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> A large red candle swallows the previous green candle's body entirely. Sellers overwhelmed buyers with one decisive session. The larger the engulf, the more complete the reversal. Institutional selling taking over at the top — the most reliable 2-candle bearish pattern.</p>
+    <span class="key-rule">📐 Key rule: The red candle's body must completely engulf (open above and close below) the prior green candle's body — wicks not counted. The larger the engulf, the stronger. Ideally on above-average volume — institutional selling.</span>
+  </div>
+</div>
+
+<!-- DARK CLOUD COVER -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Dark Cloud Cover</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big green -->
+      <rect x="50" y="20" width="16" height="55" fill="#26a641" rx="1"/>
+      <line x1="58" y1="15" x2="58" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="58" y1="75" x2="58" y2="80" stroke="#26a641" stroke-width="1.5"/>
+      <!-- red opens above, closes below midpoint -->
+      <line x1="90" y1="10" x2="90" y2="18" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="82" y="18" width="16" height="45" fill="#da3633" rx="1"/>
+      <line x1="90" y1="63" x2="90" y2="70" stroke="#da3633" stroke-width="1.5"/>
+      <!-- midpoint -->
+      <line x1="48" y1="47" x2="106" y2="47" stroke="#e3b341" stroke-width="1" stroke-dasharray="3"/>
+      <text x="90" y="85" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="72" y="44" fill="#e3b341" font-size="7" font-family="JetBrains Mono">MID</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Bulls gap up confidently but sellers storm in and push below the midpoint of the previous green candle. The 'dark cloud' rolls in over the sunny rally. This is the bearish mirror of Piercing Line. The 50% threshold is non-negotiable — it separates a strong reversal from a weak reaction.</p>
+    <span class="key-rule">📐 Key rule: Second candle (red) must open ABOVE the prior green candle's high (gap up) and close BELOW the midpoint (50%) of the prior green body. Closing above 50% makes it a weak signal only. The deeper it closes into the green body, the stronger the bearish signal.</span>
+  </div>
+</div>
+
+<!-- HARAMI BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Harami (Bearish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big green -->
+      <rect x="50" y="15" width="16" height="62" fill="#26a641" rx="1"/>
+      <line x1="58" y1="10" x2="58" y2="15" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="58" y1="77" x2="58" y2="83" stroke="#26a641" stroke-width="1.5"/>
+      <!-- small red inside -->
+      <rect x="82" y="32" width="16" height="24" fill="#da3633" rx="1"/>
+      <text x="90" y="75" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> A small red candle contained within the previous large green body. Bulls have lost momentum — the market is hesitating at highs. Sellers beginning to emerge but not yet dominant. Needs confirmation from the next candle to become a reliable signal.</p>
+    <span class="key-rule">📐 Key rule: The second candle (red) must be entirely contained within the body of the first (large green). Less powerful standalone signal — needs confirmation from next session. A red confirming candle that closes below the Harami's low completes the reversal.</span>
+  </div>
+</div>
+
+<!-- HARAMI CROSS BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Harami Cross (Bearish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="50" y="15" width="16" height="62" fill="#26a641" rx="1"/>
+      <line x1="58" y1="10" x2="58" y2="15" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="58" y1="77" x2="58" y2="83" stroke="#26a641" stroke-width="1.5"/>
+      <!-- doji inside -->
+      <line x1="90" y1="32" x2="90" y2="56" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="78" y1="44" x2="102" y2="44" stroke="#e3b341" stroke-width="2"/>
+      <rect x="82" y="42" width="16" height="4" fill="#e3b341" rx="1"/>
+      <text x="90" y="75" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> After a large green candle, a Doji appears — complete indecision at the highs. Perfect balance between buyers and sellers. At market tops, this prolonged hesitation typically resolves downward as bulls run out of fresh buying power. More powerful than regular bearish Harami.</p>
+    <span class="key-rule">📐 Key rule: Second candle must be a Doji contained within the prior large green body. The Doji is more powerful than a regular small red body — absolute indecision at a market high after sustained buying is a significant warning sign.</span>
+  </div>
+</div>
+
+<!-- DOJI STAR BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Doji Star (Bearish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="50" y="25" width="16" height="50" fill="#26a641" rx="1"/>
+      <line x1="58" y1="20" x2="58" y2="25" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="58" y1="75" x2="58" y2="82" stroke="#26a641" stroke-width="1.5"/>
+      <!-- doji gap above -->
+      <line x1="90" y1="10" x2="90" y2="28" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="78" y1="19" x2="102" y2="19" stroke="#e3b341" stroke-width="2"/>
+      <rect x="82" y="17" width="16" height="4" fill="#e3b341" rx="1"/>
+      <text x="90" y="82" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> A Doji gaps above the previous green candle — appearing at new highs with complete indecision. The gap shows bullish excitement, but the Doji shows it went nowhere. Buyers and sellers at a stalemate at the highest point — the equilibrium at extremes is the warning.</p>
+    <span class="key-rule">📐 Key rule: Doji must gap above the prior green candle's high — the gap creates the 'star' separation. No overlap of bodies. The gap up into the Doji shows euphoric buying that immediately stalled — very bearish when it gaps away properly.</span>
+  </div>
+</div>
+
+<!-- EVENING STAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Evening Star</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big green -->
+      <line x1="38" y1="55" x2="38" y2="62" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="30" y="20" width="16" height="35" fill="#26a641" rx="1"/>
+      <line x1="38" y1="18" x2="38" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <!-- small star top -->
+      <rect x="72" y="10" width="16" height="8" fill="#da3633" rx="1"/>
+      <line x1="80" y1="6" x2="80" y2="10" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="80" y1="18" x2="80" y2="23" stroke="#da3633" stroke-width="1.5"/>
+      <text x="80" y="2" fill="#e3b341" font-size="8" text-anchor="middle">★</text>
+      <!-- big red -->
+      <rect x="110" y="25" width="16" height="52" fill="#da3633" rx="1"/>
+      <line x1="118" y1="20" x2="118" y2="25" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="118" y1="77" x2="118" y2="83" stroke="#da3633" stroke-width="1.5"/>
+      <text x="118" y="96" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Mirror of Morning Star. Bulls push up (candle 1), then a small star shows exhaustion at the top (candle 2), then bears take over completely (candle 3). The three-act reversal at the top — rally, hesitation, collapse. One of the most powerful 3-candle bearish patterns.</p>
+    <span class="key-rule">📐 Key rule: Three-candle pattern. Candle 1: large green. Candle 2: small body (star) that gaps UP from candle 1. Candle 3: large red that closes below the midpoint of candle 1's body. The more candle 3 closes into candle 1's body, the stronger the signal.</span>
+  </div>
+</div>
+
+<!-- EVENING DOJI STAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Evening Doji Star</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="30" y="20" width="16" height="38" fill="#26a641" rx="1"/>
+      <line x1="38" y1="15" x2="38" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="38" y1="58" x2="38" y2="64" stroke="#26a641" stroke-width="1.5"/>
+      <!-- Doji at top -->
+      <line x1="80" y1="6" x2="80" y2="22" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="68" y1="14" x2="92" y2="14" stroke="#e3b341" stroke-width="2"/>
+      <rect x="72" y="12" width="16" height="4" fill="#e3b341" rx="1"/>
+      <rect x="110" y="22" width="16" height="50" fill="#da3633" rx="1"/>
+      <line x1="118" y1="17" x2="118" y2="22" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="118" y1="72" x2="118" y2="78" stroke="#da3633" stroke-width="1.5"/>
+      <text x="118" y="93" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Same as Evening Star but the middle candle is a Doji — perfect indecision at the top. The Doji at the peak is the market's last moment of total stalemate before the fall. Stronger signal than regular Evening Star — maximum uncertainty at maximum height.</p>
+    <span class="key-rule">📐 Key rule: Same as Evening Star but candle 2 must be a Doji. The gap between candle 1 and the Doji, and between the Doji and candle 3, strengthens the pattern. Stronger than Evening Star for the same reason Morning Doji Star is stronger than Morning Star.</span>
+  </div>
+</div>
+
+<!-- THREE BLACK CROWS -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Three Black Crows</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- prior green context -->
+      <rect x="12" y="45" width="12" height="25" fill="#26a641" rx="1"/>
+      <!-- THREE CROWS stepping lower -->
+      <rect x="35" y="15" width="14" height="42" fill="#da3633" rx="1"/>
+      <line x1="42" y1="10" x2="42" y2="15" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="42" y1="57" x2="42" y2="62" stroke="#da3633" stroke-width="1.5"/>
+
+      <rect x="60" y="30" width="14" height="42" fill="#da3633" rx="1"/>
+      <line x1="67" y1="25" x2="67" y2="30" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="67" y1="72" x2="67" y2="77" stroke="#da3633" stroke-width="1.5"/>
+
+      <rect x="85" y="45" width="14" height="42" fill="#da3633" rx="1"/>
+      <line x1="92" y1="40" x2="92" y2="45" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="92" y1="87" x2="92" y2="92" stroke="#da3633" stroke-width="1.5"/>
+      <text x="92" y="10" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Mirror of Three White Soldiers. Three consecutive long red candles, each opening within the prior body and closing progressively lower. Bears systematically dismantling the bull case session by session. Institutional distribution happening in an orderly, sustained fashion.</p>
+    <span class="key-rule">📐 Key rule: Each candle should open within the body of the prior candle (not gap down) and close near its low. Small or no wicks. Avoid if third candle shows a notably long lower wick — that signals potential exhaustion of the downmove itself and weakens the pattern.</span>
+  </div>
+</div>
+
+<!-- ABANDONED BABY BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Abandoned Baby (Bearish)</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="20" y="30" width="16" height="40" fill="#26a641" rx="1"/>
+      <line x1="28" y1="25" x2="28" y2="30" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="28" y1="70" x2="28" y2="76" stroke="#26a641" stroke-width="1.5"/>
+      <!-- isolated doji gap above -->
+      <line x1="80" y1="5" x2="80" y2="22" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="68" y1="13" x2="92" y2="13" stroke="#e3b341" stroke-width="2"/>
+      <rect x="72" y="11" width="16" height="4" fill="#e3b341" rx="1"/>
+      <text x="80" y="28" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">GAPS</text>
+      <!-- big red -->
+      <rect x="118" y="30" width="16" height="48" fill="#da3633" rx="1"/>
+      <line x1="126" y1="25" x2="126" y2="30" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="126" y1="78" x2="126" y2="84" stroke="#da3633" stroke-width="1.5"/>
+      <text x="126" y="96" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> The bearish version of the rarest pattern. A Doji gaps completely above both surrounding candles — euphorically isolated at the peak. Then bears gap down from that Doji and take complete control. Complete sentiment reversal in three sessions with institutional force.</p>
+    <span class="key-rule">📐 Key rule: The Doji must gap above candle 1 AND gap below candle 3 — completely isolated with no wick overlap on either side. This complete isolation is what makes it bearish and rare. Treat as very high conviction when it appears.</span>
+  </div>
+</div>
+
+<!-- MEETING LINES BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Meeting Lines (Bearish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="50" y="25" width="16" height="45" fill="#26a641" rx="1"/>
+      <line x1="58" y1="20" x2="58" y2="25" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="58" y1="70" x2="58" y2="76" stroke="#26a641" stroke-width="1.5"/>
+      <!-- red same close -->
+      <rect x="84" y="35" width="16" height="35" fill="#da3633" rx="1"/>
+      <line x1="92" y1="28" x2="92" y2="35" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="92" y1="70" x2="92" y2="77" stroke="#da3633" stroke-width="1.5"/>
+      <!-- same close line -->
+      <line x1="48" y1="70" x2="110" y2="70" stroke="#e3b341" stroke-width="1" stroke-dasharray="3"/>
+      <text x="90" y="92" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="79" y="80" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">SAME CLOSE</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Green and red candles meet at exactly the same closing price. At a top, this standoff signals the rally has stalled — sellers are perfectly matching every buyer at this exact level. The price level becomes identified resistance. Needs confirming red candle next session.</p>
+    <span class="key-rule">📐 Key rule: Both candles must close at precisely the same price. The red candle must open above the prior green close (gap up) then close exactly at the same level — showing the bulls' gap-up enthusiasm was completely absorbed. That shared price becomes resistance.</span>
+  </div>
+</div>
+
+<!-- TRI-STAR BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Tri-Star (Bearish)</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- 3 dojis at top -->
+      <line x1="55" y1="15" x2="55" y2="38" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="43" y1="26" x2="67" y2="26" stroke="#e3b341" stroke-width="2"/>
+      <rect x="47" y="24" width="16" height="4" fill="#e3b341" rx="1"/>
+
+      <line x1="85" y1="15" x2="85" y2="38" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="73" y1="26" x2="97" y2="26" stroke="#e3b341" stroke-width="2"/>
+      <rect x="77" y="24" width="16" height="4" fill="#e3b341" rx="1"/>
+
+      <line x1="115" y1="15" x2="115" y2="38" stroke="#e3b341" stroke-width="1.5"/>
+      <line x1="103" y1="26" x2="127" y2="26" stroke="#e3b341" stroke-width="2"/>
+      <rect x="107" y="24" width="16" height="4" fill="#e3b341" rx="1"/>
+      <text x="85" y="88" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="85" y="98" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">3 DOJIS AT TOP</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Three consecutive Dojis at market highs — complete exhaustion across three sessions. At tops, this prolonged deadlock breaks downward as bulls run out of fresh buying power to sustain the level. The longer the standoff, the more violent the eventual break.</p>
+    <span class="key-rule">📐 Key rule: Three consecutive Doji candles at market highs. The pattern is more powerful when the Dojis appear near a known resistance level or after an extended rally. Three sessions of stalemate at the top is the exhaustion signal.</span>
+  </div>
+</div>
+
+<!-- UPSIDE GAP TWO CROWS -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Upside Gap Two Crows</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big green -->
+      <rect x="25" y="30" width="16" height="45" fill="#26a641" rx="1"/>
+      <line x1="33" y1="25" x2="33" y2="30" stroke="#26a641" stroke-width="1.5"/>
+      <!-- first crow gaps above -->
+      <rect x="60" y="12" width="14" height="20" fill="#da3633" rx="1"/>
+      <line x1="67" y1="8" x2="67" y2="12" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="67" y1="32" x2="67" y2="38" stroke="#da3633" stroke-width="1.5"/>
+      <!-- second crow engulfs first -->
+      <rect x="85" y="8" width="14" height="28" fill="#da3633" rx="1"/>
+      <line x1="92" y1="4" x2="92" y2="8" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="92" y1="36" x2="92" y2="42" stroke="#da3633" stroke-width="1.5"/>
+      <text x="92" y="85" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> After a big green candle, two red candles form above with a gap. Sellers are showing up at elevated prices. The second crow engulfing the first shows sellers gaining confidence. The gap that should have extended the rally is now being filled — distribution at highs.</p>
+    <span class="key-rule">📐 Key rule: Three candles. Candle 1: large green. Candle 2: small red that gaps ABOVE candle 1's close. Candle 3: larger red that opens above candle 2's open and closes within candle 1's body — engulfing candle 2. The key: both red candles stay above candle 1's close initially, then the third closes into it.</span>
+  </div>
+</div>
+
+<!-- IDENTICAL THREE CROWS -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Identical Three Crows</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- 3 crows opening at prev close exactly -->
+      <rect x="30" y="10" width="14" height="35" fill="#da3633" rx="1"/>
+      <rect x="54" y="45" width="14" height="32" fill="#da3633" rx="1"/>
+      <rect x="78" y="77" width="14" height="12" fill="#da3633" rx="1"/>
+      <text x="85" y="98" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="65" y="8" fill="#f85149" font-size="7" font-family="JetBrains Mono" text-anchor="middle">EACH OPENS AT PREV CLOSE</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Like Three Black Crows but each candle opens exactly at the previous close — no gap, no hesitation, immediate continuation downward. Relentless, mechanical selling with zero hesitation between sessions. One of the most bearish 3-candle patterns when seen.</p>
+    <span class="key-rule">📐 Key rule: Like Three Black Crows but each candle opens EXACTLY at the previous close — no upward gap at all. This mechanical, relentless sequential selling with zero pause is more bearish than regular Three Black Crows because bears aren't even allowing any overnight recovery.</span>
+  </div>
+</div>
+
+<!-- DELIBERATION -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Deliberation</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- 2 big greens then small at top -->
+      <rect x="25" y="40" width="14" height="45" fill="#26a641" rx="1"/>
+      <rect x="50" y="22" width="14" height="42" fill="#26a641" rx="1"/>
+      <line x1="57" y1="18" x2="57" y2="22" stroke="#26a641" stroke-width="1.5"/>
+      <!-- small at very top - spinning top -->
+      <rect x="78" y="15" width="14" height="10" fill="#26a641" rx="1"/>
+      <line x1="85" y1="8" x2="85" y2="15" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="85" y1="25" x2="85" y2="32" stroke="#26a641" stroke-width="1.5"/>
+      <text x="85" y="85" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="85" y="96" fill="#f85149" font-size="7" font-family="JetBrains Mono" text-anchor="middle">SLOWING TOP</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Two strong green candles followed by a much smaller green candle at the top. The market is 'deliberating' — bulls are losing their drive after two powerful sessions. The shrinking third candle shows exhaustion setting in at the highs. Not confirmed reversal yet — watch next candle.</p>
+    <span class="key-rule">📐 Key rule: Two large green candles followed by a significantly smaller green candle or spinning top at the top. The third candle should be noticeably smaller than the first two — this visual shrinking is the key signal. Sometimes called 'Stalled Pattern'.</span>
+  </div>
+</div>
+
+<!-- ADVANCE BLOCK -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Advance Block</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- 3 greens but shrinking and longer upper wicks -->
+      <rect x="25" y="35" width="14" height="45" fill="#26a641" rx="1"/>
+      <line x1="32" y1="30" x2="32" y2="35" stroke="#26a641" stroke-width="1.5"/>
+
+      <rect x="50" y="22" width="14" height="32" fill="#26a641" rx="1"/>
+      <line x1="57" y1="10" x2="57" y2="22" stroke="#26a641" stroke-width="2"/>
+      <line x1="57" y1="54" x2="57" y2="60" stroke="#26a641" stroke-width="1.5"/>
+
+      <rect x="75" y="14" width="14" height="22" fill="#26a641" rx="1"/>
+      <line x1="82" y1="5" x2="82" y2="14" stroke="#26a641" stroke-width="2.5"/>
+      <line x1="82" y1="36" x2="82" y2="44" stroke="#26a641" stroke-width="1.5"/>
+      <text x="82" y="88" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Three green candles but with shrinking bodies and lengthening upper wicks. The rally is struggling — each session buyers push up but get rejected. The growing upper wicks show sellers are actively fighting back at every new high. The rally is running into a supply wall.</p>
+    <span class="key-rule">📐 Key rule: Three green candles with progressively shrinking bodies AND progressively lengthening upper wicks. The rally is advancing but each session closes less convincingly with more selling above. Upper wicks growing = sellers actively fighting back at higher prices.</span>
+  </div>
+</div>
+
+<!-- MATCHING HIGH -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Matching High</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="50" y="30" width="16" height="45" fill="#26a641" rx="1"/>
+      <line x1="58" y1="25" x2="58" y2="30" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="58" y1="75" x2="58" y2="80" stroke="#26a641" stroke-width="1.5"/>
+      <!-- second green same close -->
+      <rect x="82" y="38" width="16" height="37" fill="#26a641" rx="1"/>
+      <line x1="90" y1="32" x2="90" y2="38" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="90" y1="75" x2="90" y2="82" stroke="#26a641" stroke-width="1.5"/>
+      <!-- matching high line -->
+      <line x1="48" y1="30" x2="110" y2="30" stroke="#e3b341" stroke-width="1.5" stroke-dasharray="3"/>
+      <text x="90" y="95" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="79" y="24" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">SAME HIGH</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Two green candles with identical closing highs. Bulls hit the same ceiling twice and couldn't break through. The shared high becomes a hard resistance level — sellers are defending this price with consistent conviction. Needs red confirming candle next session.</p>
+    <span class="key-rule">📐 Key rule: Two green candles with identical closing highs — the closes must be at the same price. The second candle should close at the same level as the first despite potentially opening lower. The shared high defines a hard resistance ceiling.</span>
+  </div>
+</div>
+
+<!-- LATTER TOP -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Latter Top</span>
+    <span class="card-candles">5 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big green, 3 small mixed, big red -->
+      <rect x="10" y="35" width="12" height="40" fill="#26a641" rx="1"/>
+      <line x1="16" y1="30" x2="16" y2="35" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="28" y="25" width="10" height="18" fill="#26a641" rx="1"/>
+      <rect x="42" y="22" width="10" height="15" fill="#da3633" rx="1"/>
+      <rect x="56" y="24" width="10" height="14" fill="#26a641" rx="1"/>
+      <!-- big red breakdown -->
+      <rect x="74" y="18" width="14" height="58" fill="#da3633" rx="1"/>
+      <line x1="81" y1="14" x2="81" y2="18" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="81" y1="76" x2="81" y2="82" stroke="#da3633" stroke-width="1.5"/>
+      <text x="81" y="95" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> After a big green candle, price drifts sideways in small candles — distribution. Smart money is quietly selling to retail buyers who see the previous green as confirmation. Then a large red candle breaks down decisively. The sideways drift was hidden selling, not accumulation.</p>
+    <span class="key-rule">📐 Key rule: Five candles. First is a large green. Next three are small mixed candles staying in a tight range — this is the distribution phase. Fifth is a large red breakdown below the consolidation range. The tight sideways drift is the hidden distribution — smart money exiting.</span>
+  </div>
+</div>
+
+<!-- TWO CROWS -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Two Crows</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big green -->
+      <rect x="30" y="30" width="16" height="45" fill="#26a641" rx="1"/>
+      <line x1="38" y1="25" x2="38" y2="30" stroke="#26a641" stroke-width="1.5"/>
+      <!-- first small red gaps above -->
+      <rect x="65" y="15" width="14" height="18" fill="#da3633" rx="1"/>
+      <line x1="72" y1="10" x2="72" y2="15" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="72" y1="33" x2="72" y2="38" stroke="#da3633" stroke-width="1.5"/>
+      <!-- second red opens higher closes inside green -->
+      <rect x="88" y="12" width="14" height="32" fill="#da3633" rx="1"/>
+      <line x1="95" y1="8" x2="95" y2="12" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="95" y1="44" x2="95" y2="50" stroke="#da3633" stroke-width="1.5"/>
+      <text x="95" y="85" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> After a strong green candle, two red candles appear — the first gaps up then the second opens higher but closes back inside the original green body. The inability to maintain the gap shows sellers picking off every rally attempt with increasing confidence.</p>
+    <span class="key-rule">📐 Key rule: Three candles. Candle 1: large green. Candle 2: small red that gaps above candle 1's close. Candle 3: larger red that opens above candle 2's open but closes INSIDE candle 1's body — partially filling the gap. The gap fill by sellers into candle 1's body is the bearish signal.</span>
+  </div>
+</div>
+
+<!-- KICKING BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Kicking (Bearish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- Marubozu green then gap Marubozu red -->
+      <rect x="48" y="20" width="18" height="55" fill="#26a641" rx="1"/>
+      <rect x="86" y="30" width="18" height="55" fill="#da3633" rx="1"/>
+      <line x1="75" y1="50" x2="86" y2="50" stroke="#e3b341" stroke-width="1" stroke-dasharray="2"/>
+      <text x="80" y="45" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">GAP</text>
+      <text x="95" y="96" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-prior">Prior trend: UPTREND</span>
+    <p class="psych"><strong>Psychology:</strong> Two Marubozu candles with a gap between them — green followed by red. Overnight, sentiment did a complete 180 with zero ambiguity. The gap signals an institutional-level change of heart. One of the most violent and reliable top patterns when seen.</p>
+    <span class="key-rule">📐 Key rule: Both candles must be Marubozu — no wicks at all. A gap must exist between them (green then red). The gap + zero wicks on both = extreme directional conviction in both sessions. Equally rare and equally powerful as the bullish version.</span>
+  </div>
+</div>
+
+</div><!-- /bear rev grid -->
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- BULLISH CONTINUATION -->
+<!-- ═══════════════════════════════════ -->
+<section id="bull-con">
+<div class="section-header">
+  <span class="section-badge badge-bull-c">→ Bull Continuation</span>
+  <span class="section-title">Bullish Continuation Patterns</span>
+  <span class="section-count">Appear DURING uptrends — signal the trend resuming after a pause</span>
+</div>
+
+
+<div class="cat-context cat-bull-c">
+  <h3>⚠ Read This First — What "Bullish Continuation" Actually Means</h3>
+  <p><strong>Prior trend required: UPTREND already in progress.</strong> Bullish continuation patterns do NOT appear at bottoms. They appear in the MIDDLE of an existing uptrend — during a brief pause, pullback, or consolidation. The signal: the pause is ending and the uptrend is resuming. Bulls were in control, took a breath, and are now back.</p>
+  <p>Think of it like a sprinter who pauses to catch their breath mid-race — but then accelerates again. The pause looked like they were stopping, but they weren't. These patterns tell you the sprint is resuming. They are NOT reversal signals — they confirm the existing direction.</p>
+  <p><strong>Murphy's rule:</strong> Continuation patterns require confirmation that price is resuming in the direction of the prior trend. The key question is always: "Is this pullback a pause or a reversal?" These patterns answer: it was a pause.</p>
+</div>
+
+<div class="pattern-grid">
+
+<!-- RISING THREE METHODS -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Rising Three Methods</span>
+    <span class="card-candles">5 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big green -->
+      <rect x="10" y="20" width="14" height="55" fill="#26a641" rx="1"/>
+      <line x1="17" y1="15" x2="17" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <!-- 3 small reds contained -->
+      <rect x="30" y="32" width="10" height="18" fill="#da3633" rx="1"/>
+      <rect x="44" y="38" width="10" height="16" fill="#da3633" rx="1"/>
+      <rect x="58" y="34" width="10" height="18" fill="#da3633" rx="1"/>
+      <!-- big green resumes -->
+      <rect x="74" y="12" width="14" height="58" fill="#26a641" rx="1"/>
+      <line x1="81" y1="8" x2="81" y2="12" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="81" y1="70" x2="81" y2="76" stroke="#26a641" stroke-width="1.5"/>
+      <text x="81" y="5" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-trend">Prior trend: UPTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> A large green candle (the trend), then three small red candles that stay within the first candle's body — profit-taking pause contained within the trend. Then a new large green candle resumes the uptrend. The shallow pullback was healthy consolidation — bulls held the line.</p>
+    <span class="key-rule">📐 Key rule: Five candles. Candle 1: large green. Candles 2-4: small red candles that stay WITHIN candle 1's body range — they must not close below candle 1's open. Candle 5: large green that closes above candle 1's high. The containment of the pullback within candle 1 is essential.</span>
+  </div>
+</div>
+
+<!-- SEPARATING LINES BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Separating Lines (Bullish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- red then green opening at same level -->
+      <rect x="45" y="25" width="14" height="45" fill="#da3633" rx="1"/>
+      <line x1="52" y1="20" x2="52" y2="25" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="52" y1="70" x2="52" y2="78" stroke="#da3633" stroke-width="1.5"/>
+      <!-- green opens at same open as red -->
+      <rect x="74" y="25" width="14" height="55" fill="#26a641" rx="1"/>
+      <line x1="81" y1="18" x2="81" y2="25" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="81" y1="80" x2="81" y2="86" stroke="#26a641" stroke-width="1.5"/>
+      <!-- same open line -->
+      <line x1="43" y1="25" x2="92" y2="25" stroke="#e3b341" stroke-width="1" stroke-dasharray="3"/>
+      <text x="81" y="5" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="68" y="20" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">SAME OPEN</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-trend">Prior trend: UPTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> After a bearish pullback candle in an uptrend, a bullish candle opens at the same price but surges upward — 'separating' from the red candle's direction. Bulls used the red day as a buying opportunity and immediately reclaimed control. Trend resumes.</p>
+    <span class="key-rule">📐 Key rule: Two candles with the SAME opening price. First is red (a pullback in the uptrend), second is green that opens at the exact same level but closes significantly higher. The shared opening price is the critical element — bulls defended that exact level.</span>
+  </div>
+</div>
+
+<!-- UPSIDE TASUKI GAP -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Upside Tasuki Gap</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- two greens with gap -->
+      <rect x="20" y="45" width="14" height="35" fill="#26a641" rx="1"/>
+      <line x1="27" y1="40" x2="27" y2="45" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="46" y="20" width="14" height="28" fill="#26a641" rx="1"/>
+      <line x1="53" y1="15" x2="53" y2="20" stroke="#26a641" stroke-width="1.5"/>
+      <!-- gap indicator -->
+      <line x1="34" y1="40" x2="46" y2="40" stroke="#e3b341" stroke-width="1" stroke-dasharray="2"/>
+      <!-- small red tries to fill gap but fails -->
+      <rect x="74" y="30" width="14" height="25" fill="#da3633" rx="1"/>
+      <line x1="81" y1="25" x2="81" y2="30" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="81" y1="55" x2="81" y2="62" stroke="#da3633" stroke-width="1.5"/>
+      <text x="53" y="5" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-trend">Prior trend: UPTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> Two green candles gap up with momentum, then a red candle tries to fill the gap but fails. The unfilled gap acts as support. Bears attempted to fill it but were absorbed by buyers. The gap holding confirms institutional demand at that price level.</p>
+    <span class="key-rule">📐 Key rule: Two green candles with a gap between them, then a red candle that partially fills the gap but CANNOT close the gap completely. The gap must remain open — if the red candle closes below the lower green candle's close, the gap is filled and the pattern fails.</span>
+  </div>
+</div>
+
+<!-- SIDE BY SIDE WHITE LINES BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Side by Side White Lines</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big green -->
+      <rect x="20" y="35" width="14" height="40" fill="#26a641" rx="1"/>
+      <line x1="27" y1="30" x2="27" y2="35" stroke="#26a641" stroke-width="1.5"/>
+      <!-- two greens side by side with gap -->
+      <rect x="50" y="15" width="14" height="30" fill="#26a641" rx="1"/>
+      <line x1="57" y1="10" x2="57" y2="15" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="74" y="15" width="14" height="30" fill="#26a641" rx="1"/>
+      <line x1="81" y1="10" x2="81" y2="15" stroke="#26a641" stroke-width="1.5"/>
+      <text x="65" y="5" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-trend">Prior trend: UPTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> After a big green candle, two smaller green candles of equal size appear side by side above the gap. Consolidation at the new high level — bulls are building a base above the gap before the next leg up. The gap holds as support.</p>
+    <span class="key-rule">📐 Key rule: After a large green candle, two consecutive green candles of similar size appear at approximately the same price level — gapped above the first candle. They should be similar in size and positioned side by side. This sideways consolidation above the gap is bullish.</span>
+  </div>
+</div>
+
+<!-- THREE LINE STRIKE BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Three Line Strike (Bullish)</span>
+    <span class="card-candles">4 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- 3 greens stepping up -->
+      <rect x="10" y="55" width="12" height="30" fill="#26a641" rx="1"/>
+      <rect x="26" y="38" width="12" height="30" fill="#26a641" rx="1"/>
+      <rect x="42" y="22" width="12" height="30" fill="#26a641" rx="1"/>
+      <!-- strike: big red engulfs all -->
+      <rect x="62" y="18" width="14" height="68" fill="#da3633" rx="1"/>
+      <line x1="69" y1="13" x2="69" y2="18" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="69" y1="86" x2="69" y2="92" stroke="#da3633" stroke-width="1.5"/>
+      <text x="69" y="5" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="69" y="98" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">BULL RESUMES</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-trend">Prior trend: UPTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> Three green candles followed by a huge red candle that engulfs all three. Paradoxically this is a CONTINUATION signal — the violent pullback shakes out weak bulls, triggering stops. But the underlying trend is intact. Smart money uses the dip to load positions. Resume expected.</p>
+    <span class="key-rule">📐 Key rule: Three consecutive green candles followed by a large red candle that completely engulfs all three. This looks like a bearish reversal but is actually bullish continuation — the violent shakeout clears weak hands. Watch for the next candle to resume upward. Counterintuitive — use with care.</span>
+  </div>
+</div>
+
+<!-- UPSIDE GAP THREE METHODS -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Upside Gap Three Methods</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big green -->
+      <rect x="15" y="35" width="14" height="40" fill="#26a641" rx="1"/>
+      <!-- gap -->
+      <line x1="29" y1="28" x2="46" y2="28" stroke="#e3b341" stroke-width="1" stroke-dasharray="2"/>
+      <!-- second big green -->
+      <rect x="46" y="12" width="14" height="28" fill="#26a641" rx="1"/>
+      <line x1="53" y1="8" x2="53" y2="12" stroke="#26a641" stroke-width="1.5"/>
+      <!-- red fills gap -->
+      <rect x="74" y="28" width="14" height="28" fill="#da3633" rx="1"/>
+      <line x1="81" y1="23" x2="81" y2="28" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="81" y1="56" x2="81" y2="62" stroke="#da3633" stroke-width="1.5"/>
+      <text x="53" y="3" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-trend">Prior trend: UPTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> Two green candles gap up with strong momentum, then a red candle fills the gap — the gap fill is the market giving you a last chance entry. Once the gap is fully absorbed by buyers, the trend resumes. Gap area becomes support.</p>
+    <span class="key-rule">📐 Key rule: Two large green candles gap upward, then a red candle fills the gap between them. The red candle closes within the gap zone — it fills the gap completely but does not close below the lower green candle. Gap fill is the last buying opportunity before the trend resumes.</span>
+  </div>
+</div>
+
+<!-- ON NECK LINE BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">On Neck Line (Bullish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- downtrend candle (context) -->
+      <rect x="35" y="20" width="14" height="42" fill="#da3633" rx="1"/>
+      <line x1="42" y1="15" x2="42" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="42" y1="62" x2="42" y2="70" stroke="#da3633" stroke-width="1.5"/>
+      <!-- green closes at prev low -->
+      <rect x="64" y="55" width="14" height="22" fill="#26a641" rx="1"/>
+      <line x1="71" y1="50" x2="71" y2="55" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="71" y1="77" x2="71" y2="83" stroke="#26a641" stroke-width="1.5"/>
+      <!-- neck line -->
+      <line x1="33" y1="62" x2="82" y2="62" stroke="#e3b341" stroke-width="1.5" stroke-dasharray="3"/>
+      <text x="71" y="3" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="57" y="58" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">NECK</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-trend">Prior trend: DOWNTREND (weak bounce signal)</span>
+    <p class="psych"><strong>Psychology:</strong> In a downtrend, a green candle closes exactly at the prior red candle's low — touching the 'neck' but nothing more. Bulls tested the bounce but failed to close higher. This actually signals the downtrend is likely to continue — the bounce was fully absorbed by sellers at the prior low.</p>
+    <span class="key-rule">📐 Key rule: In a downtrend, a green candle closes exactly AT the low of the previous red candle — at the 'neck'. It does NOT close above the low. This is actually a warning that the downtrend continues — the bounce was absorbed at exactly the prior low. Do not confuse with bullish reversal.</span>
+  </div>
+</div>
+
+<!-- IN NECK LINE BULL -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">In Neck Line (Bullish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="35" y="20" width="14" height="42" fill="#da3633" rx="1"/>
+      <line x1="42" y1="15" x2="42" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="42" y1="62" x2="42" y2="70" stroke="#da3633" stroke-width="1.5"/>
+      <!-- green closes slightly inside red body -->
+      <rect x="64" y="52" width="14" height="20" fill="#26a641" rx="1"/>
+      <line x1="71" y1="47" x2="71" y2="52" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="71" y1="72" x2="71" y2="78" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="33" y1="62" x2="82" y2="62" stroke="#e3b341" stroke-width="1.5" stroke-dasharray="3"/>
+      <text x="71" y="3" fill="#3fb950" font-size="14" text-anchor="middle">↑</text>
+      <text x="57" y="48" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">IN</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bull-trend">Prior trend: DOWNTREND (weak bounce signal)</span>
+    <p class="psych"><strong>Psychology:</strong> Green candle closes slightly 'into' the previous red body — a tiny bit above the low. Only marginally stronger than On Neck Line. Sellers remain in control — the slight penetration is insufficient to signal reversal. Downtrend continues as sellers overwhelm the small bounce.</p>
+    <span class="key-rule">📐 Key rule: Similar to On Neck but the green candle closes slightly INTO the prior red body — marginally above the red candle's close. Marginally stronger than On Neck but still a very weak bounce. Sellers remain in control — insufficient penetration to threaten the downtrend.</span>
+  </div>
+</div>
+
+</div><!-- /bull cont grid -->
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- BEARISH CONTINUATION -->
+<!-- ═══════════════════════════════════ -->
+<section id="bear-con">
+<div class="section-header">
+  <span class="section-badge badge-bear-c">→ Bear Continuation</span>
+  <span class="section-title">Bearish Continuation Patterns</span>
+  <span class="section-count">Appear DURING downtrends — signal the decline resuming after a bounce</span>
+</div>
+
+
+<div class="cat-context cat-bear-c">
+  <h3>⚠ Read This First — What "Bearish Continuation" Actually Means</h3>
+  <p><strong>Prior trend required: DOWNTREND already in progress.</strong> Bearish continuation patterns appear in the MIDDLE of an existing downtrend — during a brief bounce or relief rally. The signal: the bounce is a trap and the downtrend is resuming. Bears were in control, allowed a small recovery, and are now pressing lower again.</p>
+  <p>Think of it like a stone dropped from height — it bounces once on hitting a surface, but then rolls downward again. That bounce is not a reversal. It is a continuation. These patterns identify that the apparent recovery is being absorbed by sellers who use it as a chance to reload short positions.</p>
+  <p><strong>Murphy's rule:</strong> Do not confuse a continuation bounce with a genuine reversal. These patterns appear most powerfully when the bounce candles are contained within the prior large red candle's range — the bears never truly lost control.</p>
+</div>
+
+<div class="pattern-grid">
+
+<!-- FALLING THREE METHODS -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Falling Three Methods</span>
+    <span class="card-candles">5 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big red -->
+      <rect x="10" y="10" width="14" height="55" fill="#da3633" rx="1"/>
+      <line x1="17" y1="6" x2="17" y2="10" stroke="#da3633" stroke-width="1.5"/>
+      <!-- 3 small greens contained -->
+      <rect x="30" y="28" width="10" height="18" fill="#26a641" rx="1"/>
+      <rect x="44" y="22" width="10" height="16" fill="#26a641" rx="1"/>
+      <rect x="58" y="26" width="10" height="18" fill="#26a641" rx="1"/>
+      <!-- big red resumes -->
+      <rect x="74" y="8" width="14" height="60" fill="#da3633" rx="1"/>
+      <line x1="81" y1="3" x2="81" y2="8" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="81" y1="68" x2="81" y2="75" stroke="#da3633" stroke-width="1.5"/>
+      <text x="81" y="92" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-trend">Prior trend: DOWNTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> Mirror of Rising Three Methods. A large red candle, small green bounces contained within it — bears letting weak shorts cover temporarily. Then a new large red candle resumes the downtrend convincingly. The bounce was a temporary relief rally absorbed by sellers.</p>
+    <span class="key-rule">📐 Key rule: Five candles. Candle 1: large red. Candles 2-4: small green candles that stay WITHIN candle 1's body range — they must not close above candle 1's open. Candle 5: large red that closes below candle 1's low. The containment of the bounce within candle 1 is essential.</span>
+  </div>
+</div>
+
+<!-- DOWNSIDE TASUKI GAP -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Downside Tasuki Gap</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- two reds with gap -->
+      <rect x="15" y="10" width="14" height="32" fill="#da3633" rx="1"/>
+      <line x1="22" y1="6" x2="22" y2="10" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="44" y="50" width="14" height="30" fill="#da3633" rx="1"/>
+      <line x1="51" y1="45" x2="51" y2="50" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="51" y1="80" x2="51" y2="86" stroke="#da3633" stroke-width="1.5"/>
+      <!-- gap indicator -->
+      <line x1="29" y1="42" x2="44" y2="42" stroke="#e3b341" stroke-width="1" stroke-dasharray="2"/>
+      <!-- green tries to fill gap but fails -->
+      <rect x="72" y="38" width="14" height="26" fill="#26a641" rx="1"/>
+      <line x1="79" y1="33" x2="79" y2="38" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="79" y1="64" x2="79" y2="70" stroke="#26a641" stroke-width="1.5"/>
+      <text x="51" y="95" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-trend">Prior trend: DOWNTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> Two red candles gap down with momentum, then a green candle tries to fill the gap but fails. The unfilled gap acts as resistance. Bulls attempted to recover but were absorbed by sellers. The gap holding confirms institutional supply at that price level.</p>
+    <span class="key-rule">📐 Key rule: Two red candles with a gap down between them, then a green candle that partially fills the gap but CANNOT close it completely. If the green candle closes above the upper red candle's open, the gap is filled and the pattern fails. Gap must remain as resistance.</span>
+  </div>
+</div>
+
+<!-- SIDE BY SIDE WHITE LINES BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Side by Side White Lines (Bear)</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big red -->
+      <rect x="15" y="15" width="14" height="40" fill="#da3633" rx="1"/>
+      <line x1="22" y1="10" x2="22" y2="15" stroke="#da3633" stroke-width="1.5"/>
+      <!-- gap down then 2 side by side greens (bearish - gap never filled) -->
+      <rect x="48" y="62" width="14" height="22" fill="#26a641" rx="1"/>
+      <line x1="55" y1="57" x2="55" y2="62" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="72" y="62" width="14" height="22" fill="#26a641" rx="1"/>
+      <line x1="79" y1="57" x2="79" y2="62" stroke="#26a641" stroke-width="1.5"/>
+      <!-- gap stays unfilled -->
+      <line x1="30" y1="55" x2="47" y2="55" stroke="#e3b341" stroke-width="1" stroke-dasharray="2"/>
+      <text x="65" y="96" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="47" y="50" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">GAP HOLDS</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-trend">Prior trend: DOWNTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> After a gap down red candle, two green candles form side by side — but the gap remains unfilled. Bulls are bouncing but cannot reclaim the gap level. Bears control the gap as resistance overhead and will resume lower after this brief consolidation.</p>
+    <span class="key-rule">📐 Key rule: After a large red candle gaps down, two similar-sized green candles appear side by side in the gap zone — but the gap remains unfilled. The green candles are a short-covering bounce, not genuine buying. The gap resistance above them holds.</span>
+  </div>
+</div>
+
+<!-- THREE LINE STRIKE BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Three Line Strike (Bearish)</span>
+    <span class="card-candles">4 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- 3 reds stepping lower -->
+      <rect x="10" y="10" width="12" height="28" fill="#da3633" rx="1"/>
+      <rect x="26" y="25" width="12" height="28" fill="#da3633" rx="1"/>
+      <rect x="42" y="40" width="12" height="28" fill="#da3633" rx="1"/>
+      <!-- strike: big green engulfs all -->
+      <rect x="62" y="8" width="14" height="64" fill="#26a641" rx="1"/>
+      <line x1="69" y1="4" x2="69" y2="8" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="69" y1="72" x2="69" y2="78" stroke="#26a641" stroke-width="1.5"/>
+      <text x="69" y="93" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="69" y="3" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">BEAR RESUMES</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-trend">Prior trend: DOWNTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> Three red candles followed by a big green that engulfs all three. Counter-intuitively bearish — the short-covering rally gives bears a better price to reload short positions. The squeeze is the gift. Downtrend resumes after the brief squeeze clears weak shorts.</p>
+    <span class="key-rule">📐 Key rule: Three consecutive red candles followed by a large green candle that completely engulfs all three. Looks like a bullish reversal — but is actually bearish continuation. The green candle is a short-covering squeeze giving bears a chance to reload. Next candle should resume down.</span>
+  </div>
+</div>
+
+<!-- DOWNSIDE GAP THREE METHODS -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Downside Gap Three Methods</span>
+    <span class="card-candles">3 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big red -->
+      <rect x="15" y="10" width="14" height="35" fill="#da3633" rx="1"/>
+      <line x1="22" y1="6" x2="22" y2="10" stroke="#da3633" stroke-width="1.5"/>
+      <!-- gap down -->
+      <line x1="29" y1="52" x2="46" y2="52" stroke="#e3b341" stroke-width="1" stroke-dasharray="2"/>
+      <!-- second big red -->
+      <rect x="46" y="55" width="14" height="30" fill="#da3633" rx="1"/>
+      <line x1="53" y1="50" x2="53" y2="55" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="53" y1="85" x2="53" y2="91" stroke="#da3633" stroke-width="1.5"/>
+      <!-- green fills gap exactly -->
+      <rect x="74" y="38" width="14" height="28" fill="#26a641" rx="1"/>
+      <line x1="81" y1="33" x2="81" y2="38" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="81" y1="66" x2="81" y2="72" stroke="#26a641" stroke-width="1.5"/>
+      <text x="53" y="98" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-trend">Prior trend: DOWNTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> Two red candles gap down with force. A green candle fills the gap perfectly — this is the last short-covering opportunity for bears to exit and re-enter. Once the gap is fully filled, sellers return and the downtrend accelerates from that level.</p>
+    <span class="key-rule">📐 Key rule: Two red candles gap down, then a green candle fills the gap between them exactly. The green candle closes within the gap zone — absorbed by sellers. Once the gap is filled, sellers return with force. Gap fill is the last short-covering opportunity.</span>
+  </div>
+</div>
+
+<!-- ON NECK BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">On Neck Line (Bearish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="35" y="15" width="14" height="45" fill="#da3633" rx="1"/>
+      <line x1="42" y1="10" x2="42" y2="15" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="42" y1="60" x2="42" y2="68" stroke="#da3633" stroke-width="1.5"/>
+      <!-- green closes exactly at prev close -->
+      <rect x="64" y="48" width="14" height="18" fill="#26a641" rx="1"/>
+      <line x1="71" y1="43" x2="71" y2="48" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="71" y1="66" x2="71" y2="72" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="33" y1="60" x2="82" y2="60" stroke="#e3b341" stroke-width="1.5" stroke-dasharray="3"/>
+      <text x="71" y="88" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="57" y="56" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">NECK</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-trend">Prior trend: DOWNTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> In a downtrend, a green candle closes exactly at the prior red candle's close — the bounce was perfectly contained. Bulls could only recover to where bears stopped yesterday. Downtrend absolutely intact — sellers absorbed every buyer at that exact price.</p>
+    <span class="key-rule">📐 Key rule: In a downtrend, a green bounce candle closes exactly at the CLOSE of the prior red candle — not the low, but the close. Bulls could only get back to where yesterday's sellers stopped. The downtrend is confirmed intact.</span>
+  </div>
+</div>
+
+<!-- IN NECK BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">In Neck Line (Bearish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <rect x="35" y="15" width="14" height="45" fill="#da3633" rx="1"/>
+      <line x1="42" y1="10" x2="42" y2="15" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="42" y1="60" x2="42" y2="68" stroke="#da3633" stroke-width="1.5"/>
+      <!-- green closes slightly into body -->
+      <rect x="64" y="44" width="14" height="22" fill="#26a641" rx="1"/>
+      <line x1="71" y1="39" x2="71" y2="44" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="71" y1="66" x2="71" y2="72" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="33" y1="60" x2="82" y2="60" stroke="#e3b341" stroke-width="1" stroke-dasharray="3"/>
+      <text x="71" y="88" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-trend">Prior trend: DOWNTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> Green candle closes slightly into the prior red body — marginally stronger than On Neck but still insufficient to threaten the downtrend. Sellers overwhelm the small penetration. The marginal penetration actually lures weak bulls in before the downtrend resumes.</p>
+    <span class="key-rule">📐 Key rule: Similar to On Neck (Bearish) but the green candle closes slightly ABOVE the prior red candle's close — marginally into the body. Still insufficient to threaten the downtrend. Sellers at the next session will overwhelm this small penetration.</span>
+  </div>
+</div>
+
+<!-- SEPARATING LINES BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Separating Lines (Bearish)</span>
+    <span class="card-candles">2 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- green then red same open -->
+      <rect x="45" y="25" width="14" height="42" fill="#26a641" rx="1"/>
+      <line x1="52" y1="20" x2="52" y2="25" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="52" y1="67" x2="52" y2="74" stroke="#26a641" stroke-width="1.5"/>
+      <!-- red opens at same level, falls -->
+      <rect x="74" y="25" width="14" height="55" fill="#da3633" rx="1"/>
+      <line x1="81" y1="18" x2="81" y2="25" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="81" y1="80" x2="81" y2="87" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="43" y1="25" x2="92" y2="25" stroke="#e3b341" stroke-width="1" stroke-dasharray="3"/>
+      <text x="81" y="98" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+      <text x="68" y="20" fill="#e3b341" font-size="7" font-family="JetBrains Mono" text-anchor="middle">SAME OPEN</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-trend">Prior trend: DOWNTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> After a bullish bounce, a red candle opens at the same price as the green but falls hard. Bears used the green candle as a selling opportunity — they were waiting at that exact open price level to reload short positions. The downtrend resumes with force.</p>
+    <span class="key-rule">📐 Key rule: Two candles with the SAME opening price. First is green (a bounce in the downtrend), second is red that opens at the exact same level but closes significantly lower. The shared opening price is the critical element — bears defended that exact level perfectly.</span>
+  </div>
+</div>
+
+<!-- BREAKAWAY BEAR -->
+<div class="pattern-card">
+  <div class="card-header">
+    <span class="card-name">Breakaway (Bearish)</span>
+    <span class="card-candles">5 candles</span>
+  </div>
+  <div class="card-chart">
+    <div class="grid-bg"></div>
+    <span class="chart-label">Isolation</span>
+    <svg width="160" height="100" viewBox="0 0 160 100">
+      <!-- big red, 3 small, big red -->
+      <rect x="10" y="8" width="12" height="42" fill="#da3633" rx="1"/>
+      <line x1="16" y1="4" x2="16" y2="8" stroke="#da3633" stroke-width="1.5"/>
+      <rect x="26" y="40" width="10" height="18" fill="#da3633" rx="1"/>
+      <rect x="40" y="44" width="10" height="16" fill="#26a641" rx="1"/>
+      <rect x="54" y="42" width="10" height="14" fill="#da3633" rx="1"/>
+      <!-- big red breakaway -->
+      <rect x="72" y="30" width="14" height="55" fill="#da3633" rx="1"/>
+      <line x1="79" y1="25" x2="79" y2="30" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="79" y1="85" x2="79" y2="91" stroke="#da3633" stroke-width="1.5"/>
+      <text x="79" y="98" fill="#f85149" font-size="14" text-anchor="middle">↓</text>
+    </svg>
+  </div>
+  <div class="card-body">
+    <span class="trend-tag tag-bear-trend">Prior trend: DOWNTREND (continuing)</span>
+    <p class="psych"><strong>Psychology:</strong> After a big red candle, the market drifts sideways briefly in mixed small candles. Then a decisive large red candle breaks away below — the consolidation was distribution of remaining long positions. Bears reload and resume the downtrend with renewed force.</p>
+    <span class="key-rule">📐 Key rule: Five candles. First is a large red. Next three are small mixed candles (consolidation) staying roughly in the same zone. Fifth is a large red that breaks below the consolidation range — the 'breakaway'. The sideways drift was distribution — bears loading positions.</span>
+  </div>
+</div>
+
+</div><!-- /bear cont grid -->
+</section>
+
+<!-- ═══════════════════════════════════ -->
+<!-- COMBINATION WITH INDICATORS -->
+<!-- ═══════════════════════════════════ -->
+<section id="combo">
+<div class="section-header">
+  <span class="section-badge badge-combo">⚡ Confluence</span>
+  <span class="section-title">Candlesticks + Indicators — The Real Edge</span>
+  <span class="section-count">Murphy's rule: candlesticks signal direction, indicators confirm conviction</span>
+</div>
+
+<p style="color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:24px;max-width:780px">A candlestick pattern alone is a suggestion. A candlestick pattern at a key support/resistance level, confirmed by RSI divergence and above-average volume — that is a high-conviction trade. Here are four examples of confluence in action.</p>
+
+<div class="combo-grid">
+
+<!-- COMBO 1: HAMMER + RSI OVERSOLD -->
+<div class="usage-card">
+  <div class="usage-header">
+    <span class="section-badge badge-bull">Example 1</span>
+    <span style="font-size:13px;font-weight:600;color:var(--text)">Hammer + RSI Oversold + Support Level</span>
+  </div>
+  <div class="usage-chart">
+    <svg width="500" height="160" viewBox="0 0 500 160">
+      <defs>
+        <pattern id="g2" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#21262d" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="500" height="160" fill="#0d1117"/>
+      <rect width="500" height="160" fill="url(#g2)"/>
+
+      <!-- SUPPORT LINE -->
+      <line x1="0" y1="95" x2="500" y2="95" stroke="#e3b341" stroke-width="1" stroke-dasharray="5"/>
+      <text x="8" y="91" fill="#e3b341" font-size="9" font-family="JetBrains Mono">SUPPORT</text>
+
+      <!-- Downtrend candles -->
+      <rect x="30" y="20" width="16" height="42" fill="#da3633" rx="1"/>
+      <line x1="38" y1="15" x2="38" y2="20" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="38" y1="62" x2="38" y2="68" stroke="#da3633" stroke-width="1.5"/>
+
+      <rect x="58" y="30" width="16" height="38" fill="#da3633" rx="1"/>
+      <line x1="66" y1="25" x2="66" y2="30" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="66" y1="68" x2="66" y2="75" stroke="#da3633" stroke-width="1.5"/>
+
+      <rect x="86" y="45" width="16" height="35" fill="#da3633" rx="1"/>
+      <line x1="94" y1="40" x2="94" y2="45" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="94" y1="80" x2="94" y2="88" stroke="#da3633" stroke-width="1.5"/>
+
+      <!-- HAMMER AT SUPPORT -->
+      <line x1="122" y1="78" x2="122" y2="85" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="114" y="85" width="16" height="8" fill="#26a641" rx="1"/>
+      <line x1="122" y1="93" x2="122" y2="128" stroke="#26a641" stroke-width="2.5"/>
+      <!-- Highlight box -->
+      <rect x="110" y="74" width="26" height="58" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-dasharray="3" rx="3"/>
+      <text x="122" y="70" fill="#3fb950" font-size="8" font-family="JetBrains Mono" text-anchor="middle">HAMMER</text>
+
+      <!-- Recovery -->
+      <rect x="152" y="65" width="16" height="28" fill="#26a641" rx="1"/>
+      <line x1="160" y1="60" x2="160" y2="65" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="180" y="50" width="16" height="30" fill="#26a641" rx="1"/>
+      <line x1="188" y1="45" x2="188" y2="50" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="208" y="38" width="16" height="28" fill="#26a641" rx="1"/>
+
+      <!-- RSI panel -->
+      <rect x="0" y="138" width="500" height="22" fill="#0d1117"/>
+      <line x1="0" y1="138" x2="500" y2="138" stroke="#30363d" stroke-width="1"/>
+      <text x="8" y="150" fill="#8b949e" font-size="8" font-family="JetBrains Mono">RSI</text>
+      <!-- RSI line going low then turning up -->
+      <polyline points="30,152 66,154 94,157 122,159 152,153 188,147 220,142" fill="none" stroke="#bc8cff" stroke-width="1.5"/>
+      <!-- oversold zone line -->
+      <line x1="0" y1="157" x2="500" y2="157" stroke="#da3633" stroke-width="0.5" stroke-dasharray="3"/>
+      <text x="220" y="156" fill="#da3633" font-size="7" font-family="JetBrains Mono">30</text>
+      <!-- divergence arrow -->
+      <text x="122" y="136" fill="#3fb950" font-size="8" font-family="JetBrains Mono" text-anchor="middle">RSI turns up</text>
+    </svg>
+  </div>
+  <div class="usage-text">
+    <strong>How to read this:</strong> Price is falling and reaches a known support level. A Hammer forms exactly at support — bulls rejected the selloff intraday. RSI simultaneously crosses below 30 (oversold) and begins turning up — divergence forming. Volume should be above average on the Hammer candle. <strong>Three-condition confirmation: pattern + support level + RSI signal = high conviction long entry.</strong> Stop loss just below the Hammer's low.
+  </div>
+</div>
+
+<!-- COMBO 2: EVENING STAR + RSI OVERBOUGHT -->
+<div class="usage-card">
+  <div class="usage-header">
+    <span class="section-badge badge-bear">Example 2</span>
+    <span style="font-size:13px;font-weight:600;color:var(--text)">Evening Star + RSI Overbought + Resistance</span>
+  </div>
+  <div class="usage-chart">
+    <svg width="500" height="160" viewBox="0 0 500 160">
+      <rect width="500" height="160" fill="#0d1117"/>
+      <rect width="500" height="160" fill="url(#g2)"/>
+
+      <!-- RESISTANCE LINE -->
+      <line x1="0" y1="38" x2="500" y2="38" stroke="#e3b341" stroke-width="1" stroke-dasharray="5"/>
+      <text x="8" y="34" fill="#e3b341" font-size="9" font-family="JetBrains Mono">RESISTANCE</text>
+
+      <!-- Uptrend -->
+      <rect x="20" y="85" width="16" height="32" fill="#26a641" rx="1"/>
+      <line x1="28" y1="80" x2="28" y2="85" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="48" y="72" width="16" height="30" fill="#26a641" rx="1"/>
+      <line x1="56" y1="67" x2="56" y2="72" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="76" y="58" width="16" height="30" fill="#26a641" rx="1"/>
+      <line x1="84" y1="53" x2="84" y2="58" stroke="#26a641" stroke-width="1.5"/>
+
+      <!-- EVENING STAR at resistance -->
+      <!-- big green -->
+      <rect x="106" y="42" width="16" height="30" fill="#26a641" rx="1"/>
+      <line x1="114" y1="37" x2="114" y2="42" stroke="#26a641" stroke-width="1.5"/>
+      <!-- star -->
+      <rect x="134" y="32" width="14" height="8" fill="#da3633" rx="1"/>
+      <line x1="141" y1="27" x2="141" y2="32" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="141" y1="40" x2="141" y2="45" stroke="#da3633" stroke-width="1.5"/>
+      <!-- big red -->
+      <rect x="160" y="44" width="16" height="45" fill="#da3633" rx="1"/>
+      <line x1="168" y1="39" x2="168" y2="44" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="168" y1="89" x2="168" y2="95" stroke="#da3633" stroke-width="1.5"/>
+      <!-- Highlight box -->
+      <rect x="102" y="26" width="78" height="72" fill="none" stroke="#f85149" stroke-width="1.5" stroke-dasharray="3" rx="3"/>
+      <text x="140" y="23" fill="#f85149" font-size="8" font-family="JetBrains Mono" text-anchor="middle">EVENING STAR</text>
+
+      <!-- sell off -->
+      <rect x="190" y="68" width="16" height="35" fill="#da3633" rx="1"/>
+      <rect x="218" y="80" width="16" height="32" fill="#da3633" rx="1"/>
+
+      <!-- RSI panel -->
+      <rect x="0" y="138" width="500" height="22" fill="#0d1117"/>
+      <line x1="0" y1="138" x2="500" y2="138" stroke="#30363d" stroke-width="1"/>
+      <text x="8" y="150" fill="#8b949e" font-size="8" font-family="JetBrains Mono">RSI</text>
+      <polyline points="20,152 56,148 84,143 114,141 141,140 168,145 200,150 230,154" fill="none" stroke="#bc8cff" stroke-width="1.5"/>
+      <line x1="0" y1="141" x2="500" y2="141" stroke="#da3633" stroke-width="0.5" stroke-dasharray="3"/>
+      <text x="240" y="140" fill="#da3633" font-size="7" font-family="JetBrains Mono">70 OB</text>
+      <text x="168" y="136" fill="#f85149" font-size="8" font-family="JetBrains Mono" text-anchor="middle">RSI turns down</text>
+    </svg>
+  </div>
+  <div class="usage-text">
+    <strong>How to read this:</strong> Price rallies into a known resistance zone. An Evening Star forms right at resistance — the star shows exhaustion at the high, the red candle confirms sellers taking over. RSI was above 70 (overbought) and begins rolling over — bearish divergence forming. <strong>Pattern + resistance + RSI rollover = high conviction short or exit long.</strong> This is exactly the type of setup Murphy describes as the highest reliability combination.
+  </div>
+</div>
+
+<!-- COMBO 3: ENGULFING + VOLUME + MA -->
+<div class="usage-card">
+  <div class="usage-header">
+    <span class="section-badge badge-bull">Example 3</span>
+    <span style="font-size:13px;font-weight:600;color:var(--text)">Bullish Engulfing + Volume Surge + 200 MA Bounce</span>
+  </div>
+  <div class="usage-chart">
+    <svg width="500" height="160" viewBox="0 0 500 160">
+      <rect width="500" height="160" fill="#0d1117"/>
+      <rect width="500" height="160" fill="url(#g2)"/>
+
+      <!-- 200 MA line -->
+      <path d="M 0,90 Q 100,88 200,92 Q 280,94 380,90 Q 440,88 500,89" fill="none" stroke="#388bfd" stroke-width="1.5" stroke-dasharray="5"/>
+      <text x="8" y="86" fill="#388bfd" font-size="9" font-family="JetBrains Mono">200 MA</text>
+
+      <!-- fall toward MA -->
+      <rect x="25" y="35" width="14" height="38" fill="#da3633" rx="1"/>
+      <rect x="50" y="45" width="14" height="35" fill="#da3633" rx="1"/>
+      <rect x="75" y="58" width="14" height="30" fill="#da3633" rx="1"/>
+      <line x1="82" y1="54" x2="82" y2="58" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="82" y1="88" x2="82" y2="96" stroke="#da3633" stroke-width="1.5"/>
+
+      <!-- small red at MA -->
+      <rect x="103" y="75" width="12" height="18" fill="#da3633" rx="1"/>
+      <line x1="109" y1="70" x2="109" y2="75" stroke="#da3633" stroke-width="1.5"/>
+
+      <!-- ENGULFING green -->
+      <rect x="127" y="50" width="16" height="45" fill="#26a641" rx="1"/>
+      <line x1="135" y1="45" x2="135" y2="50" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="135" y1="95" x2="135" y2="100" stroke="#26a641" stroke-width="1.5"/>
+      <rect x="122" y="44" width="28" height="60" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-dasharray="3" rx="3"/>
+      <text x="135" y="40" fill="#3fb950" font-size="8" font-family="JetBrains Mono" text-anchor="middle">ENGULF</text>
+
+      <!-- recovery -->
+      <rect x="158" y="40" width="14" height="38" fill="#26a641" rx="1"/>
+      <rect x="184" y="32" width="14" height="35" fill="#26a641" rx="1"/>
+
+      <!-- volume bars -->
+      <text x="8" y="120" fill="#8b949e" font-size="8" font-family="JetBrains Mono">VOL</text>
+      <rect x="25" y="118" width="12" height="12" fill="#da3633" opacity="0.6" rx="1"/>
+      <rect x="50" y="115" width="12" height="15" fill="#da3633" opacity="0.6" rx="1"/>
+      <rect x="75" y="112" width="12" height="18" fill="#da3633" opacity="0.6" rx="1"/>
+      <rect x="103" y="120" width="10" height="10" fill="#da3633" opacity="0.5" rx="1"/>
+      <!-- HUGE volume on engulfing -->
+      <rect x="127" y="108" width="14" height="22" fill="#26a641" rx="1"/>
+      <text x="134" y="106" fill="#3fb950" font-size="7" font-family="JetBrains Mono" text-anchor="middle">2x AVG</text>
+      <rect x="158" y="116" width="12" height="14" fill="#26a641" opacity="0.7" rx="1"/>
+      <rect x="184" y="113" width="12" height="17" fill="#26a641" opacity="0.7" rx="1"/>
+
+      <!-- MA 20 volume line -->
+      <line x1="0" y1="118" x2="500" y2="118" stroke="#30363d" stroke-width="1" stroke-dasharray="3"/>
+    </svg>
+  </div>
+  <div class="usage-text">
+    <strong>How to read this:</strong> Price pulls back to the 200 MA — a major long-term support. A small red candle touches the MA, then a large Bullish Engulfing pattern forms — with volume at 2x the average. This triple confluence is one of the most reliable setups in Murphy's entire framework: <strong>key MA support + bullish reversal pattern + institutional volume confirmation.</strong> Three filters firing simultaneously. The Engulfing candle with outsized volume is the institutional footprint — smart money defending the MA.
+  </div>
+</div>
+
+<!-- COMBO 4: MORNING STAR + MACD -->
+<div class="usage-card">
+  <div class="usage-header">
+    <span class="section-badge badge-bull">Example 4</span>
+    <span style="font-size:13px;font-weight:600;color:var(--text)">Morning Star + MACD Bullish Crossover</span>
+  </div>
+  <div class="usage-chart">
+    <svg width="500" height="160" viewBox="0 0 500 160">
+      <rect width="500" height="160" fill="#0d1117"/>
+      <rect width="500" height="160" fill="url(#g2)"/>
+
+      <!-- Downtrend -->
+      <rect x="15" y="15" width="14" height="40" fill="#da3633" rx="1"/>
+      <line x1="22" y1="10" x2="22" y2="15" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="22" y1="55" x2="22" y2="62" stroke="#da3633" stroke-width="1.5"/>
+
+      <rect x="40" y="28" width="14" height="38" fill="#da3633" rx="1"/>
+      <line x1="47" y1="23" x2="47" y2="28" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="47" y1="66" x2="47" y2="73" stroke="#da3633" stroke-width="1.5"/>
+
+      <!-- MORNING STAR -->
+      <rect x="67" y="42" width="14" height="35" fill="#da3633" rx="1"/>
+      <line x1="74" y1="37" x2="74" y2="42" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="74" y1="77" x2="74" y2="85" stroke="#da3633" stroke-width="1.5"/>
+      <!-- star -->
+      <rect x="92" y="82" width="12" height="7" fill="#da3633" rx="1"/>
+      <line x1="98" y1="78" x2="98" y2="82" stroke="#da3633" stroke-width="1.5"/>
+      <line x1="98" y1="89" x2="98" y2="94" stroke="#da3633" stroke-width="1.5"/>
+      <!-- big green -->
+      <rect x="115" y="38" width="14" height="48" fill="#26a641" rx="1"/>
+      <line x1="122" y1="33" x2="122" y2="38" stroke="#26a641" stroke-width="1.5"/>
+      <line x1="122" y1="86" x2="122" y2="92" stroke="#26a641" stroke-width="1.5"/>
+
+      <!-- Highlight -->
+      <rect x="63" y="30" width="70" height="68" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-dasharray="3" rx="3"/>
+      <text x="98" y="26" fill="#3fb950" font-size="8" font-family="JetBrains Mono" text-anchor="middle">MORNING STAR</text>
+
+      <!-- recovery -->
+      <rect x="142" y="28" width="14" height="35" fill="#26a641" rx="1"/>
+      <rect x="168" y="20" width="14" height="32" fill="#26a641" rx="1"/>
+      <rect x="194" y="15" width="14" height="28" fill="#26a641" rx="1"/>
+
+      <!-- MACD panel -->
+      <line x1="0" y1="110" x2="500" y2="110" stroke="#30363d" stroke-width="1"/>
+      <text x="8" y="122" fill="#8b949e" font-size="8" font-family="JetBrains Mono">MACD</text>
+      <!-- zero line -->
+      <line x1="0" y1="128" x2="500" y2="128" stroke="#30363d" stroke-width="1" stroke-dasharray="2"/>
+      <text x="445" y="126" fill="#30363d" font-size="7" font-family="JetBrains Mono">ZERO</text>
+      <!-- MACD line (blue) below zero, then crosses -->
+      <polyline points="15,138 47,140 74,143 98,144 122,140 142,133 168,126 194,120 220,115" fill="none" stroke="#388bfd" stroke-width="1.5"/>
+      <!-- Signal line -->
+      <polyline points="15,141 47,143 74,145 98,146 122,143 142,137 168,130 194,124 220,118" fill="none" stroke="#f85149" stroke-width="1.5" stroke-dasharray="3"/>
+      <!-- crossover circle -->
+      <circle cx="152" cy="135" r="6" fill="none" stroke="#3fb950" stroke-width="1.5"/>
+      <text x="152" y="108" fill="#3fb950" font-size="7" font-family="JetBrains Mono" text-anchor="middle">CROSS↑</text>
+    </svg>
+  </div>
+  <div class="usage-text">
+    <strong>How to read this:</strong> A Morning Star pattern forms during a downtrend — the three-act reversal playing out on the price chart. Simultaneously, the MACD line (blue) crosses above the signal line (red dashed) — the momentum indicator confirming what the candlestick is showing. <strong>When a high-quality 3-candle reversal pattern coincides with a MACD crossover, you have two independent systems giving the same signal at the same time.</strong> Murphy's rule: convergence of signals from independent methods dramatically increases reliability.
+  </div>
+</div>
+
+</div><!-- /combo grid -->
+
+<!-- FINAL NOTE -->
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px 28px;margin-top:24px;">
+  <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;">Murphy's Golden Rules for Candlestick Trading</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;">
+    <div style="font-size:12px;color:var(--muted);line-height:1.65;padding:10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--bull)"><strong style="color:var(--text);display:block;margin-bottom:4px">Rule 1 — Trend first</strong>Always identify the prior trend. A Hammer at the bottom of a downtrend is powerful. A Hammer in the middle of an uptrend is noise.</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.65;padding:10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--bear)"><strong style="color:var(--text);display:block;margin-bottom:4px">Rule 2 — Confirm</strong>Every candlestick signal requires confirmation from the next candle. Never act on a pattern before the confirming candle closes.</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.65;padding:10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--gold)"><strong style="color:var(--text);display:block;margin-bottom:4px">Rule 3 — Volume</strong>A reversal pattern on below-average volume is unreliable. Volume above the 20-period average on the key candle is the institutional footprint.</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.65;padding:10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--blue)"><strong style="color:var(--text);display:block;margin-bottom:4px">Rule 4 — Location</strong>Context multiplies power. A pattern at a key support/resistance, Fibonacci level, or moving average is 3-5x more reliable than the same pattern in empty space.</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.65;padding:10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--purple)"><strong style="color:var(--text);display:block;margin-bottom:4px">Rule 5 — Confluence</strong>Candlestick + RSI signal + MACD crossover + volume = three independent systems agreeing. This is where the real edge lives — not in the pattern alone.</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.65;padding:10px;background:var(--bg3);border-radius:6px;border-left:2px solid var(--teal)"><strong style="color:var(--text);display:block;margin-bottom:4px">Rule 6 — Stop loss</strong>Every candlestick trade has a natural stop: just below the low of a bullish pattern, just above the high of a bearish pattern. The pattern itself defines the invalidation.</div>
+  </div>
+</div>
+
+</section>
+
+</main>
+
+<footer>
+  Murphy's Technical Analysis of the Financial Markets — Chapter 12 Candlestick Library<br>
+  Module 5: Chart Pattern Library · Rachit's Trading Operating System · Educational Use Only
+</footer>
+
+</body>
+</html>

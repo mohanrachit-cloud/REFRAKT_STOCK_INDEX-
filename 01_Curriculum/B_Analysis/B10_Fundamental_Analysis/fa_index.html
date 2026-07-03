@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fundamental Analysis Hub — Refrakt Studios</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF7F2;--beige:#F5F0E8;--beige2:#EDE8DF;--beige3:#E4DDD1;
+  --white:#FFFFFF;--ink:#1C1917;--ink2:#44403C;--ink3:#78716C;--ink4:#A8A29E;
+  --rule:rgba(28,25,23,0.10);
+  --gold:#C9A227;--gold2:#E3B341;--gold-bg:#F5EDDB;--gold-mid:#D9C28A;
+  --sage:#4A7C59;--sage-bg:#EBF2ED;--sage-mid:#C5DCC9;
+  --clay:#A85C3A;--clay-bg:#F5EAE4;--clay-mid:#E0BAA8;
+  --slate:#3B5A7A;--slate-bg:#E7EEF5;--slate-mid:#AFC4D6;
+  --plum:#6B4580;--plum-bg:#EFE8F5;--plum-mid:#C9ADDA;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.7;}
+nav{background:var(--beige);border-bottom:1px solid var(--rule);padding:12px 40px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;}
+.logo-wrap{display:flex;align-items:center;gap:8px;}
+.logo-text{font-family:'DM Mono',monospace;font-weight:500;font-size:13px;color:var(--ink);letter-spacing:.12em;text-transform:uppercase;}
+.bc-sep{color:var(--ink4);font-size:13px;}
+.bc-pill{font-family:'DM Mono',monospace;font-size:11px;background:var(--gold-bg);border:1px solid var(--gold-mid);color:var(--gold);padding:3px 10px;border-radius:20px;text-decoration:none;}
+.bc-current{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink4);}
+.hero{padding:72px 40px 52px;border-bottom:1px solid var(--rule);}
+.chapter-tag{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.chapter-tag::before{content:'';display:inline-block;width:24px;height:1px;background:var(--gold);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(40px,6vw,76px);font-weight:900;color:var(--ink);line-height:1.04;letter-spacing:-.02em;margin-bottom:6px;}
+.hero h1 em{color:var(--gold2);font-style:italic;font-weight:700;}
+.hero-sub{font-weight:300;font-size:15px;color:var(--ink3);max-width:540px;line-height:1.8;margin:16px 0 36px;}
+.hero-stats{display:flex;border-top:1px solid var(--rule);padding-top:28px;flex-wrap:wrap;}
+.hstat{padding-right:40px;margin-right:40px;border-right:1px solid var(--rule);}
+.hstat:last-child{border-right:none;}
+.hstat-num{font-family:'Playfair Display',serif;font-size:40px;font-weight:700;color:var(--ink);display:block;line-height:1;}
+.hstat-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);letter-spacing:1px;text-transform:uppercase;margin-top:4px;display:block;}
+.phil-strip{background:var(--beige);border-bottom:1px solid var(--rule);padding:18px 40px;display:flex;gap:48px;overflow-x:auto;}
+.phil-item{display:flex;align-items:flex-start;gap:10px;white-space:nowrap;flex-shrink:0;}
+.phil-text{font-size:12px;color:var(--ink3);font-weight:300;}
+.phil-text strong{color:var(--ink);font-weight:600;}
+.main{max-width:920px;margin:0 auto;padding:52px 40px 80px;}
+.section{margin-bottom:60px;}
+.sec-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink4);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.sec-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--ink);margin-bottom:24px;}
+.track-bar{background:var(--ink);padding:12px 20px;border-radius:6px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.track-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);}
+.track-title{font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;color:var(--cream);text-transform:uppercase;letter-spacing:.08em;}
+.track-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink4);}
+.framework{background:var(--white);border:1px solid var(--rule);border-radius:8px;padding:32px;margin-bottom:48px;}
+.fw-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:24px;color:var(--ink);}
+.fw-row{display:grid;grid-template-columns:110px 1fr 1.4fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--rule);align-items:start;}
+.fw-row:last-child{border-bottom:none;}
+.fw-step{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);font-weight:500;letter-spacing:.5px;margin-top:2px;}
+.fw-name{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--ink);}
+.fw-desc{font-size:13px;color:var(--ink3);font-weight:300;line-height:1.6;}
+.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:48px;}
+.module-card{background:var(--white);border:1px solid var(--rule);border-radius:8px;padding:22px;text-decoration:none;color:var(--ink);display:block;transition:box-shadow .2s,border-color .2s;position:relative;}
+.module-card:hover:not(.dim){box-shadow:0 4px 16px rgba(28,25,23,.08);border-color:var(--beige3);}
+.module-card.dim{opacity:.42;pointer-events:none;}
+.mc-status{position:absolute;top:16px;right:16px;font-family:'DM Mono',monospace;font-size:10px;padding:2px 8px;border-radius:3px;letter-spacing:.5px;}
+.status-live{background:var(--ink);color:var(--cream);}
+.status-soon{border:1px solid var(--rule);color:var(--ink4);font-style:italic;}
+.mc-track{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+.mc-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.3;}
+.mc-desc{font-size:13px;color:var(--ink3);line-height:1.65;margin-bottom:14px;font-weight:300;}
+.mc-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.mc-tag{font-family:'DM Mono',monospace;font-size:10px;padding:2px 8px;border-radius:3px;border:1px solid var(--rule);color:var(--ink4);background:var(--beige);letter-spacing:.5px;text-transform:uppercase;}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:48px;}
+.tool-card{background:var(--white);border:1px solid var(--rule);border-radius:8px;padding:18px;text-decoration:none;color:var(--ink);display:block;transition:box-shadow .2s;}
+.tool-card:hover:not(.dim){box-shadow:0 4px 12px rgba(28,25,23,.07);}
+.tool-card.dim{opacity:.42;pointer-events:none;}
+.tc-icon{font-size:20px;margin-bottom:10px;}
+.tc-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.tc-desc{font-size:12px;color:var(--ink4);font-weight:300;line-height:1.5;}
+.callout{border-left:3px solid var(--gold-mid);background:var(--gold-bg);padding:14px 18px;border-radius:0 6px 6px 0;font-size:14px;color:var(--ink2);line-height:1.7;margin:24px 0;font-weight:300;}
+.callout strong{color:var(--ink);font-weight:600;}
+footer{border-top:1px solid var(--rule);padding:24px 40px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--ink4);}
+footer a{color:var(--gold);text-decoration:none;}
+@media(max-width:640px){.hero{padding:48px 20px 36px;}.main{padding:36px 20px 60px;}nav{padding:12px 20px;}.phil-strip{padding:16px 20px;}.hstat{padding-right:24px;margin-right:24px;}.fw-row{grid-template-columns:1fr;gap:8px;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo-wrap">
+    <svg width="22" height="22" viewBox="0 0 28 28" fill="none"><polygon points="14,2 26,24 2,24" fill="none" stroke="#C9A227" stroke-width="1.5"/><polygon points="14,8 22,22 6,22" fill="rgba(201,162,39,0.15)" stroke="#C9A227" stroke-width="1"/></svg>
+    <span class="logo-text">Refrakt</span>
+  </div>
+  <span class="bc-sep">›</span>
+  <a href="index.html" class="bc-pill">← Portal Home</a>
+  <span class="bc-sep">›</span>
+  <span class="bc-current">Fundamental Analysis Hub</span>
+</nav>
+
+<div class="hero">
+  <div class="chapter-tag">FA Track · Fundamental Analysis</div>
+  <h1>Pick Stocks<br>Like an <em>Analyst.</em></h1>
+  <p class="hero-sub">The FA layer to your TA skeleton. Where technical timing meets fundamental conviction. Built for Indian equity markets, filtered to the 15 metrics that actually move the needle.</p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="hstat-num">15</span><span class="hstat-label">Priority Metrics</span></div>
+    <div class="hstat"><span class="hstat-num">6</span><span class="hstat-label">Analysis Buckets</span></div>
+    <div class="hstat"><span class="hstat-num">NSE</span><span class="hstat-label">India Focused</span></div>
+    <div class="hstat"><span class="hstat-num">30%</span><span class="hstat-label">Tax Adjusted</span></div>
+  </div>
+</div>
+
+<div class="phil-strip">
+  <div class="phil-item"><span>🔍</span><span class="phil-text"><strong>FA = WHAT to buy.</strong> TA = WHEN to buy it.</span></div>
+  <div class="phil-item"><span>📊</span><span class="phil-text"><strong>Price is what you pay.</strong> Value is what you get. — Graham</span></div>
+  <div class="phil-item"><span>🌳</span><span class="phil-text"><strong>DCF</strong> = present value of a mango tree's future harvest.</span></div>
+  <div class="phil-item"><span>⚠️</span><span class="phil-text"><strong>OCF ≠ Net Profit</strong> = red flag. Always check both.</span></div>
+  <div class="phil-item"><span>🇮🇳</span><span class="phil-text"><strong>Promoter pledging</strong> = India's #1 early-warning signal.</span></div>
+</div>
+
+<div class="main">
+  <div class="section">
+    <div class="sec-label">The Framework</div>
+    <div class="sec-title">How to Pick a Stock — The 4-Step Filter</div>
+    <div class="framework">
+      <div class="fw-title">Use This Order Every Time. No Exceptions.</div>
+      <div class="fw-row"><div class="fw-step">STEP 1 · SCREEN</div><div class="fw-name">Quality Filter</div><div class="fw-desc">ROE &gt;15%, ROCE &gt;15%, D/E &lt;1. Kills 80% of bad stocks in 2 minutes on Screener.in.</div></div>
+      <div class="fw-row"><div class="fw-step">STEP 2 · VALUE</div><div class="fw-name">Valuation Check</div><div class="fw-desc">P/E vs sector median. P/B vs historical average. Cheap for a reason — or genuinely undervalued?</div></div>
+      <div class="fw-row"><div class="fw-step">STEP 3 · VERIFY</div><div class="fw-name">Cash Flow Audit</div><div class="fw-desc">OCF must track Net Profit. Growing profit + declining OCF = manipulation signal. Never skip this.</div></div>
+      <div class="fw-row"><div class="fw-step">STEP 4 · TIME</div><div class="fw-name">TA Entry</div><div class="fw-desc">Open TradingView. FA gave you the WHAT. TA gives you the WHEN. Great company, wrong entry = painful loss.</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="track-bar"><span class="track-label">B10 · Core Module</span><span class="track-title">Fundamental Analysis</span><span class="track-count">4 modules</span></div>
+    <div class="module-grid">
+      <a href="b10_fundamental_analysis.html" class="module-card">
+        <span class="mc-status status-live">LIVE</span>
+        <div class="mc-track">B10 · Fundamental Analysis</div>
+        <div class="mc-title">The 15 Metrics That Matter</div>
+        <div class="mc-desc">All 6 buckets. ROE, ROCE, P/B, P/E, DCF, FCF, Promoter holding — with Indian examples, formulas, red-flag thresholds, and interactive calculators.</div>
+        <div class="mc-tags"><span class="mc-tag">Valuation</span><span class="mc-tag">Profitability</span><span class="mc-tag">Cash Flow</span><span class="mc-tag">India</span></div>
+      </a>
+      <div class="module-card dim">
+        <span class="mc-status status-soon">Coming Soon</span>
+        <div class="mc-track">B10-EXT · Deep Dive</div>
+        <div class="mc-title">Reading Annual Reports</div>
+        <div class="mc-desc">Screener.in end-to-end. DRHP analysis. Management commentary red flags. Notes to accounts decoded.</div>
+        <div class="mc-tags"><span class="mc-tag">Annual Report</span><span class="mc-tag">Screener</span></div>
+      </div>
+      <div class="module-card dim">
+        <span class="mc-status status-soon">Coming Soon</span>
+        <div class="mc-track">G1 · Portfolio Construction</div>
+        <div class="mc-title">Building a Portfolio</div>
+        <div class="mc-desc">Sector allocation, position sizing from FA conviction, concentration vs diversification for sub-₹1L capital.</div>
+        <div class="mc-tags"><span class="mc-tag">Allocation</span><span class="mc-tag">Risk</span></div>
+      </div>
+      <div class="module-card dim">
+        <span class="mc-status status-soon">Coming Soon</span>
+        <div class="mc-track">B12 · Sector Rotation</div>
+        <div class="mc-title">Sector Rotation & Cycles</div>
+        <div class="mc-desc">Which sectors lead at which points in the economic cycle. India-specific macro triggers.</div>
+        <div class="mc-tags"><span class="mc-tag">Macro</span><span class="mc-tag">Cycles</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="track-bar"><span class="track-label">D-Track · Tools</span><span class="track-title">FA Calculators & Tools</span><span class="track-count">6 tools</span></div>
+    <div class="tools-grid">
+      <div class="tool-card dim"><div class="tc-icon">📐</div><div class="tc-title">DCF Calculator</div><div class="tc-desc">Input assumptions → intrinsic value with sensitivity table.</div></div>
+      <div class="tool-card dim"><div class="tc-icon">📊</div><div class="tc-title">Ratio Screener</div><div class="tc-desc">NSE stock → auto-fetch key ratios vs sector median.</div></div>
+      <div class="tool-card dim"><div class="tc-icon">🧾</div><div class="tc-title">Tax Calculator (D9)</div><div class="tc-desc">STCG / LTCG + 30% slab impact on post-tax returns.</div></div>
+      <div class="tool-card dim"><div class="tc-icon">📈</div><div class="tc-title">MF Tracker (D8)</div><div class="tc-desc">Motilal Oswal Midcap + other holdings vs benchmark.</div></div>
+      <div class="tool-card dim"><div class="tc-icon">🔗</div><div class="tc-title">FA + TA Confluence</div><div class="tc-desc">Does this stock pass both FA quality and TA timing filters?</div></div>
+      <div class="tool-card dim"><div class="tc-icon">⚠️</div><div class="tc-title">Red Flag Detector</div><div class="tc-desc">Flags promoter pledging, OCF divergence, high D/E.</div></div>
+    </div>
+  </div>
+
+  <div class="callout"><strong>How this connects to your TA stack:</strong> Every stock that passes FA filtering still needs a TA entry trigger. FA gives conviction to hold through volatility. TA gives the right price and moment to enter. Neither alone is complete — together they are the edge.</div>
+</div>
+
+<footer>Refrakt Studios · Fundamental Analysis Hub · Indian Equity Markets · <a href="index.html">← Back to Portal</a></footer>
+</body>
+</html>

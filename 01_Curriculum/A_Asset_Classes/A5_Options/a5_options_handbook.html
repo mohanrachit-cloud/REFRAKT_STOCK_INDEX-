@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Options Strategies Handbook — Rachit 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #faf9f5;
+  --bg2:      #e8e6dc;
+  --surface:  #ffffff;
+  --surface2: #faf9f5;
+  --border:   #e8e6dc;
+  --border2:  #b0aea5;
+  --amber:    #b3603f;
+  --amber2:   #d97757;
+  --amber3:   #d97757;
+  --green:    #5f7049;
+  --green2:   #788c5d;
+  --green3:   #eef1e8;
+  --red:      #9c4a3a;
+  --red2:     #b3503f;
+  --red3:     #f7e6e2;
+  --blue:     #4a7396;
+  --blue2:    #6a9bcc;
+  --blue3:    #e9eef4;
+  --ink:      #141413;
+  --ink2:     #141413;
+  --ink3:     #b0aea5;
+  --ink4:     #b0aea5;
+  --rule:     #b0aea5;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+/* ── TYPOGRAPHY SCALE ── */
+h1, h2, h3, h4 { font-family: 'Poppins', Arial, sans-serif; line-height: 1.2; }
+h1 { font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 900; }
+h2 { font-size: 1.8rem; font-weight: 700; }
+h3 { font-size: 1.25rem; font-weight: 700; }
+h4 { font-size: 1rem; font-weight: 700; }
+
+/* ── LAYOUT ── */
+.page { max-width: 920px; margin: 0 auto; padding: 0 2rem 8rem; }
+
+/* ── HERO ── */
+.hero {
+  border-bottom: 2px solid var(--ink);
+  padding: 4rem 0 2.5rem;
+  margin-bottom: 3rem;
+}
+.hero-eyebrow {
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: block;
+}
+.hero h1 { color: var(--ink); margin-bottom: 0.75rem; }
+.hero h1 em { color: var(--amber); font-style: italic; }
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--ink3);
+  max-width: 600px;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+.hero-meta {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.hero-meta-item {
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.7rem;
+  color: var(--ink4);
+  letter-spacing: 0.05em;
+}
+.hero-meta-item strong { color: var(--ink2); }
+
+/* ── PART HEADER ── */
+.part {
+  background: var(--ink);
+  color: var(--surface);
+  padding: 0.6rem 1.2rem;
+  margin: 4rem 0 2.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+.part-num {
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--amber3);
+  text-transform: uppercase;
+}
+.part-title { font-family: 'Poppins', Arial, sans-serif; font-size: 1rem; font-weight: 700; color: #ffffff; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 3.5rem; }
+.section-eyebrow {
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+.section h2 { margin-bottom: 0.4rem; }
+.section-sub { color: var(--ink3); font-size: 1rem; margin-bottom: 1.5rem; }
+.rule { border: none; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+/* ── PULL QUOTE ── */
+.pull-quote {
+  border-left: 4px solid var(--amber2);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  background: var(--surface2);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--ink2);
+  line-height: 1.6;
+}
+.pull-quote cite {
+  display: block;
+  font-style: normal;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+
+/* ── CALLOUT BOXES ── */
+.callout {
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.callout h4 { margin-bottom: 0.4rem; font-size: 0.9rem; }
+.callout-note { background: var(--blue3); border-left: 4px solid var(--blue2); color: var(--blue); }
+.callout-note h4 { color: var(--blue); }
+.callout-warn { background: #f5e6df; border-left: 4px solid var(--amber2); color: var(--ink2); }
+.callout-warn h4 { color: var(--amber); }
+.callout-danger { background: var(--red3); border-left: 4px solid var(--red2); color: var(--red); }
+.callout-danger h4 { color: var(--red); }
+.callout-success { background: var(--green3); border-left: 4px solid var(--green2); color: var(--green); }
+.callout-success h4 { color: var(--green); }
+
+/* ── CALCULATION BLOCK ── */
+.calc-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 1.25rem 0;
+  font-family: Consolas, Menlo, monospace;
+}
+.calc-head {
+  background: var(--ink2);
+  color: var(--amber3);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+}
+.calc-body { padding: 1rem 1.25rem; font-size: 0.78rem; line-height: 2; }
+.calc-body .buy    { color: var(--green); font-weight: 500; }
+.calc-body .sell   { color: var(--red); font-weight: 500; }
+.calc-body .net    { color: var(--amber); font-weight: 500; }
+.calc-body .rule-line { border-top: 1px solid var(--border); margin: 0.2rem 0; }
+.calc-body .label  { color: var(--ink4); }
+.calc-body .total  { color: var(--ink); font-weight: 500; }
+.calc-body .profit { color: var(--green); font-weight: 500; }
+.calc-body .loss   { color: var(--red); font-weight: 500; }
+
+/* ── P&L TABLE ── */
+.pnl-table-wrap { overflow-x: auto; margin: 1.25rem 0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+thead th {
+  background: var(--ink2);
+  color: #ffffff;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:nth-child(even) { background: var(--surface2); }
+tbody tr:hover { background: var(--bg2); }
+tbody td { padding: 0.5rem 0.75rem; vertical-align: top; font-family: Consolas, Menlo, monospace; font-size: 0.78rem; }
+tbody td:first-child { color: var(--ink2); font-weight: 500; }
+.td-p { color: var(--green) !important; font-weight: 500; }
+.td-l { color: var(--red) !important; font-weight: 500; }
+.td-b { color: var(--amber) !important; font-weight: 500; }
+.td-g { color: var(--ink4) !important; }
+.row-be { background: #f5e6df !important; }
+.row-max-p { background: var(--green3) !important; }
+.row-max-l { background: var(--red3) !important; }
+
+/* ── METRICS STRIP ── */
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; margin: 1.25rem 0; }
+.metric {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 0.75rem;
+  text-align: center;
+}
+.metric-label { font-family: Consolas, Menlo, monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink4); margin-bottom: 0.3rem; }
+.metric-value { font-family: Consolas, Menlo, monospace; font-size: 1.1rem; font-weight: 500; line-height: 1.2; }
+.metric-sub { font-size: 0.72rem; color: var(--ink4); margin-top: 0.15rem; font-family: Consolas, Menlo, monospace; }
+.m-green .metric-value { color: var(--green); }
+.m-red .metric-value { color: var(--red); }
+.m-amber .metric-value { color: var(--amber); }
+.m-blue .metric-value { color: var(--blue2); }
+
+/* ── STORY BLOCK ── */
+.story {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin: 1.25rem 0;
+  position: relative;
+}
+.story::before {
+  content: 'THE STORY';
+  position: absolute;
+  top: -0.55rem;
+  left: 1rem;
+  background: var(--surface);
+  padding: 0 0.5rem;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+}
+.story-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: start; margin-bottom: 1rem; }
+@media(max-width:600px){ .story-row { grid-template-columns: 1fr; } }
+.story-side { background: var(--bg2); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.88rem; }
+.story-side h4 { font-size: 0.8rem; margin-bottom: 0.4rem; }
+.story-side.buyer h4 { color: var(--blue2); }
+.story-side.seller h4 { color: var(--green); }
+.story-vs { font-family: 'Poppins', Arial, sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--border2); self-align: center; padding-top: 1rem; }
+.story-hedge { background: #f5e6df; border: 1px dashed var(--amber2); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.88rem; margin-top: 0.5rem; }
+.story-hedge h4 { color: var(--amber); font-size: 0.8rem; margin-bottom: 0.3rem; }
+.story-outcome { background: var(--green3); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.88rem; margin-top: 0.5rem; }
+
+/* ── STRATEGY CARD ── */
+.strat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 2.5rem;
+  overflow: hidden;
+}
+.strat-card-head {
+  display: grid;
+  grid-template-columns: 3rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.strat-num {
+  font-family: 'Poppins', Arial, sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--border2);
+  line-height: 1;
+}
+.strat-title { font-family: 'Poppins', Arial, sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.1rem; }
+.strat-view { font-family: Consolas, Menlo, monospace; font-size: 0.65rem; color: var(--ink3); letter-spacing: 0.05em; }
+.badge {
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.badge-debit { background: var(--blue3); color: var(--blue); border: 1px solid rgba(30,61,110,0.3); }
+.badge-credit { background: var(--green3); color: var(--green); border: 1px solid rgba(30,94,58,0.3); }
+.badge-event { background: #e9eef4; color: #4a7396; border: 1px solid rgba(91,69,200,0.3); }
+.badge-new { background: #f5e6df; color: var(--amber); border: 1px solid var(--amber2); margin-left: 0.3rem; }
+
+.strat-body { padding: 1.5rem; }
+.strat-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media(max-width:650px){ .strat-cols { grid-template-columns: 1fr; } }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; padding: 0; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+  color: var(--ink3);
+  border-bottom: 1px dotted var(--border);
+}
+.checklist li:last-child { border: none; }
+.checklist li::before { content: '✦'; color: var(--amber3); font-size: 0.7rem; margin-top: 0.3rem; flex-shrink: 0; }
+.checklist li.yes::before { content: '✅'; font-size: 0.8rem; }
+.checklist li.no::before { content: '❌'; font-size: 0.8rem; }
+.checklist li.warn::before { content: '⚠️'; font-size: 0.8rem; }
+
+/* ── STOP LOSS BOX ── */
+.sl-box {
+  background: var(--red3);
+  border: 1px solid rgba(122,30,30,0.25);
+  border-left: 4px solid var(--red2);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.sl-box h4 { color: var(--red2); font-size: 0.88rem; margin-bottom: 0.4rem; }
+.sl-box p { color: var(--ink2); margin-bottom: 0.3rem; }
+
+/* ── RISK BOX ── */
+.risk-box {
+  background: #f5e6df;
+  border: 1px solid rgba(122,90,26,0.25);
+  border-left: 4px solid var(--amber2);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.risk-box h4 { color: var(--amber); font-size: 0.88rem; margin-bottom: 0.4rem; }
+
+/* ── RESISTANCE BOX ── */
+.resistance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+.r-level {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 0.75rem;
+  text-align: center;
+  position: relative;
+}
+.r-level.major { border-color: var(--red2); background: var(--red3); }
+.r-level.moderate { border-color: var(--amber2); background: #f5e6df; }
+.r-level.minor { border-color: var(--border2); }
+.r-price { font-family: Consolas, Menlo, monospace; font-size: 1.1rem; font-weight: 500; margin-bottom: 0.2rem; }
+.r-level.major .r-price { color: var(--red2); }
+.r-level.moderate .r-price { color: var(--amber); }
+.r-tag { font-family: Consolas, Menlo, monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--ink4); text-transform: uppercase; }
+.r-note { font-size: 0.8rem; color: var(--ink3); margin-top: 0.3rem; }
+
+/* ── ADVANCED STRATEGIES TABLE ── */
+.adv-table-wrap { overflow-x: auto; }
+.adv-table th { background: var(--ink); }
+.adv-table td { font-family: 'Lora', Georgia, serif; font-size: 0.9rem; }
+.adv-table td:first-child { font-family: Consolas, Menlo, monospace; font-size: 0.75rem; color: var(--ink2); font-weight: 500; }
+.star { color: var(--amber); }
+.complexity-bar { display: flex; gap: 2px; }
+.cb { width: 8px; height: 8px; border-radius: 1px; background: var(--border2); }
+.cb.filled { background: var(--amber2); }
+
+/* ── ALGO WARNING ── */
+.algo-section { background: #141413; color: #faf9f5; border-radius: 8px; padding: 2rem; margin: 2rem 0; }
+.algo-section h2 { color: #d97757; font-size: 1.5rem; margin-bottom: 0.5rem; }
+.algo-section h3 { color: #faf9f5; font-size: 1rem; margin: 1.25rem 0 0.5rem; }
+.algo-section p { color: #b0aea5; font-size: 0.95rem; margin-bottom: 0.6rem; }
+.algo-section ul { list-style: none; padding: 0; }
+.algo-section ul li { color: #b0aea5; font-size: 0.9rem; padding: 0.3rem 0 0.3rem 1rem; border-bottom: 1px solid #141413; }
+.algo-section ul li::before { content: '→ '; color: #d97757; }
+.jane-highlight {
+  background: #141413;
+  border: 1px solid #b3603f;
+  border-radius: 5px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: #d97757;
+  font-style: italic;
+}
+.watch-tag {
+  display: inline-block;
+  background: #9c4a3a;
+  color: #f7e6e2;
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.65rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  margin-right: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── COMPARISON TABLE ── */
+.compare-section { margin: 1.5rem 0; }
+
+/* ── QUICK REF STRIP ── */
+.quick-ref { background: var(--ink); color: var(--surface); border-radius: 8px; padding: 2rem; margin-top: 3rem; }
+.quick-ref h2 { color: var(--amber3); margin-bottom: 1.5rem; font-size: 1.4rem; }
+.qr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.qr-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; padding: 1rem; }
+.qr-card h4 { color: var(--amber3); font-size: 0.9rem; margin-bottom: 0.5rem; }
+.qr-card p { color: #b0aea5; font-size: 0.82rem; line-height: 1.5; }
+
+/* ── FOOTER ── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  margin-top: 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.footer-left { font-family: Consolas, Menlo, monospace; font-size: 0.65rem; color: var(--ink4); letter-spacing: 0.1em; }
+.footer-right { font-family: Consolas, Menlo, monospace; font-size: 0.65rem; color: var(--amber); }
+
+/* ── PRINT / MISC ── */
+@media print { body { background: #ffffff; } .part { -webkit-print-color-adjust: exact; } }
+@media(max-width:600px){ .hero-meta { gap: 1rem; } .page { padding: 0 1rem 5rem; } }
+</style>
+</head>
+<body>
+<div style="background:#141413;padding:10px 24px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;border-bottom:2px solid #d97757;"><span style="font-family: Consolas, Menlo, monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#d97757;margin-right:14px;">Options Suite —</span><a href="a5_options_index.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:transparent;color:inherit;border-color:rgba(217,119,87,.5);">Hub</a><a href="a5_options_foundations.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:transparent;color:#e8dcc0;border-color:rgba(232,220,192,.35);">Foundations</a><a href="a5_options_handbook.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:#d97757;color:#141413;border-color:#d97757;">Handbook</a><a href="a5_options_strategies.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:transparent;color:#e8dcc0;border-color:rgba(232,220,192,.35);">Strategies</a><a href="../A4_Futures/a4_futures_masterclass.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:transparent;color:#e8dcc0;border-color:rgba(232,220,192,.35);">Futures →</a></div>
+
+<div class="page">
+
+<!-- ════════════ HERO ════════════ -->
+<div class="hero">
+  <span class="hero-eyebrow">Refrakt Trading Programme · Module A5 · Options Strategies</span>
+  <h1>The Options<br><em>Handbook</em></h1>
+  <p class="hero-sub">A complete reference for strategies, calculations, story logic, risk controls, and market signals. Written to be picked up two months from now and read cold.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">Capital Ref: <strong>₹20,000 Options</strong></div>
+    <div class="hero-meta-item">Index: <strong>Nifty 50 · Lot 65</strong></div>
+    <div class="hero-meta-item">Ref Price: <strong>₹24,300</strong></div>
+    <div class="hero-meta-item">Bible: <strong>Murphy + O'Neil</strong></div>
+  </div>
+</div>
+
+
+<!-- ════════════ PART 0: PHILOSOPHY ════════════ -->
+<div class="part"><span class="part-num">Foundational Layer</span><span class="part-title">The Two Families — Everything Stems From This</span></div>
+
+<div class="section">
+  <div class="pull-quote">
+    "Options are not complicated instruments. They are simply contracts about the future. You either believe the market will move — or it won't. That one belief determines your entire strategy family."
+    <cite>Rachit's Trading Philosophy · 2026</cite>
+  </div>
+
+  <div class="strat-cols">
+    <div class="callout callout-note">
+      <h4>DEBIT FAMILY — You Pay Premium</h4>
+      <p>You are the buyer of the spread. You pay net premium upfront. Your maximum loss = the premium you paid. Your maximum gain is capped at the strike gap minus what you paid. Time works against you — every day that passes without the market moving costs you money (Theta decay). <strong>Use when you expect movement.</strong></p>
+    </div>
+    <div class="callout callout-success">
+      <h4>CREDIT FAMILY — You Collect Premium</h4>
+      <p>You are the seller of the spread. Cash enters your account on day one. Your maximum gain = premium collected. Your maximum loss = (strike gap − premium collected) × lot size. Time works FOR you — every day the market stays still adds to your profit. <strong>Use when you expect stillness.</strong></p>
+    </div>
+  </div>
+
+  <div class="calc-block">
+    <div class="calc-head">The Master 2×2 Grid — Every Spread You'll Ever Trade</div>
+    <div class="calc-body">
+      <span class="label">                    DEBIT (you pay)          CREDIT (you collect)</span><br>
+      <span class="label">BULLISH OUTLOOK  →  </span><span class="buy">Bull Call Spread        Bull Put Spread</span><br>
+      <span class="label">BEARISH OUTLOOK  →  </span><span class="sell">Bear Put Spread         Bear Call Spread</span><br>
+      <div class="rule-line"></div>
+      <span class="label">EVENT (no direction) →  </span><span class="net">Long Straddle / Long Strangle</span><br>
+      <span class="label">RANGE BOUND     →  </span><span class="net">Iron Condor (Credit from both sides)</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ PART 1: PRIMARY WORKED EXAMPLE ════════════ -->
+<div class="part"><span class="part-num">Part I · Primary Case Study</span><span class="part-title">Bear Call Spread — The Complete Deep Dive</span></div>
+
+<div class="section">
+  <span class="section-eyebrow">Why This Strategy First</span>
+  <h2>The Mildly Bearish / Neutral Premise</h2>
+  <p class="section-sub">Your current view: "I don't think Nifty will rise much from here. It might drift sideways or mildly lower." The Bear Call Spread is built exactly for this.</p>
+
+  <!-- THE STORY -->
+  <span class="section-eyebrow">Step 1 — The Story</span>
+  <h3>Who Is on Each Side of This Trade?</h3>
+  <p style="margin-bottom:1rem;color:var(--ink3);">Every options trade has two parties with opposite convictions. Understanding both sides makes your conviction sharper.</p>
+
+  <div class="story">
+    <div class="story-row">
+      <div class="story-side seller">
+        <h4>🏦 YOU — The Seller (Bear Call)</h4>
+        <p style="font-size:0.88rem;color:var(--ink3);">You look at the chart. Nifty is at 24,300. You see strong resistance at 24,500 — a prior swing high with heavy OI concentration. You say: <em>"I don't think Nifty crosses 24,500 by expiry. I'll charge someone a fee for that right — and keep the fee if I'm right."</em> You SELL the 24,500 CE at ₹90 and collect ₹5,850 immediately.</p>
+      </div>
+      <div class="story-vs">VS</div>
+      <div class="story-side buyer">
+        <h4>🐂 THE BUYER — The Call Buyer</h4>
+        <p style="font-size:0.88rem;color:var(--ink3);">The buyer of the 24,500 CE thinks: <em>"Nifty is going to break 24,500 and rally. Maybe to 25,000. If I'm right, I make multiples of what I pay."</em> They pay you ₹90 for the right to profit from that move. They need Nifty to go above 24,555 (your breakeven) before they see any profit.</p>
+      </div>
+    </div>
+
+    <div class="story-hedge">
+      <h4>🛡️ YOUR HEDGE — The 24,800 CE You Buy</h4>
+      <p style="font-size:0.88rem;color:var(--ink3);">You're not reckless. What if there's surprise positive news and Nifty shoots to 25,200? Unlimited losses is not your game. So you also BUY the 24,800 CE for ₹35. This caps your maximum pain at the 24,800 level — no matter how far Nifty goes above 24,800, your losses stop at ₹15,925. The hedge costs ₹2,275 but buys you infinite peace of mind above 24,800. You're now officially a spread trader — defined risk, defined reward.</p>
+    </div>
+
+    <div class="story-outcome">
+      <strong style="color:var(--green);">The Outcome You're Betting On:</strong> Nifty stays below 24,500 (ideally stays below 24,555). Both Calls expire worthless. The ₹5,850 you collected minus the ₹2,275 hedge cost = <strong>₹3,575 is yours to keep. No action needed. Time simply passes in your favour.</strong>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- FULL PREMIUM CALCULATION -->
+  <span class="section-eyebrow">Step 2 — The Full Calculation</span>
+  <h3>Premium × Lot Size — Every Rupee Accounted For</h3>
+
+  <div class="calc-block">
+    <div class="calc-head">Bear Call Spread · Setup Calculation · Nifty @ 24,300</div>
+    <div class="calc-body">
+      <span class="label">SOLD LEG (creates your income)</span><br>
+      <span class="sell">SELL 24,500 CE  @  ₹90 per unit</span><br>
+      <span class="label">  → ₹90  ×  65 units  =  </span><span class="sell">₹5,850 credited to your account</span><br>
+      <br>
+      <span class="label">HEDGE LEG (limits your downside)</span><br>
+      <span class="buy">BUY  24,800 CE  @  ₹35 per unit</span><br>
+      <span class="label">  → ₹35  ×  65 units  =  </span><span class="buy">₹2,275 debited from your account</span><br>
+      <div class="rule-line"></div>
+      <span class="label">NET POSITION (day one)</span><br>
+      <span class="net">Net Credit  =  ₹90 − ₹35  =  ₹55 per unit</span><br>
+      <span class="net">Net Credit  =  ₹55  ×  65  =  ₹3,575 in your account</span><br>
+      <br>
+      <span class="label">MAXIMUM PROFIT (if Nifty stays below 24,500)</span><br>
+      <span class="profit">= Full credit kept  =  ₹3,575</span><br>
+      <br>
+      <span class="label">MAXIMUM LOSS CALCULATION</span><br>
+      <span class="label">  Strike gap  =  24,800 − 24,500  =  300 points</span><br>
+      <span class="label">  Loss per unit  =  Strike gap − Net credit per unit</span><br>
+      <span class="label">  Loss per unit  =  300 − 55  =  245 points</span><br>
+      <span class="loss">  Max Loss  =  245  ×  65  =  ₹15,925</span><br>
+      <br>
+      <span class="label">BREAKEVEN (where you start losing)</span><br>
+      <span class="net">  Sell strike + Net premium  =  24,500 + 55  =  24,555</span><br>
+      <span class="label">  Nifty must cross 24,555 for buyer to profit. Below = yours.</span>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric m-green"><div class="metric-label">Max Profit</div><div class="metric-value">₹3,575</div><div class="metric-sub">Nifty &lt; 24,500</div></div>
+    <div class="metric m-red"><div class="metric-label">Max Loss</div><div class="metric-value">₹15,925</div><div class="metric-sub">Nifty &gt; 24,800</div></div>
+    <div class="metric m-amber"><div class="metric-label">Breakeven</div><div class="metric-value">24,555</div><div class="metric-sub">+255 pts from now</div></div>
+    <div class="metric m-blue"><div class="metric-label">R:R</div><div class="metric-value">1 : 4.46</div><div class="metric-sub">Offset by 70% win rate</div></div>
+    <div class="metric m-green"><div class="metric-label">Win Probability</div><div class="metric-value">~70%</div><div class="metric-sub">Delta of sold = 0.30</div></div>
+    <div class="metric"><div class="metric-label">Net Credit</div><div class="metric-value">₹55/unit</div><div class="metric-sub">Day 1 income</div></div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- P&L TABLE -->
+  <span class="section-eyebrow">Step 3 — The P&L Landscape</span>
+  <h3>What Happens at Every Nifty Level at Expiry</h3>
+  <p style="color:var(--ink3);margin-bottom:1rem;font-size:0.95rem;">This table shows how the hedge saves you — once Nifty crosses 24,800, your loss is completely capped. The buyer of the 24,800 CE (your hedge) now covers exactly what you owe on the 24,500 CE you sold.</p>
+
+  <div class="pnl-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nifty at Expiry</th>
+          <th>24,500 CE Value</th>
+          <th>24,800 CE Value</th>
+          <th>P&L per Unit</th>
+          <th>P&L Total (×65)</th>
+          <th>Situation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-max-p">
+          <td>22,000</td><td class="td-g">₹0</td><td class="td-g">₹0</td>
+          <td class="td-p">+₹55</td><td class="td-p">+₹3,575</td><td>Full profit. Nifty crashed.</td>
+        </tr>
+        <tr class="row-max-p">
+          <td>23,000</td><td class="td-g">₹0</td><td class="td-g">₹0</td>
+          <td class="td-p">+₹55</td><td class="td-p">+₹3,575</td><td>Full profit. Market fell.</td>
+        </tr>
+        <tr class="row-max-p">
+          <td>24,000</td><td class="td-g">₹0</td><td class="td-g">₹0</td>
+          <td class="td-p">+₹55</td><td class="td-p">+₹3,575</td><td>Full profit. Flat or lower.</td>
+        </tr>
+        <tr class="row-max-p">
+          <td>24,300 (entry)</td><td class="td-g">₹0</td><td class="td-g">₹0</td>
+          <td class="td-p">+₹55</td><td class="td-p">+₹3,575</td><td>Market didn't move. You win.</td>
+        </tr>
+        <tr class="row-max-p">
+          <td>24,500</td><td class="td-g">₹0</td><td class="td-g">₹0</td>
+          <td class="td-p">+₹55</td><td class="td-p">+₹3,575</td><td>Just at sold strike. Still win.</td>
+        </tr>
+        <tr class="row-be">
+          <td><strong>24,555</strong></td><td class="td-b">₹55</td><td class="td-g">₹0</td>
+          <td class="td-b">₹0</td><td class="td-b">₹0</td><td>⚖️ BREAKEVEN. Not profitable.</td>
+        </tr>
+        <tr>
+          <td>24,600</td><td class="td-l">₹100</td><td class="td-g">₹0</td>
+          <td class="td-l">−₹45</td><td class="td-l">−₹2,925</td><td>Losing. Nifty rose 300pts.</td>
+        </tr>
+        <tr>
+          <td>24,700</td><td class="td-l">₹200</td><td class="td-g">₹0</td>
+          <td class="td-l">−₹145</td><td class="td-l">−₹9,425</td><td>Significant loss. Act now.</td>
+        </tr>
+        <tr class="row-max-l">
+          <td>24,800</td><td class="td-l">₹300</td><td class="td-p">₹0</td>
+          <td class="td-l">−₹245</td><td class="td-l">−₹15,925</td><td>🔴 MAXIMUM LOSS point.</td>
+        </tr>
+        <tr class="row-max-l">
+          <td>25,000</td><td class="td-l">₹500</td><td class="td-p">₹200</td>
+          <td class="td-l">−₹245</td><td class="td-l">−₹15,925</td><td>🛡️ HEDGE KICKS IN. Loss capped!</td>
+        </tr>
+        <tr class="row-max-l">
+          <td>26,000</td><td class="td-l">₹1,500</td><td class="td-p">₹1,200</td>
+          <td class="td-l">−₹245</td><td class="td-l">−₹15,925</td><td>🛡️ Still capped. Hedge works.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-success">
+    <h4>Why the Hedge is the Most Important Number in the Table</h4>
+    At Nifty = 25,000: Sold CE loses ₹500/unit. Hedge CE gains ₹200/unit. Net = −₹300 + ₹55 credit = −₹245. Same as at 24,800. At 26,000: Sold CE loses ₹1,500. Hedge gains ₹1,200. Net = −₹300 + ₹55 = −₹245. Always −₹245 once above 24,800. The hedge is literally a perfect cost cap. This is defined risk. Sleep easy.
+  </div>
+
+  <hr class="rule">
+
+  <!-- RISK % CAPPING -->
+  <span class="section-eyebrow">Step 4 — Position Sizing & Risk Capping</span>
+  <h3>How Much of Your ₹20,000 Can You Actually Risk?</h3>
+
+  <div class="calc-block">
+    <div class="calc-head">Risk Percentage Framework · Options Capital ₹20,000</div>
+    <div class="calc-body">
+      <span class="label">YOUR OPTIONS CAPITAL ALLOCATION:</span><br>
+      <span class="total">₹20,000 designated for options trading</span><br>
+      <br>
+      <span class="label">RISK RULE (standard):  Max 15–20% per trade on options capital</span><br>
+      <span class="label">  → 15% of ₹20,000  =  </span><span class="net">₹3,000 maximum risk per trade</span><br>
+      <span class="label">  → 20% of ₹20,000  =  </span><span class="net">₹4,000 maximum risk per trade</span><br>
+      <br>
+      <span class="label">THE TENSION: Standard Bear Call Spread (300pt wide)</span><br>
+      <span class="loss">  Max Loss = ₹15,925 → Exceeds ₹4,000 cap!</span><br>
+      <br>
+      <span class="label">SOLUTION: Tighten the strike width to 100 points</span><br>
+      <span class="sell">SELL 24,500 CE @ ₹90 → ₹5,850 collected</span><br>
+      <span class="buy">BUY  24,600 CE @ ₹60 → ₹3,900 paid</span><br>
+      <span class="net">Net Credit  =  ₹30/unit  ×  65  =  ₹1,950</span><br>
+      <span class="label">Max Loss    =  (100 − 30) × 65 = 70 × 65 = </span><span class="loss">₹4,550</span><br>
+      <span class="label">Breakeven   =  24,500 + 30  =  24,530</span><br>
+      <br>
+      <span class="label">VERDICT: 100pt spread → Max loss ₹4,550 → Within 20% cap ✓</span><br>
+      <span class="label">         300pt spread → Max loss ₹15,925 → Too large for ₹20k ✗</span><br>
+      <div class="rule-line"></div>
+      <span class="net">KEY INSIGHT: With ₹20k, always trade 100pt-wide spreads maximum.</span><br>
+      <span class="label">Wider spreads need capital of ₹50,000+ to stay within risk rules.</span>
+    </div>
+  </div>
+
+  <div class="risk-box">
+    <h4>⚖️ The R:R Context — Why 1:4.46 is Acceptable Here</h4>
+    <p>Standard R:R wisdom says never risk more than you make. But credit spreads invert this logic deliberately. You risk ₹4,550 to make ₹1,950. That's 1:2.3 — still unfavourable on paper. But here's the math that makes it work over time: If your probability of winning is 70%, then in 10 trades you win 7 (×₹1,950 = ₹13,650) and lose 3 (×₹4,550 = ₹13,650). Barely breakeven. This is why you need your probability read to be accurate, VIX to be in your favour, and a clean resistance level.</p>
+    <p>The 300pt spread (₹3,575 vs ₹15,925) needs a win rate of 82%+ to break even. That's too demanding for a routine strategy. Stick to 100pt spreads with tight capital until you build experience.</p>
+  </div>
+
+  <hr class="rule">
+
+  <!-- STOP LOSS & GUARDS -->
+  <span class="section-eyebrow">Step 5 — Risk Guards</span>
+  <h3>Stop Loss, Guards, and Murphy's Whole Number Rule</h3>
+
+  <div class="strat-cols">
+    <div class="sl-box">
+      <h4>🛑 Stop Loss Rule — Credit Spread</h4>
+      <p><strong>Primary rule:</strong> Exit if the cost to close the spread exceeds 2× what you collected.</p>
+      <p>You collected ₹1,950 (100pt spread). Exit if closing debit > ₹3,900 (i.e., net loss of ₹1,950 = you've given back all your profit and are now bleeding).</p>
+      <p><strong>Simpler rule:</strong> If net premium to close the spread reaches ₹60/unit (vs ₹30/unit collected), exit immediately. Don't wait for max loss.</p>
+    </div>
+    <div class="sl-box" style="background:#f7e6e2;">
+      <h4>🛑 Stop Loss Rule — Chart Trigger</h4>
+      <p><strong>Murphy's rule:</strong> If Nifty closes ABOVE your sold strike (24,500) on a daily candle with above-average volume — exit the trade. Don't wait for expiry.</p>
+      <p><strong>Intra-day guard:</strong> If Nifty breaches 24,500 intraday by more than 50 points (i.e., touches 24,550), start preparing the closing order. Breakeven is at 24,555 — dangerously close.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <h4>📐 Murphy's Whole Number Rule — Why 24,500 and 25,000 Matter</h4>
+    <p>John Murphy dedicates significant space in Chapter 4 to psychological support and resistance. Round numbers — ₹100, ₹500, ₹1,000 — act as invisible walls because human beings naturally place orders at clean numbers. Institutions write massive options at round strikes. Retail traders place stop losses at round numbers. For Nifty specifically:</p>
+    <ul class="checklist" style="margin-top:0.75rem;">
+      <li>25,000 is the supreme round-number resistance — major institutional writing at this strike</li>
+      <li>24,500 is the 500-point sub-level — significant in its own right</li>
+      <li>24,000 is the next major round support below</li>
+      <li>When choosing your sold strike, always align it with a round number that has visible OI — you have institutional confirmation working with you</li>
+    </ul>
+  </div>
+
+  <!-- NIFTY RESISTANCE LEVELS -->
+  <span class="section-eyebrow">Step 6 — Chart Signals</span>
+  <h3>Nifty Resistance Levels to Confirm Before Entry</h3>
+  <p style="color:var(--ink3);margin-bottom:1rem;font-size:0.95rem;">Before placing the Bear Call Spread, confirm these levels on TradingView. Your sold strike must sit AT or just ABOVE a confirmed resistance cluster.</p>
+
+  <div class="resistance-grid">
+    <div class="r-level major">
+      <div class="r-price">25,000</div>
+      <div class="r-tag">SUPREME · Round Number</div>
+      <div class="r-note">Murphy's whole number. Maximum institutional Call writing. Strongest resistance on the board.</div>
+    </div>
+    <div class="r-level major">
+      <div class="r-price">24,500</div>
+      <div class="r-tag">PRIMARY · OI Wall</div>
+      <div class="r-note">Prior swing high. Heavy OI concentration. Institutional selling wall. Your primary sell strike.</div>
+    </div>
+    <div class="r-level moderate">
+      <div class="r-price">24,117</div>
+      <div class="r-tag">MODERATE · Prior Low</div>
+      <div class="r-note">Prior support that may act as resistance on bounce. Watch if Nifty tests from below.</div>
+    </div>
+    <div class="r-level moderate">
+      <div class="r-price">24,000</div>
+      <div class="r-tag">MODERATE · Round + Support</div>
+      <div class="r-note">Round number + current support. If Nifty is below 24,000 — no Bear Call until it stabilises.</div>
+    </div>
+    <div class="r-level minor">
+      <div class="r-price">200-DMA</div>
+      <div class="r-tag">DYNAMIC · Moving Average</div>
+      <div class="r-note">Check on TradingView. If 200-DMA is above current Nifty, it acts as dynamic resistance.</div>
+    </div>
+    <div class="r-level minor">
+      <div class="r-price">Gap Fill</div>
+      <div class="r-tag">PATTERN · Unfilled Gaps</div>
+      <div class="r-note">Any prior down-gap on daily chart becomes resistance on retracement. Mark these on TradingView.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-note">
+    <h4>🎯 Pre-Trade Confirmation Checklist — Bear Call Spread</h4>
+    <ul class="checklist">
+      <li class="yes">Chart shows clear resistance at your chosen sell strike (prior swing high, round number, gap)</li>
+      <li class="yes">Open Interest at sell strike is HIGH and increasing (OI change is positive)</li>
+      <li class="yes">India VIX is between 14–20 (premium rich, not panicky)</li>
+      <li class="yes">Put-Call Ratio (PCR) is below 1.0 (more Calls being written = bearish institutional tone)</li>
+      <li class="yes">Max Pain is at or below current Nifty level (gravitational pull toward expiry)</li>
+      <li class="yes">No major event (RBI, budget, election, Fed) in the next 5 trading days</li>
+      <li class="yes">10–15 days to expiry (sweet spot for Theta to work)</li>
+      <li class="no">Do NOT enter if Nifty is forming higher highs on daily chart — breakout risk</li>
+      <li class="no">Do NOT enter on Monday of expiry week if VIX is above 18</li>
+      <li class="warn">Caution if Nifty had a strong gap-up to current levels — momentum could continue</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ════════════ PART 2: ALL STRATEGIES ════════════ -->
+<div class="part"><span class="part-num">Part II · Complete Playbook</span><span class="part-title">All 8 Strategies — Standard Reference Format</span></div>
+
+<!-- STRATEGY 1: BULL CALL SPREAD -->
+<div class="strat-card">
+  <div class="strat-card-head">
+    <div class="strat-num">01</div>
+    <div>
+      <div class="strat-title">Bull Call Spread</div>
+      <div class="strat-view">Market View: Moderately bullish. Expects rise, not explosion.</div>
+    </div>
+    <span class="badge badge-debit">DEBIT</span>
+  </div>
+  <div class="strat-body">
+
+    <div class="story">
+      <p style="font-size:0.9rem;color:var(--ink3);"><strong style="color:var(--ink);">The Story:</strong> You think Nifty will rise from 24,300 to somewhere around 24,700. But the 24,300 CE alone costs ₹180 — too expensive. So you make a deal: you'll cap your profit at 24,700 in exchange for selling the 24,700 CE to someone else for ₹60. The buyer of the 24,700 CE thinks Nifty will shoot past 24,700 and keeps going — they're the aggressive bull. You're the moderate bull. Both of you are wrong about each other's conviction. You pay a net ₹120. If Nifty rises between 24,420 and 24,700 — you profit. If it roars past 24,700 — you still make your capped maximum but miss the extra upside. The ₹60 credit from selling is literally a coupon off your ticket price.</p>
+    </div>
+
+    <div class="calc-block">
+      <div class="calc-head">Bull Call Spread · Full Calculation</div>
+      <div class="calc-body">
+        <span class="buy">BUY  24,300 CE @ ₹180  →  ₹180 × 65 = ₹11,700 (paid)</span><br>
+        <span class="sell">SELL 24,700 CE @ ₹60   →  ₹60  × 65 = ₹3,900  (collected)</span><br>
+        <div class="rule-line"></div>
+        <span class="net">Net Cost per unit  =  ₹180 − ₹60  =  ₹120</span><br>
+        <span class="net">Total Outlay       =  ₹120 × 65  =  ₹7,800</span><br>
+        <span class="profit">Max Profit   =  (400 − 120) × 65  =  ₹280 × 65  =  ₹18,200</span><br>
+        <span class="loss">Max Loss     =  ₹120 × 65  =  ₹7,800  (full premium)</span><br>
+        <span class="net">Breakeven    =  24,300 + 120  =  24,420</span><br>
+        <span class="label">R:R Ratio    =  ₹18,200 ÷ ₹7,800  =  2.33 : 1</span>
+      </div>
+    </div>
+
+    <div class="risk-box">
+      <h4>Risk Cap Check — ₹20,000 Options Capital</h4>
+      <p>₹7,800 outlay = 39% of ₹20,000 options capital — exceeds 20% cap. To stay within ₹4,000 risk: use 100pt spread instead. Buy 24,300 CE @ ₹180, Sell 24,400 CE @ ₹135. Net cost ≈ ₹45/unit × 65 = ₹2,925. Within cap. Max profit = ₹55 × 65 = ₹3,575. R:R = 1.22:1. More modest but disciplined.</p>
+    </div>
+
+    <div class="sl-box">
+      <h4>Stop Loss</h4>
+      <p><strong>Time-based exit:</strong> If 7 days pass and Nifty hasn't crossed 24,420 (breakeven), exit. Theta decay makes recovery unlikely. Don't let a debit spread die slowly.</p>
+      <p><strong>Price-based exit:</strong> Exit if premium of the spread drops to 50% of what you paid. ₹7,800 paid → exit if spread value drops to ₹3,900.</p>
+    </div>
+
+    <ul class="checklist">
+      <li class="yes">Chart shows uptrend with bullish candle patterns (Murphy: hammer, morning star above support)</li>
+      <li class="yes">Strong support visible below current Nifty on chart</li>
+      <li class="yes">IV elevated — selling the upper Call meaningfully reduces cost</li>
+      <li class="no">Avoid if market is at major resistance — rise may be limited</li>
+    </ul>
+  </div>
+</div>
+
+<!-- STRATEGY 2: BEAR PUT SPREAD -->
+<div class="strat-card">
+  <div class="strat-card-head">
+    <div class="strat-num">02</div>
+    <div>
+      <div class="strat-title">Bear Put Spread</div>
+      <div class="strat-view">Market View: Moderately bearish. Expects controlled fall.</div>
+    </div>
+    <span class="badge badge-debit">DEBIT</span>
+  </div>
+  <div class="strat-body">
+    <div class="story">
+      <p style="font-size:0.9rem;color:var(--ink3);"><strong style="color:var(--ink);">The Story:</strong> Exact mirror of the Bull Call Spread — but for falls. You think Nifty will decline from 24,300 to around 23,900. Buying the 24,300 PE outright costs ₹175. Instead, you sell the 23,900 PE for ₹65 to someone who thinks Nifty will crash past 23,900 all the way to 23,000. You're the controlled bear; the 23,900 PE buyer is the crash bear. You cap your profit at 23,900 but reduce your entry cost from ₹175 to ₹110. If Nifty falls between 24,190 and 23,900 — you profit handsomely with a 2.6:1 R:R.</p>
+    </div>
+    <div class="calc-block">
+      <div class="calc-head">Bear Put Spread · Full Calculation</div>
+      <div class="calc-body">
+        <span class="buy">BUY  24,300 PE @ ₹175  →  ₹175 × 65 = ₹11,375 (paid)</span><br>
+        <span class="sell">SELL 23,900 PE @ ₹65   →  ₹65  × 65 = ₹4,225  (collected)</span><br>
+        <div class="rule-line"></div>
+        <span class="net">Net Cost per unit  =  ₹175 − ₹65  =  ₹110</span><br>
+        <span class="net">Total Outlay       =  ₹110 × 65  =  ₹7,150</span><br>
+        <span class="profit">Max Profit   =  (400 − 110) × 65  =  ₹290 × 65  =  ₹18,850</span><br>
+        <span class="loss">Max Loss     =  ₹110 × 65  =  ₹7,150</span><br>
+        <span class="net">Breakeven    =  24,300 − 110  =  24,190</span><br>
+        <span class="label">R:R Ratio    =  ₹18,850 ÷ ₹7,150  =  2.64 : 1</span>
+      </div>
+    </div>
+    <div class="risk-box">
+      <h4>Risk Cap Check</h4>
+      <p>₹7,150 = 35.7% of ₹20k. Exceed cap. For 100pt spread: Buy 24,300 PE @ ₹175, Sell 24,200 PE @ ₹130. Net ≈ ₹45 × 65 = ₹2,925. Within ₹4,000 cap. Trade only 1 lot.</p>
+    </div>
+    <div class="sl-box">
+      <h4>Stop Loss</h4>
+      <p>Exit if Nifty closes ABOVE your bought Put strike (24,300) with strong bullish momentum. Your bearish thesis is invalidated. Exit if premium falls to 50% of entry value.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY 3: BEAR CALL SPREAD (brief — fully covered above) -->
+<div class="strat-card">
+  <div class="strat-card-head">
+    <div class="strat-num">03</div>
+    <div>
+      <div class="strat-title">Bear Call Spread</div>
+      <div class="strat-view">Market View: Mildly bearish or neutral. Collect premium, not direction.</div>
+    </div>
+    <span class="badge badge-credit">CREDIT</span>
+  </div>
+  <div class="strat-body">
+    <div class="callout callout-note" style="margin-bottom:1rem;">
+      <h4>Full Analysis in Part I Above</h4>
+      This strategy has been given the full deep-dive treatment in Part I, including the complete story, P&L table, every rupee calculation, risk capping, stop loss, and resistance signals. Refer to Part I for the complete reference.
+    </div>
+    <div class="calc-block">
+      <div class="calc-head">Bear Call Spread · Summary (100pt Width · Risk-Capped Version)</div>
+      <div class="calc-body">
+        <span class="sell">SELL 24,500 CE @ ₹90  →  ₹90 × 65  =  ₹5,850 (collected)</span><br>
+        <span class="buy">BUY  24,600 CE @ ₹60  →  ₹60 × 65  =  ₹3,900 (paid)</span><br>
+        <div class="rule-line"></div>
+        <span class="net">Net Credit  =  ₹30/unit  ×  65  =  ₹1,950</span><br>
+        <span class="profit">Max Profit  =  ₹1,950</span>  <span class="loss">Max Loss  =  ₹4,550</span>  <span class="net">Breakeven  =  24,530</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY 4: BULL PUT SPREAD -->
+<div class="strat-card">
+  <div class="strat-card-head">
+    <div class="strat-num">04</div>
+    <div>
+      <div class="strat-title">Bull Put Spread <span class="badge badge-new">✦ Complete Addition</span></div>
+      <div class="strat-view">Market View: Mildly bullish or neutral. Market won't fall below your level.</div>
+    </div>
+    <span class="badge badge-credit">CREDIT</span>
+  </div>
+  <div class="strat-body">
+    <div class="story">
+      <p style="font-size:0.9rem;color:var(--ink3);"><strong style="color:var(--ink);">The Story:</strong> Nifty is at 24,300. You look at the chart and see strong support at 24,000 — multiple prior lows, heavy Put OI, and a round number. You don't think Nifty is going to crash through that level. So you sell the 24,200 PE to someone who thinks it will. They're paying you ₹110 for the right to profit if Nifty falls below 24,200. You think they're wrong. You also buy the 23,900 PE for ₹50 — just in case you're wrong and Nifty collapses. Net: ₹60/unit in your account. Every day Nifty stays above 24,200, their option decays and your collected premium solidifies into profit.</p>
+    </div>
+    <div class="calc-block">
+      <div class="calc-head">Bull Put Spread · Full Calculation</div>
+      <div class="calc-body">
+        <span class="sell">SELL 24,200 PE @ ₹110  →  ₹110 × 65 = ₹7,150 (collected)</span><br>
+        <span class="buy">BUY  23,900 PE @ ₹50   →  ₹50  × 65 = ₹3,250 (paid)</span><br>
+        <div class="rule-line"></div>
+        <span class="net">Net Credit per unit  =  ₹110 − ₹50  =  ₹60</span><br>
+        <span class="net">Total Credit         =  ₹60 × 65  =  ₹3,900</span><br>
+        <span class="profit">Max Profit   =  ₹3,900  (Nifty stays above 24,200)</span><br>
+        <span class="label">Max Loss per unit  =  (300 − 60)  =  240  →  240 × 65  =  </span><span class="loss">₹15,600</span><br>
+        <span class="net">Breakeven    =  24,200 − 60  =  24,140</span><br>
+        <span class="label">R:R          =  ₹3,900 ÷ ₹15,600  =  1 : 4.0</span>
+      </div>
+    </div>
+    <div class="risk-box">
+      <h4>Risk Cap Check (100pt width version)</h4>
+      <p>SELL 24,200 PE @ ₹110, BUY 24,100 PE @ ₹80. Net ≈ ₹30 × 65 = ₹1,950. Max loss = (100−30) × 65 = ₹4,550. Within cap.</p>
+    </div>
+    <div class="sl-box">
+      <h4>Stop Loss</h4>
+      <p>Exit immediately if Nifty closes BELOW your sold Put strike (24,200) with a strong bearish candle and volume. The support thesis is broken. Don't hope for a bounce. Also exit if closing debit to exit the spread exceeds 2× what you collected.</p>
+    </div>
+    <ul class="checklist">
+      <li class="yes">Clear support level visible on chart below (prior swing lows, rising trendline)</li>
+      <li class="yes">High OI at Put strikes below = market makers protecting the floor</li>
+      <li class="yes">PCR above 1.2 (more Puts being written = bullish institutional tone)</li>
+      <li class="no">Avoid if news flow suggests downside risk (weak earnings season, global selloff)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- STRATEGY 5: LONG STRADDLE -->
+<div class="strat-card">
+  <div class="strat-card-head">
+    <div class="strat-num">05</div>
+    <div>
+      <div class="strat-title">Long Straddle</div>
+      <div class="strat-view">Market View: Big move certain. Direction irrelevant.</div>
+    </div>
+    <span class="badge badge-event">EVENT</span>
+  </div>
+  <div class="strat-body">
+    <div class="story">
+      <p style="font-size:0.9rem;color:var(--ink3);"><strong style="color:var(--ink);">The Story:</strong> RBI policy announcement is tomorrow. Markets are on edge. You have no idea if they'll cut rates (bullish) or hold/hike (bearish) — but you're certain the market will move violently either way. You buy the 24,300 CE for ₹180 AND the 24,300 PE for ₹175 — ₹355 total. You're not guessing direction; you're betting on the magnitude of the move. If Nifty shoots to 25,000 — the Call prints massively and the Put expires worthless. If Nifty tanks to 23,500 — the Put wins and the Call is the sunk cost. Your enemy is not the direction — it's time. If RBI says nothing remarkable and Nifty barely moves, both options decay and you lose ₹23,075. Enter 1–2 days before the event only.</p>
+    </div>
+    <div class="calc-block">
+      <div class="calc-head">Long Straddle · Full Calculation</div>
+      <div class="calc-body">
+        <span class="buy">BUY  24,300 CE @ ₹180  →  ₹180 × 65 = ₹11,700</span><br>
+        <span class="buy">BUY  24,300 PE @ ₹175  →  ₹175 × 65 = ₹11,375</span><br>
+        <div class="rule-line"></div>
+        <span class="net">Total Cost      =  ₹355/unit  ×  65  =  ₹23,075</span><br>
+        <span class="profit">Max Profit      =  Unlimited on Call side if Nifty explodes upward</span><br>
+        <span class="loss">Max Loss        =  ₹23,075  (if Nifty expires exactly at 24,300)</span><br>
+        <span class="net">Upper Breakeven =  24,300 + 355  =  24,655</span><br>
+        <span class="net">Lower Breakeven =  24,300 − 355  =  23,945</span><br>
+        <span class="label">Move Needed     =  ±355 points  =  ±1.46%  (achievable on events)</span><br>
+        <span class="label">Theta Burn      =  ~₹45−60 per day on combined position</span>
+      </div>
+    </div>
+    <div class="risk-box">
+      <h4>Risk Cap Check</h4>
+      <p>₹23,075 far exceeds ₹4,000 cap. Straddle is NOT suitable for ₹20,000 options capital. Use Strangle instead (₹10,725). Or wait until capital grows to ₹75,000+.</p>
+    </div>
+    <div class="sl-box">
+      <h4>Stop Loss</h4>
+      <p><strong>Time stop:</strong> If the event passes and Nifty hasn't moved beyond either breakeven within 1–2 days of the event — exit both legs immediately. Don't hold through post-event IV crush. IV will collapse (VIX drops) after the event — destroying the remaining premium.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY 6: LONG STRANGLE -->
+<div class="strat-card">
+  <div class="strat-card-head">
+    <div class="strat-num">06</div>
+    <div>
+      <div class="strat-title">Long Strangle</div>
+      <div class="strat-view">Market View: Big extreme move coming. Budget version of Straddle.</div>
+    </div>
+    <span class="badge badge-event">EVENT</span>
+  </div>
+  <div class="strat-body">
+    <div class="story">
+      <p style="font-size:0.9rem;color:var(--ink3);"><strong style="color:var(--ink);">The Story:</strong> Same event premise as the Straddle — but you're working with ₹20k and can't afford ₹23,075. So you shift both options OUT of the money. Instead of buying the ATM 24,300 CE/PE, you buy the 24,600 CE (above market) and the 24,000 PE (below market). You pay only ₹165/unit instead of ₹355 — a saving of ₹12,350. The catch: Nifty needs to move further (±465 points vs ±355 in the straddle) before you profit. You're paying for a bigger swing. This makes the Strangle ideal for budget days, election results, or US Fed events — scenarios where 2–3% moves are common.</p>
+    </div>
+    <div class="calc-block">
+      <div class="calc-head">Long Strangle · Full Calculation</div>
+      <div class="calc-body">
+        <span class="buy">BUY  24,600 CE @ ₹85  →  ₹85 × 65 = ₹5,525</span><br>
+        <span class="buy">BUY  24,000 PE @ ₹80  →  ₹80 × 65 = ₹5,200</span><br>
+        <div class="rule-line"></div>
+        <span class="net">Total Cost      =  ₹165/unit  ×  65  =  ₹10,725</span><br>
+        <span class="profit">Max Profit      =  Unlimited on either side</span><br>
+        <span class="loss">Max Loss        =  ₹10,725</span><br>
+        <span class="net">Upper Breakeven =  24,600 + 165  =  24,765  (+1.9% move)</span><br>
+        <span class="net">Lower Breakeven =  24,000 − 165  =  23,835  (−1.9% move)</span><br>
+        <span class="label">Saving vs Straddle  =  ₹23,075 − ₹10,725  =  ₹12,350</span>
+      </div>
+    </div>
+    <div class="risk-box">
+      <h4>Risk Cap Check</h4>
+      <p>₹10,725 = 53.6% of ₹20k. Still exceeds conservative 20% cap. However for event trades, many traders accept 1 lot of strangle as a contained unit. Treat the full premium as your max loss and size accordingly. If ₹10k is too much, skip the event.</p>
+    </div>
+    <div class="sl-box">
+      <h4>Stop Loss</h4>
+      <p>Exit within 24 hours of the event announcement. OTM options decay even faster than ATM after IV crush. If neither breakeven is breached within 1 day of the event, the trade is unlikely to recover.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY 7: IRON CONDOR -->
+<div class="strat-card">
+  <div class="strat-card-head">
+    <div class="strat-num">07</div>
+    <div>
+      <div class="strat-title">Iron Condor</div>
+      <div class="strat-view">Market View: Range bound. No major events. Income from stillness.</div>
+    </div>
+    <span class="badge badge-credit">CREDIT</span>
+  </div>
+  <div class="strat-body">
+    <div class="story">
+      <p style="font-size:0.9rem;color:var(--ink3);"><strong style="color:var(--ink);">The Story:</strong> No RBI this week. No elections. No Fed. Nifty has been coiling between 24,000 and 24,600 for 10 days. You see it clearly on the chart — a defined range with tested support and resistance. Instead of guessing which way it breaks, you charge a toll from both sides simultaneously. You sell a Bear Call Spread above (24,600/24,900) AND a Bull Put Spread below (24,000/23,700). Four legs. Two premiums collected on each side. Nifty must stay between 24,000 and 24,600 for you to keep all ₹6,500. It's the weekly paycheck strategy used by professional Indian options traders — the "toll booth model." The only way you lose meaningfully is if something unexpected breaks the range.</p>
+    </div>
+    <div class="calc-block">
+      <div class="calc-head">Iron Condor · Full 4-Leg Calculation</div>
+      <div class="calc-body">
+        <span class="label">UPPER SPREAD (Bear Call):</span><br>
+        <span class="sell">  SELL 24,600 CE @ ₹90   →  ₹90 × 65 = ₹5,850</span><br>
+        <span class="buy">  BUY  24,900 CE @ ₹35   →  ₹35 × 65 = ₹2,275</span><br>
+        <span class="net">  Upper spread credit    =  ₹55 × 65  =  ₹3,575</span><br>
+        <br>
+        <span class="label">LOWER SPREAD (Bull Put):</span><br>
+        <span class="sell">  SELL 24,000 PE @ ₹85   →  ₹85 × 65 = ₹5,525</span><br>
+        <span class="buy">  BUY  23,700 PE @ ₹40   →  ₹40 × 65 = ₹2,600</span><br>
+        <span class="net">  Lower spread credit    =  ₹45 × 65  =  ₹2,925</span><br>
+        <div class="rule-line"></div>
+        <span class="net">Total Net Credit  =  (₹55 + ₹45) × 65  =  ₹100 × 65  =  ₹6,500</span><br>
+        <span class="profit">Max Profit        =  ₹6,500  (Nifty between 24,000 and 24,600)</span><br>
+        <span class="loss">Max Loss (either side)  =  (300 − 100) × 65  =  ₹13,000</span><br>
+        <span class="net">Upper Breakeven   =  24,600 + 100  =  24,700</span><br>
+        <span class="net">Lower Breakeven   =  24,000 − 100  =  23,900</span><br>
+        <span class="label">Profitable zone   =  23,900 to 24,700  (800 point runway)</span>
+      </div>
+    </div>
+    <div class="risk-box">
+      <h4>Risk Cap Check</h4>
+      <p>Max loss ₹13,000 = 65% of ₹20k. This strategy requires full ₹20k dedicated to margins plus buffer. Not ideal for ₹20k. More appropriate at ₹50,000+ options capital. Build toward this — it's the pinnacle income strategy.</p>
+    </div>
+    <div class="sl-box">
+      <h4>Stop Loss</h4>
+      <p><strong>Leg-by-leg rule:</strong> If Nifty breaches either inner strike (24,600 or 24,000) and closes there — close the breached spread immediately. Keep the profitable spread open. Do NOT hold both if one side is blown.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY 8: COVERED CALL -->
+<div class="strat-card">
+  <div class="strat-card-head">
+    <div class="strat-num">08</div>
+    <div>
+      <div class="strat-title">Covered Call</div>
+      <div class="strat-view">Market View: Already own stock/ETF. Want monthly income on holdings.</div>
+    </div>
+    <span class="badge badge-credit">CREDIT</span>
+  </div>
+  <div class="strat-body">
+    <div class="story">
+      <p style="font-size:0.9rem;color:var(--ink3);"><strong style="color:var(--ink);">The Story:</strong> You own the Motilal Oswal Midcap Fund or Nifty ETF. The units sit there. Instead of letting them earn nothing beyond NAV appreciation, you rent them out. You sell a Call option against your holdings — pocketing ₹5,850/month in premium for agreeing that if Nifty rises above 24,600, you'll sell your units at that price. You're happy to sell at 24,600 — it's profit. If Nifty doesn't reach 24,600 by expiry, the Call expires worthless and you keep the ₹5,850 without selling anything. The next month you do it again. Warren Buffett generates hundreds of millions annually this way on Berkshire's existing portfolio. This is the closest thing to a rent cheque from your investments.</p>
+    </div>
+    <div class="calc-block">
+      <div class="calc-head">Covered Call · Full Calculation</div>
+      <div class="calc-body">
+        <span class="label">POSITION: Hold 65 units of Nifty ETF @ ₹24,300</span><br>
+        <span class="label">VALUE OF HOLDING  =  65 × ₹24,300  =  ₹15,79,500</span><br>
+        <br>
+        <span class="sell">SELL 24,600 CE @ ₹90   →  ₹90 × 65  =  ₹5,850 per month</span><br>
+        <div class="rule-line"></div>
+        <span class="net">Monthly income rate  =  ₹5,850 ÷ ₹15,79,500  =  0.37% per month</span><br>
+        <span class="label">Annualised yield     =  ~4.4% — on top of NAV appreciation</span><br>
+        <br>
+        <span class="label">SCENARIO A — Nifty below 24,600 at expiry:</span><br>
+        <span class="profit">  Call expires worthless. Keep ₹5,850. Still own units. Repeat.</span><br>
+        <br>
+        <span class="label">SCENARIO B — Nifty above 24,600 at expiry:</span><br>
+        <span class="profit">  Units are called away at ₹24,600. Profit = ₹300/unit × 65 + ₹5,850 = ₹25,350</span><br>
+        <span class="loss">  You miss any upside beyond 24,600. That's the tradeoff.</span>
+      </div>
+    </div>
+    <ul class="checklist">
+      <li class="yes">You hold the underlying — this is non-negotiable for the strategy to be "covered"</li>
+      <li class="yes">You are willing to sell your holding at the Call strike (no emotional attachment)</li>
+      <li class="yes">Flat or mildly bullish outlook on your holding</li>
+      <li class="no">Avoid during strong bull phases — you'll repeatedly miss the upside</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ════════════ PART 3: ADVANCED STRATEGIES ════════════ -->
+<div class="part"><span class="part-num">Part III · Professional Knowledge Layer</span><span class="part-title">Strategies Used by Institutions — For Context Only</span></div>
+
+<div class="section">
+  <span class="section-eyebrow">Knowledge Without Action</span>
+  <h2>What the Pros Use — and Why Our 8 Are Sufficient for You Now</h2>
+  <p class="section-sub">These strategies exist. Knowing their names and logic makes you a more informed trader. Do not deploy them without 2+ years of live experience with the core 8.</p>
+
+  <div class="adv-table-wrap">
+    <table class="adv-table">
+      <thead>
+        <tr>
+          <th>Strategy Name</th>
+          <th>Structure</th>
+          <th>View</th>
+          <th>Risk Profile</th>
+          <th>Complexity</th>
+          <th>Suitable For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Iron Butterfly</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Sell ATM Call + Put, Buy OTM wings. Tighter than Condor.</td>
+          <td>Strictly neutral</td>
+          <td style="color:var(--green);">Defined</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div><div class="cb"></div></div></td>
+          <td>Prop desks, high IV environments</td>
+        </tr>
+        <tr>
+          <td>Short Straddle</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Sell ATM Call + Sell ATM Put. Naked on both sides.</td>
+          <td>Strictly neutral</td>
+          <td style="color:var(--red);">UNLIMITED LOSS</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div></div></td>
+          <td>Institutional desks only. Never retail without massive capital.</td>
+        </tr>
+        <tr>
+          <td>Short Strangle</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Sell OTM Call + Sell OTM Put. Wider than Straddle.</td>
+          <td>Neutral/range</td>
+          <td style="color:var(--red);">UNLIMITED LOSS</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div></div></td>
+          <td>Professional traders with large margin buffers</td>
+        </tr>
+        <tr>
+          <td>Calendar Spread</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Buy far-month option, Sell near-month same strike. Time play.</td>
+          <td>Neutral, near-term</td>
+          <td style="color:var(--amber);">Limited debit</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div></div></td>
+          <td>Traders with understanding of term structure &amp; IV skew</td>
+        </tr>
+        <tr>
+          <td>Diagonal Spread</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Different strike + Different expiry. Flexible calendar variant.</td>
+          <td>Mild directional</td>
+          <td style="color:var(--amber);">Limited</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div></div></td>
+          <td>Advanced retail, prop traders</td>
+        </tr>
+        <tr>
+          <td>Ratio Spread (1:2)</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Buy 1 ATM, Sell 2 OTM. Net zero cost possible. Dangerous tail.</td>
+          <td>Mildly directional</td>
+          <td style="color:var(--red);">Unlimited one side</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div></div></td>
+          <td>Prop desks only. "Free trade" is an illusion — tail risk is real.</td>
+        </tr>
+        <tr>
+          <td>Back Spread (2:1)</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Buy 2 OTM, Sell 1 ATM. Profits from explosive moves.</td>
+          <td>Volatility explosion</td>
+          <td style="color:var(--green);">Limited, net credit possible</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div></div></td>
+          <td>Hedge funds. Used before known volatility events.</td>
+        </tr>
+        <tr>
+          <td>Jade Lizard</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Short Put + Bear Call Spread. Zero upside risk if done right.</td>
+          <td>Bullish to neutral</td>
+          <td style="color:var(--amber);">Put downside only</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div><div class="cb"></div></div></td>
+          <td>Advanced retail with moderate capital</td>
+        </tr>
+        <tr>
+          <td>Broken Wing Butterfly</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Asymmetric butterfly skewed to collect net credit on one side.</td>
+          <td>Directional bias</td>
+          <td style="color:var(--green);">Defined but complex</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div></div></td>
+          <td>Professional options traders only</td>
+        </tr>
+        <tr>
+          <td>Synthetic Long</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Buy ATM Call + Sell ATM Put. Mimics owning the stock.</td>
+          <td>Strongly bullish</td>
+          <td style="color:var(--red);">Unlimited downside</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div><div class="cb"></div></div></td>
+          <td>Capital-efficient stock replacement for experienced traders</td>
+        </tr>
+        <tr>
+          <td>Risk Reversal</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Sell OTM Put, Buy OTM Call. Zero net premium. Pure directional.</td>
+          <td>Bullish (or reverse)</td>
+          <td style="color:var(--amber);">Defined on sold side</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div><div class="cb"></div></div></td>
+          <td>FX traders, commodity hedgers, institutional desks</td>
+        </tr>
+        <tr>
+          <td>Collar</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Own stock + Buy Put + Sell Call. Cap downside, cap upside too.</td>
+          <td>Protective neutral</td>
+          <td style="color:var(--green);">Defined both ways</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div><div class="cb"></div><div class="cb"></div></div></td>
+          <td>Large portfolio holders protecting big positions. CFOs, family offices.</td>
+        </tr>
+        <tr>
+          <td>Poor Man's Covered Call</td>
+          <td style="font-size:0.82rem;color:var(--ink3);">Buy LEAPS deep ITM Call, Sell near-term OTM Call. Stock alternative.</td>
+          <td>Long-term bullish</td>
+          <td style="color:var(--amber);">Limited debit</td>
+          <td><div class="complexity-bar"><div class="cb filled"></div><div class="cb filled"></div><div class="cb filled"></div><div class="cb"></div><div class="cb"></div></div></td>
+          <td>Traders who want Covered Call income without owning the stock outright</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-success" style="margin-top:1.5rem;">
+    <h4>Are Our 8 Strategies Sufficient for the Next 2 Years? — YES.</h4>
+    <p>The 8 strategies in this handbook cover every market scenario a retail trader faces: bullish, bearish, neutral, event-driven, and income-seeking. They all have DEFINED RISK — meaning you know your worst case before entering. The "advanced" strategies above add complexity without necessarily adding profitability for traders under ₹5 lakh capital. The three dangerous ones — Short Straddle, Short Strangle, Ratio Spread — have unlimited loss potential. One bad trade can destroy months of gains. The professional community's "edge" comes not from exotic strategies, but from superior execution, risk management, and market reading — all of which you build with the core 8 first.</p>
+  </div>
+</div>
+
+
+<!-- ════════════ PART 4: ALGO WARNING ════════════ -->
+<div class="part"><span class="part-num">Part IV · Market Intelligence</span><span class="part-title">Algorithmic Manipulation — What to Watch For</span></div>
+
+<div class="section">
+  <div class="algo-section">
+    <h2>⚠️ The Invisible Hand — Algo Trading, Market Manipulation &amp; Jane Street</h2>
+    <p>You are not trading against other retail traders. You are trading against machines designed by the world's best mathematicians and programmed to exploit every pattern, every hesitation, every behavioural flaw. Knowing this is not meant to paralyse you — it's meant to make you sharper and more patient.</p>
+
+    <div class="jane-highlight">
+      "In 2024, SEBI issued notices to Jane Street — a global high-frequency trading and market-making firm — over alleged manipulation of Indian index options. The allegation was that Jane Street was taking coordinated positions in Nifty component stocks to artificially move the Nifty 50 index level, then profiting from related options positions. SEBI temporarily barred Jane Street from Indian securities markets, marking one of the most significant regulatory actions against algorithmic traders in India's history. This was not isolated — it was a window into how large firms interact with retail options markets every day."
+    </div>
+
+    <h3>1. Strike Pinning — The Expiry Day Gravity Well</h3>
+    <p>Near expiry, Nifty exhibits an uncanny tendency to "pin" to round-number strikes. This is not coincidence. Market makers with large short option books have a direct incentive to push price toward the strike where the most options expire worthless — minimising their payout. If large open interest sits at 24,500 and it's Thursday morning of expiry week, watch Nifty drift toward 24,500 as if magnetised.</p>
+    <ul>
+      <li><span class="watch-tag">Watch For</span> Slow grind toward a high-OI strike in the last hour of expiry trading</li>
+      <li><span class="watch-tag">Watch For</span> Sudden reversal right at your sold strike — manipulation protecting a level</li>
+      <li><span class="watch-tag">Your Edge</span> Choose strike levels well above/below current price with clear OI support</li>
+    </ul>
+
+    <h3>2. Spoofing — The Ghost Order</h3>
+    <p>Spoofing means placing large orders (often thousands of lots) at key levels with no intention of executing them. The goal is to create false impression of supply/demand — pushing price toward or away from a target — then cancelling the order once price has moved. These orders appear and vanish within milliseconds. As a retail trader, you see them as "big walls" in the options chain that disappear the moment price approaches.</p>
+    <ul>
+      <li><span class="watch-tag">Watch For</span> Very large bid/ask walls in options chain that vanish as price nears them</li>
+      <li><span class="watch-tag">Watch For</span> Sudden OI change mid-session without corresponding price move</li>
+      <li><span class="watch-tag">Your Edge</span> Only trade when OI builds over multiple sessions — not intraday OI spikes</li>
+    </ul>
+
+    <h3>3. IV Manipulation Before Events</h3>
+    <p>Implied Volatility (and thus option premiums) can be artificially inflated before known events (RBI, budget, earnings). Institutional players accumulate options quietly, then sell into retail demand as IV spikes. After the event, IV collapses (the "volatility crush") and all those expensive options retail traders bought at peak IV are suddenly worth far less — even if the direction was right.</p>
+    <ul>
+      <li><span class="watch-tag">Watch For</span> India VIX spiking aggressively in the 5 days before a known event</li>
+      <li><span class="watch-tag">Watch For</span> Straddle premium becoming unusually expensive relative to historical averages</li>
+      <li><span class="watch-tag">Your Edge</span> For event trades: enter as CLOSE to the event as possible to avoid inflated IV</li>
+    </ul>
+
+    <h3>4. Gamma Squeeze / Delta Hedging Cascade</h3>
+    <p>When Nifty approaches a large option strike near expiry, market makers who are short calls must buy more Nifty to stay delta-neutral (hedged). This buying itself pushes Nifty higher — which forces more buying — creating a self-reinforcing cascade. Algos detect and front-run this precisely. Retail sees "Nifty suddenly shot up for no reason." The reason is a Gamma squeeze engineered by algorithmic hedging.</p>
+    <ul>
+      <li><span class="watch-tag">Watch For</span> Nifty accelerating toward a round number with no clear news catalyst</li>
+      <li><span class="watch-tag">Watch For</span> The move stopping sharply exactly at a high-OI strike</li>
+      <li><span class="watch-tag">Your Edge</span> Don't chase these moves. Let them come to you. Set your strikes conservatively.</li>
+    </ul>
+
+    <h3>5. Last-Hour Marking / Settlement Manipulation</h3>
+    <p>Options settle at the Special Opening Quotation (SOQ) or closing price depending on contract terms. Large players can manipulate closing prices in thinly traded components to move the index settlement price by fractions that make the difference between millions in profit or loss on massive option books. Retail traders should never make critical expiry decisions in the last 15 minutes of trading.</p>
+    <ul>
+      <li><span class="watch-tag">Watch For</span> Unusually high volume and erratic price action in last 30 minutes of expiry sessions</li>
+      <li><span class="watch-tag">Watch For</span> Gap between Nifty spot and Nifty futures in the final minutes</li>
+      <li><span class="watch-tag">Your Edge</span> Close your expiry-day positions by 3:00 PM, not at 3:30 PM. Never hold to settlement.</li>
+    </ul>
+
+    <h3>6. Quote Stuffing and Latency Arbitrage</h3>
+    <p>HFT firms flood exchanges with millions of fake orders per second to cause congestion, slowing down competitors' order routing systems. In those microseconds of lag, they execute arbitrage trades that retail traders never see. While this doesn't directly harm your spread positions, it does mean the "prices you see" on screen can briefly diverge from true price during volatility spikes — making limit orders essential over market orders in options.</p>
+    <ul>
+      <li><span class="watch-tag">Watch For</span> Bid-ask spreads widening suddenly during news events</li>
+      <li><span class="watch-tag">Your Edge</span> Always use LIMIT orders in options. Never market orders. Slippage can be brutal.</li>
+    </ul>
+
+    <div class="jane-highlight" style="margin-top:1.5rem;">
+      THE RETAIL TRADER'S ADVANTAGE: Algos optimise for milliseconds. You optimise for days and weeks. You can afford to wait for the perfect setup. Algos can't. Your edge is patience and selectivity — theirs is speed and scale. Never try to out-trade an algorithm on its own turf (scalping, market orders, chasing moves). Trade on your own turf: planned entries, defined risk, strategic setups.
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ PART 5: QUICK REFERENCE ════════════ -->
+<div class="part"><span class="part-num">Part V · Rapid Recall</span><span class="part-title">Pick This Up Cold and Know Exactly What to Do</span></div>
+
+<div class="section">
+  <div class="quick-ref">
+    <h2>Quick Reference — Full Philosophy in One View</h2>
+    <div class="qr-grid">
+      <div class="qr-card">
+        <h4>Market is Bullish</h4>
+        <p><strong>Pay (debit):</strong> Bull Call Spread — buy lower CE, sell higher CE.<br><strong>Collect (credit):</strong> Bull Put Spread — sell higher PE, buy lower PE.<br>Choose credit if market is mildly bullish. Debit if you expect a clear directional move.</p>
+      </div>
+      <div class="qr-card">
+        <h4>Market is Bearish</h4>
+        <p><strong>Pay (debit):</strong> Bear Put Spread — buy higher PE, sell lower PE.<br><strong>Collect (credit):</strong> Bear Call Spread — sell lower CE, buy higher CE.<br>Choose credit for mild/uncertain bearishness. Debit for confident, directional bearishness.</p>
+      </div>
+      <div class="qr-card">
+        <h4>Market is Neutral / Range</h4>
+        <p><strong>Both sides:</strong> Iron Condor — Bear Call + Bull Put simultaneously.<br>Collect from both sides. Need ₹50k+ capital.<br><strong>One side:</strong> Bear Call or Bull Put alone. More manageable for ₹20k.</p>
+      </div>
+      <div class="qr-card">
+        <h4>Big Event Coming</h4>
+        <p><strong>Straddle (₹23k):</strong> ATM Call + ATM Put. Most powerful. Needs higher capital.<br><strong>Strangle (₹10.7k):</strong> OTM Call + OTM Put. Budget version. Needs bigger move.<br>Enter 1–2 days before event. Exit within 24 hours of announcement.</p>
+      </div>
+      <div class="qr-card">
+        <h4>Risk Rules (₹20k Capital)</h4>
+        <p>Max 20% per trade = ₹4,000.<br>Debit spreads: use 100pt wide = ~₹2,925 net cost. ✓<br>Credit spreads: use 100pt wide = max loss ~₹4,550. ✓<br>Never trade naked options (unlimited loss). Never use market orders.</p>
+      </div>
+      <div class="qr-card">
+        <h4>Stop Loss Rules</h4>
+        <p><strong>Debit spreads:</strong> Exit if premium falls to 50% of entry cost.<br><strong>Credit spreads:</strong> Exit if closing cost exceeds 2× what you collected.<br><strong>Chart rule:</strong> Exit if Nifty closes above/below your sold strike on volume.</p>
+      </div>
+      <div class="qr-card">
+        <h4>Murphy's Resistance Hierarchy</h4>
+        <p>1. 25,000 — supreme round number<br>2. 24,500 — OI wall + swing high<br>3. 200-DMA — dynamic resistance<br>4. Prior gap levels — chart resistance<br>Sell strikes ABOVE confirmed resistance.</p>
+      </div>
+      <div class="qr-card">
+        <h4>Option Chain Reading</h4>
+        <p>High OI at Call strikes = resistance wall. Use Bear Call.<br>High OI at Put strikes = support floor. Use Bull Put.<br>Rising OI = fresh conviction. Confirms level.<br>PCR &lt;1.0 = bearish tone. PCR &gt;1.2 = bullish tone.<br>VIX 14–20 = ideal selling range.</p>
+      </div>
+      <div class="qr-card">
+        <h4>Algo Warning Checklist</h4>
+        <p>Use LIMIT orders only. Never market orders.<br>Avoid last 30 min of expiry sessions.<br>Close expiry positions by 3:00 PM.<br>Don't chase sudden moves with no news.<br>High IV before events = trap. Enter late.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-left">REFRAKT TRADING PROGRAMME · MODULE A5 · OPTIONS STRATEGIES HANDBOOK 2026</div>
+  <div class="footer-right">Reference: Murphy's Technical Analysis · Indian Market Context · Nifty Lot 65</div>
+</div>
+
+</div><!-- end page -->
+</body>
+</html>

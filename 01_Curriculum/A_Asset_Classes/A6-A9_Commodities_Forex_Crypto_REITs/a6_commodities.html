@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Commodities — Rachit 2026 | Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark:#141413; --light:#faf9f5; --midgray:#b0aea5; --lightgray:#e8e6dc;
+  --orange:#d97757; --orange-dark:#b3603f; --orange-bg:#f5e6df;
+  --blue:#6a9bcc; --blue-dark:#4a7396; --blue-bg:#e9eef4;
+  --green:#788c5d; --green-dark:#5f7049; --green-bg:#eef1e8;
+  --white:#ffffff;
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--light); font-family:'Lora',Georgia,serif; color:var(--dark); line-height:1.68; }
+nav { position:sticky; top:0; z-index:20; background:var(--dark); color:var(--light); display:flex; align-items:center; justify-content:space-between; padding:13px 28px; border-bottom:1px solid var(--orange); }
+.nav-left { display:flex; align-items:center; gap:10px; }
+.nav-left svg { display:block; }
+.brand { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:16px; letter-spacing:.01em; }
+.breadcrumb-pill { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.03em; background:rgba(217,119,87,.18); color:var(--orange); padding:6px 14px; border-radius:999px; }
+.portal-link { color:var(--light); font-size:12px; text-decoration:none; border:1px solid rgba(250,249,245,.25); padding:6px 12px; border-radius:4px; font-family:'Poppins',Arial,sans-serif; }
+.portal-link:hover { border-color:var(--orange); color:var(--orange); }
+header.page-head { background:var(--dark); color:var(--light); padding:34px 32px 28px; }
+.track-label { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); margin:0 0 8px; font-weight:600; }
+h1 { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:32px; margin:0 0 8px; color:var(--light); }
+.page-sub { font-family:'Lora',Georgia,serif; font-size:14px; color:var(--lightgray); max-width:640px; margin:0 0 18px; }
+.meta-row { display:flex; gap:10px; flex-wrap:wrap; }
+.meta-chip { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.02em; color:var(--orange); border:1px solid rgba(217,119,87,.4); padding:5px 11px; border-radius:999px; }
+.suite-nav { max-width:920px; margin:0 auto; padding:16px 24px 0; display:flex; gap:8px; flex-wrap:wrap; }
+.suite-pill { font-family:'Poppins',Arial,sans-serif; font-size:11.5px; text-decoration:none; padding:7px 13px; border-radius:999px; border:1px solid var(--lightgray); color:var(--dark); background:var(--white); }
+.suite-pill.active { background:var(--dark); color:var(--light); border-color:var(--dark); }
+.suite-pill:hover:not(.active) { border-color:var(--orange); color:var(--orange-dark); }
+main { max-width:920px; margin:0 auto; padding:28px 24px 90px; }
+.toc-card { background:var(--white); border:1px solid var(--lightgray); border-radius:4px; padding:22px 26px; margin-bottom:36px; }
+.toc-card h2 { margin:0 0 12px; font-size:13px; text-transform:uppercase; letter-spacing:.12em; font-family:'Poppins',Arial,sans-serif; color:var(--blue-dark); border:none; font-weight:600; }
+.toc-list { columns:2; column-gap:28px; margin:0; padding:0; list-style:none; }
+.toc-list li { break-inside:avoid; margin-bottom:7px; }
+.toc-list a { color:var(--dark); text-decoration:none; font-size:13.5px; font-family:'Lora',Georgia,serif; }
+.toc-list a:hover { color:var(--orange-dark); }
+.toc-list .n { font-family:'Poppins',Arial,sans-serif; color:var(--orange); margin-right:6px; font-size:11px; }
+.part-banner { background:var(--dark); color:var(--light); padding:12px 20px; margin:52px 0 22px; display:flex; align-items:baseline; gap:14px; border-radius:3px; scroll-margin-top:70px; }
+.part-banner:first-of-type { margin-top:0; }
+.part-num { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); white-space:nowrap; font-weight:600; }
+.part-title { font-family:'Poppins',Arial,sans-serif; font-size:17px; font-weight:600; }
+h2 { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:19px; margin:30px 0 12px; color:var(--dark); border-bottom:1px solid var(--lightgray); padding-bottom:8px; }
+h3.inline-head { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:15.5px; margin:22px 0 8px; color:var(--dark); }
+p { font-size:14.5px; margin:0 0 12px; font-family:'Lora',Georgia,serif; }
+p.tagline { font-style:italic; color:var(--midgray); font-size:13px; text-align:center; margin:8px 0; }
+strong { font-weight:700; }
+.callout { border-left:3px solid var(--orange); background:var(--orange-bg); padding:16px 20px; margin:16px 0 22px; border-radius:0 4px 4px 0; }
+.callout p { font-size:13.5px; margin-bottom:10px; font-family:'Lora',Georgia,serif; }
+.callout p:last-child { margin-bottom:0; }
+.callout-lead, .callout p > strong:first-child { color:var(--dark); }
+.callout-warn { border-left-color:var(--orange-dark); background:var(--orange-bg); }
+.callout-rule { border-left-color:var(--green); background:var(--green-bg); }
+.callout-note { border-left-color:var(--blue); background:var(--blue-bg); }
+.table-wrap { overflow-x:auto; margin:16px 0 24px; border:1px solid var(--lightgray); border-radius:4px; }
+table { border-collapse:collapse; width:100%; font-size:13px; }
+thead tr { background:var(--dark); color:var(--light); }
+th { text-align:left; padding:10px 14px; font-family:'Poppins',Arial,sans-serif; font-weight:500; font-size:11.5px; letter-spacing:.02em; text-transform:uppercase; white-space:nowrap; }
+th strong { font-weight:500; }
+td { padding:9px 14px; border-top:1px solid var(--lightgray); vertical-align:top; font-size:13px; font-family:'Lora',Georgia,serif; }
+tbody tr:nth-child(even) { background:var(--lightgray); }
+td strong { font-family:'Poppins',Arial,sans-serif; font-weight:500; color:var(--dark); }
+footer { text-align:center; font-size:12px; color:var(--midgray); padding:28px 24px 40px; font-family:'Poppins',Arial,sans-serif; border-top:1px solid var(--lightgray); margin-top:20px; }
+footer a { color:var(--orange); text-decoration:none; }
+footer .cross-links { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:12px; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12Z" stroke="#d97757" stroke-width="1.5"/><path d="M12 2V22" stroke="#d97757" stroke-width="1"/></svg>
+    <span class="brand">Refrakt</span>
+  </div>
+  <div class="breadcrumb-pill">Finance-OS / 01_Curriculum / A6 · Commodities</div>
+  <a class="portal-link" href="../../../02_Tools_Live/master-dashboard/index.html">Portal Home</a>
+</nav>
+<header class="page-head">
+  <p class="track-label">A6 · Asset Classes · Commodities</p>
+  <h1>Commodities</h1>
+  <p class="page-sub">MCX mechanics, why commodity futures aren't a near-term allocation given current capital, and reading commodities as a macro signal even before trading them.</p>
+  <div class="meta-row"><span class="meta-chip">MCX</span><span class="meta-chip">Not Currently Capital-Feasible</span><span class="meta-chip">2026 Edition</span></div>
+</header>
+<main>
+  <div class="toc-card">
+    <h2>Contents</h2>
+    <ul class="toc-list"><li><a href="#part1"><span class="n">01</span>What Commodity Trading Actually Is</a></li><li><a href="#part2"><span class="n">02</span>Why This Isn't a Near-Term Allocation</a></li><li><a href="#part3"><span class="n">03</span>Reading Commodities as a Macro Signal (Even Without Trading Them)</a></li></ul>
+  </div>
+  <div class="part-banner" id="part1"><span class="part-num">Part 01</span><span class="part-title">What Commodity Trading Actually Is</span></div>
+<h2>1.1  The Warehouse Receipt Analogy</h2>
+<div class="callout callout-rule"><p><strong>THE WAREHOUSE RECEIPT ANALOGY:</strong> A commodity futures contract is a standardised promise tied to a physical warehouse receipt — one contract of Gold on MCX represents a specific, exchange-defined quantity (e.g. 100 grams for Gold Mini) of a specific purity, deliverable from an accredited vault. You are not buying a jewellery-shop transaction; you are buying a financial contract whose price tracks that physical commodity, almost always closed out in cash before delivery ever becomes relevant to a retail trader.</p></div>
+<h2>1.2  MCX — India's Commodity Exchange</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>Commodity</strong></th><th><strong>Contract Examples</strong></th><th><strong>Typical Lot Size</strong></th><th><strong>Approx. Margin</strong></th></tr></thead><tbody><tr><td>Gold</td><td>Gold (1kg), Gold Mini (100g), Gold Guinea (8g)</td><td>1kg / 100g / 8g</td><td>Gold Mini ≈ ₹35,000-45,000 (varies with price)</td></tr><tr><td>Silver</td><td>Silver (30kg), Silver Mini (5kg)</td><td>30kg / 5kg</td><td>Silver Mini ≈ ₹30,000-40,000</td></tr><tr><td>Crude Oil</td><td>Crude Oil, Crude Oil Mini</td><td>100 barrels / 10 barrels</td><td>Crude Mini ≈ ₹15,000-20,000</td></tr><tr><td>Natural Gas</td><td>Natural Gas</td><td>1,250 mmBtu</td><td>Varies with volatility, often ₹10,000-15,000</td></tr><tr><td>Base Metals</td><td>Copper, Zinc, Aluminium, Lead, Nickel</td><td>Varies by metal</td><td>₹10,000-30,000 range</td></tr></tbody></table></div>
+<div class="part-banner" id="part2"><span class="part-num">Part 02</span><span class="part-title">Why This Isn't a Near-Term Allocation</span></div>
+<div class="callout callout-rule"><p><strong>THE HONEST CAPITAL CHECK:</strong> Even the smallest "Mini" commodity contracts carry margin requirements in the ₹15,000-45,000 range per lot — against a total starting capital under ₹1L, with ₹60k already earmarked for equity, ₹20k for options, and ₹15k locked as an overnight buffer. There simply isn't a clean, undedicated pocket of capital to deploy into commodities without cannibalising an allocation that's already doing a specific job. This mirrors the exact capital-constraint logic that ruled out Nifty Futures in favour of currency futures — the lesson generalises: instrument choice is downstream of capital reality, not the other way around.</p></div>
+<h2>2.1  What Commodities Are Useful For, Conceptually, Even Before Trading Them</h2>
+<p>Gold in particular functions as a portfolio diversifier — it has historically moved with low or negative correlation to Indian equities during risk-off periods, which is precisely why Sovereign Gold Bonds (covered in the Bonds module) are a more capital-efficient way to get gold exposure right now than an MCX futures contract: no daily margin/MTM management, a 2.5% coupon on top of gold's price move, and eventual tax-free maturity. Direct commodity futures trading is worth returning to once capital comfortably exceeds the current allocation plan, not before.</p>
+<div class="part-banner" id="part3"><span class="part-num">Part 03</span><span class="part-title">Reading Commodities as a Macro Signal (Even Without Trading Them)</span></div>
+<div class="table-wrap"><table><thead><tr><th><strong>Signal</strong></th><th><strong>What It Reflects</strong></th><th><strong>Equity/Portfolio Relevance</strong></th></tr></thead><tbody><tr><td>Crude Oil price</td><td>Global demand + supply/OPEC decisions</td><td>India is a major net oil importer — rising crude pressures the Rupee (see Forex module) and inflation, typically a headwind for Nifty</td></tr><tr><td>Gold price</td><td>Global risk sentiment, US real interest rates, Dollar strength</td><td>Rising gold in a falling-equity environment confirms "flight to safety" — a genuine macro read, not noise</td></tr><tr><td>Industrial metals (Copper, Zinc)</td><td>Global industrial/construction demand, especially China</td><td>"Dr. Copper" is a widely-watched leading indicator for global growth expectations</td></tr></tbody></table></div>
+<p>Even without a single MCX position, watching these three prices weekly builds the same intermarket-analysis muscle Murphy's framework emphasises for futures — commodities are one more instrument panel on the same dashboard as equity, currency, and bond markets.</p>
+</main>
+<footer>
+  <div class="cross-links"><a href="a7_forex.html">Forex →</a><a href="a8_crypto.html">Crypto →</a><a href="../../../02_Tools_Live/master-dashboard/index.html">← Portal Home</a></div>
+  Gold exposure is more capital-efficient via Sovereign Gold Bonds (see Bonds module) than direct MCX futures at current capital levels.
+</footer>
+</body>
+</html>

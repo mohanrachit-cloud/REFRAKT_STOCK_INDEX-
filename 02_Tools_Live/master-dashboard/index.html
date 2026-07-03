@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Master Dashboard — Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#FAF7F2; --ink:#1C1917; --gold:#C9A227; --line:#E4DCCB;
+    --sage:#6B8F71; --clay:#B5654A; --slate:#5B6B73; --plum:#6B4C6B;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); }
+  nav { position:sticky; top:0; z-index:10; background:var(--ink); color:var(--cream); display:flex; align-items:center; justify-content:space-between; padding:13px 28px; border-bottom:1px solid var(--gold); }
+  .nav-left { display:flex; align-items:center; gap:10px; }
+  .brand { font-family:'Playfair Display',serif; font-weight:700; font-size:16px; }
+  .breadcrumb-pill { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.04em; background:rgba(201,162,39,.15); color:var(--gold); padding:6px 14px; border-radius:999px; }
+  .portal-link { color:var(--cream); font-size:12px; text-decoration:none; border:1px solid rgba(255,255,255,.25); padding:6px 12px; border-radius:4px; opacity:.5; cursor:default; }
+  header.page-head { background:var(--ink); color:var(--cream); padding:32px 32px 26px; }
+  .track-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin:0 0 6px; }
+  h1 { font-family:'Playfair Display',serif; font-weight:700; font-size:32px; margin:0; }
+  header.page-head p.sub { font-size:13px; color:#bbb; margin:8px 0 0; }
+  main { max-width:920px; margin:0 auto; padding:40px 24px 80px; }
+  section { margin-bottom:36px; }
+  .section-bar { background:var(--ink); color:var(--cream); padding:10px 16px; border-radius:3px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; }
+  .section-bar h2 { font-family:'Playfair Display',serif; font-size:16px; margin:0; color:var(--cream); }
+  .section-bar .gold-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
+  a.tool-card { display:block; background:#fff; border:1px solid var(--line); border-radius:4px; padding:18px; text-decoration:none; color:var(--ink); transition:box-shadow .15s, border-color .15s; }
+  a.tool-card:hover { border-color:var(--gold); box-shadow:0 4px 14px rgba(0,0,0,.06); }
+  a.tool-card .name { font-weight:500; font-size:15px; margin-bottom:4px; }
+  a.tool-card .desc { font-size:12px; color:#777; }
+  a.tool-card .live-tag { display:inline-block; margin-top:8px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.06em; text-transform:uppercase; background:#E8EFE9; color:var(--sage); padding:1px 7px; border-radius:8px; }
+  .status-table { width:100%; border-collapse:collapse; font-size:13px; background:#fff; border:1px solid var(--line); border-radius:4px; }
+  .status-table td { padding:10px 12px; border-bottom:1px solid var(--line); }
+  .status-table td:first-child { font-family:'DM Mono',monospace; color:#666; width:140px; }
+  footer { text-align:center; font-size:12px; color:#999; padding:28px 24px 40px; font-family:'DM Mono',monospace; border-top:1px solid var(--line); margin-top:20px; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12Z" stroke="#C9A227" stroke-width="1.5"/><path d="M12 2V22" stroke="#C9A227" stroke-width="1"/></svg>
+    <span class="brand">Refrakt</span>
+  </div>
+  <div class="breadcrumb-pill">Finance-OS / 02_Tools_Live / Master Dashboard</div>
+  <span class="portal-link">Portal Home</span>
+</nav>
+<header class="page-head">
+  <p class="track-label">D3 · Portal Hub</p>
+  <h1>Master Dashboard</h1>
+  <p class="sub">Indian equity markets · NSE / Zerodha ecosystem · Refrakt Studios curriculum</p>
+</header>
+<main>
+  <section>
+    <div class="section-bar"><h2>Tools</h2><span class="gold-label">02_Tools_Live</span></div>
+    <div class="grid">
+      <a class="tool-card" href="../position-size-calculator/index.html"><div class="name">Position Size Calculator</div><div class="desc">Risk-based quantity sizing</div></a>
+      <a class="tool-card" href="../options-pl-calculator/index.html"><div class="name">Options P&L Calculator</div><div class="desc">CE/PE payoff at expiry</div></a>
+      <a class="tool-card" href="../tax-calculator/index.html"><div class="name">Tax Calculator</div><div class="desc">STCG / LTCG / F&O estimate</div></a>
+      <a class="tool-card" href="../candlestick-app/index.html"><div class="name">Candlestick Reference</div><div class="desc">Pattern grid + bias</div><span class="live-tag">real version live on GH Pages</span></a>
+      <a class="tool-card" href="../mf-tracker/index.html"><div class="name">MF Tracker</div><div class="desc">Holdings, gain/loss</div><span class="live-tag">real version live on GH Pages</span></a>
+      <a class="tool-card" href="../strategies/index.html"><div class="name">Strategies</div><div class="desc">Options Strategies Reference — all strategies, one view</div><span class="live-tag">real version live on GH Pages</span></a>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-bar"><h2>Curriculum Status</h2><span class="gold-label"><a href="../../01_Curriculum/A_Asset_Classes/a_asset_classes_index.html" style="color:inherit;text-decoration:underline;">Track A live →</a> · <a href="../../00_START_HERE/refrakt_curriculum_tracker.html" style="color:inherit;text-decoration:underline;">Full tracker →</a></span></div>
+    <table class="status-table">
+      <tr><td>A — Asset Classes</td><td>Equities active · Options Greeks done/quiz pending · Futures doc read · Crypto done · Commodities/Forex/REITs pending</td></tr>
+      <tr><td>B — Analysis</td><td>TA foundation + Candlestick + RSI done · MACD next · Chart Patterns/FA partial</td></tr>
+      <tr><td>C — Execution</td><td>Kite/TradingView/Risk done · Journal + Position Sizing pending</td></tr>
+      <tr><td>E — Psychology</td><td>Emotional Neutrality done · Behavioural Finance + Van Tharp pending</td></tr>
+      <tr><td>F — Tax</td><td>Equity/MF/Bonds partial (30% slab assumed) · F&O tax pending</td></tr>
+      <tr><td>G — Critical Gaps</td><td>Portfolio Construction, Market Cycles, Tax Architecture — all pending</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <div class="section-bar"><h2>Capital + Platform</h2><span class="gold-label">Context</span></div>
+    <table class="status-table">
+      <tr><td>Capital</td><td>₹1L start — ₹60k equity / ₹20k options / ₹15k buffer / ₹5k currency futures (Month 3-4)</td></tr>
+      <tr><td>Platforms</td><td>Zerodha Kite (execution) · TradingView (charting) · Sensibull (options analytics)</td></tr>
+      <tr><td>Live target</td><td>Early July 2026</td></tr>
+    </table>
+  </section>
+</main>
+<footer>Dummy template — status snapshot is static. Update manually to match 00_START_HERE/FINANCE_OS_PROJECT_BRIEF.md.</footer>
+</body>
+</html>

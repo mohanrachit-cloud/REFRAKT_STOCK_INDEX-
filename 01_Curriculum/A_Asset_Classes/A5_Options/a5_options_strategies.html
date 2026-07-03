@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Options Strategies Masterclass — Rachit 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #141413;
+    --bg2: #141413;
+    --bg3: #1f1e1c;
+    --card: #1f1e1c;
+    --card2: #26241f;
+    --border: #3a3835;
+    --border2: #3a3835;
+    --gold: #d97757;
+    --gold2: #e8a084;
+    --gold3: #b3603f;
+    --green: #788c5d;
+    --green2: #5f7049;
+    --red: #c9614f;
+    --red2: #8a3f30;
+    --blue: #6a9bcc;
+    --blue2: #4a7396;
+    --purple: #6a9bcc;
+    --text: #faf9f5;
+    --text2: #b0aea5;
+    --text3: #b0aea5;
+    --accent: #e8a084;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* BACKGROUND TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 20% 10%, rgba(212,168,67,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(78,158,255,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(155,126,240,0.02) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 5rem 2rem 3rem;
+    position: relative;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    border: 1px solid var(--gold3);
+    padding: 0.3rem 1rem;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    opacity: 0.85;
+  }
+  .hero h1 {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 900;
+    color: #faf9f5;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+  }
+  .hero h1 span { color: var(--gold2); }
+  .hero-sub {
+    color: var(--text2);
+    font-size: 0.95rem;
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+  }
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .hero-divider::before, .hero-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold3), transparent);
+  }
+  .hero-divider span {
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.7rem;
+    color: var(--gold3);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-label {
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold3);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .section-title {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #faf9f5;
+    margin-bottom: 0.5rem;
+  }
+  .section-sub { color: var(--text2); font-size: 0.9rem; margin-bottom: 2rem; }
+  
+  .section-block {
+    margin-bottom: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── CLARITY CARDS (Q1, Q2, Q6) ── */
+  .clarity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; }
+  @media(max-width:680px){ .clarity-grid { grid-template-columns: 1fr; } }
+  
+  .clarity-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .clarity-card:hover { border-color: var(--border2); }
+  .clarity-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .clarity-card.gold::before { background: linear-gradient(90deg, var(--gold3), var(--gold2)); }
+  .clarity-card.green::before { background: linear-gradient(90deg, var(--green2), var(--green)); }
+  .clarity-card.red::before { background: linear-gradient(90deg, var(--red2), var(--red)); }
+  .clarity-card.blue::before { background: linear-gradient(90deg, var(--blue2), var(--blue)); }
+  .clarity-card.purple::before { background: linear-gradient(90deg, #4a7396, var(--purple)); }
+
+  .clarity-card h3 {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #faf9f5;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .clarity-card p { color: var(--text2); font-size: 0.88rem; margin-bottom: 0.6rem; }
+  .clarity-card p:last-child { margin-bottom: 0; }
+
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(212,168,67,0.08);
+    border: 1px solid var(--gold3);
+    border-radius: 4px;
+    padding: 0.4rem 0.75rem;
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.75rem;
+    color: var(--gold2);
+    margin-top: 0.75rem;
+    line-height: 1.3;
+  }
+  .verdict.green-v { background: rgba(45,212,160,0.08); border-color: var(--green2); color: var(--green); }
+  .verdict.red-v { background: rgba(224,92,92,0.08); border-color: var(--red2); color: var(--red); }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.78rem;
+    color: var(--text2);
+    line-height: 1.8;
+    margin: 0.75rem 0;
+    overflow-x: auto;
+  }
+  .code-block .buy { color: var(--green); }
+  .code-block .sell { color: var(--red); }
+  .code-block .net { color: var(--gold2); }
+  .code-block .label { color: var(--text3); }
+  .code-block .num { color: var(--blue); }
+
+  /* ── STRATEGY CARD ── */
+  .strategy-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .strategy-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .strategy-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .strat-num {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--border2);
+    line-height: 1;
+    min-width: 2rem;
+  }
+  .strat-title { font-family: 'Poppins', Arial, sans-serif; font-size: 1.25rem; font-weight: 700; color: #faf9f5; }
+  .strat-view { font-size: 0.8rem; color: var(--text2); margin-top: 0.2rem; }
+  .strat-badge {
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0.65rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-debit { background: rgba(78,158,255,0.15); color: var(--blue); border: 1px solid rgba(78,158,255,0.3); }
+  .badge-credit { background: rgba(45,212,160,0.12); color: var(--green); border: 1px solid rgba(45,212,160,0.25); }
+  .badge-event { background: rgba(155,126,240,0.12); color: var(--purple); border: 1px solid rgba(155,126,240,0.25); }
+
+  .strategy-body { padding: 1.5rem; }
+  
+  .strat-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+  @media(max-width:680px){ .strat-cols { grid-template-columns: 1fr; } }
+
+  .strat-block { }
+  .strat-block-title {
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--gold3);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .strat-block p { font-size: 0.875rem; color: var(--text2); margin-bottom: 0.4rem; }
+  .strat-block p:last-child { margin-bottom: 0; }
+  
+  .analogy-box {
+    background: rgba(212,168,67,0.05);
+    border: 1px solid rgba(212,168,67,0.15);
+    border-left: 3px solid var(--gold3);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.875rem;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  .analogy-box .analogy-head {
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  /* Numbers grid */
+  .numbers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1rem 0; }
+  @media(max-width:500px){ .numbers-grid { grid-template-columns: 1fr 1fr; } }
+  
+  .num-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem;
+    text-align: center;
+  }
+  .num-box .num-label { font-family: Consolas, Menlo, monospace; font-size: 0.6rem; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .num-box .num-value { font-family: Consolas, Menlo, monospace; font-size: 1rem; font-weight: 500; }
+  .num-box.profit .num-value { color: var(--green); }
+  .num-box.loss .num-value { color: var(--red); }
+  .num-box.neutral .num-value { color: var(--gold2); }
+  .num-box.rr .num-value { color: var(--blue); }
+
+  /* When to use */
+  .use-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+  .use-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    font-family: Consolas, Menlo, monospace;
+  }
+  .use-tag.yes { background: rgba(45,212,160,0.1); color: var(--green); border: 1px solid rgba(45,212,160,0.2); }
+  .use-tag.no { background: rgba(224,92,92,0.1); color: var(--red); border: 1px solid rgba(224,92,92,0.2); }
+
+  /* ── MEMORY CHEATSHEET ── */
+  .memory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  
+  .memory-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+  .memory-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  }
+  .memory-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .mc-bull::after { background: linear-gradient(90deg, var(--green2), var(--green)); }
+  .mc-bear::after { background: linear-gradient(90deg, var(--red2), var(--red)); }
+  .mc-neutral::after { background: linear-gradient(90deg, var(--blue2), var(--blue)); }
+  .mc-event::after { background: linear-gradient(90deg, #4a7396, var(--purple)); }
+  .mc-income::after { background: linear-gradient(90deg, var(--gold3), var(--gold2)); }
+  
+  .mc-emoji { font-size: 1.75rem; margin-bottom: 0.5rem; display: block; }
+  .mc-name { font-family: 'Poppins', Arial, sans-serif; font-size: 0.95rem; font-weight: 700; color: #faf9f5; margin-bottom: 0.25rem; }
+  .mc-hook {
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.65rem;
+    color: var(--gold2);
+    background: rgba(212,168,67,0.08);
+    padding: 0.2rem 0.45rem;
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+    letter-spacing: 0.05em;
+  }
+  .mc-detail { font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
+  .mc-detail strong { color: var(--text); font-weight: 500; }
+
+  /* ── GREEKS TABLE ── */
+  .greeks-table-wrap { overflow-x: auto; margin: 1rem 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  thead th {
+    background: var(--bg2);
+    color: var(--text3);
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--bg2); }
+  tbody td { padding: 0.65rem 0.75rem; color: var(--text2); vertical-align: top; }
+  tbody td:first-child { color: var(--text); font-weight: 500; font-family: Consolas, Menlo, monospace; font-size: 0.8rem; }
+  .td-green { color: var(--green) !important; }
+  .td-red { color: var(--red) !important; }
+  .td-gold { color: var(--gold2) !important; }
+  .td-blue { color: var(--blue) !important; }
+
+  /* ── PREMISE BOX ── */
+  .premise-box {
+    background: linear-gradient(135deg, rgba(212,168,67,0.06), rgba(78,158,255,0.04));
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+  .premise-box::before {
+    content: '"';
+    position: absolute;
+    top: -0.5rem;
+    left: 1.5rem;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 4rem;
+    color: var(--gold3);
+    line-height: 1;
+    opacity: 0.4;
+  }
+  .premise-text {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text);
+    padding-left: 1rem;
+    line-height: 1.5;
+  }
+
+  /* ── POS SIZE ── */
+  .pos-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  @media(max-width:680px){ .pos-compare { grid-template-columns: 1fr; } }
+  
+  .pos-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .pos-head {
+    padding: 0.75rem 1.25rem;
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+  }
+  .pos-head.stock-h { background: rgba(45,212,160,0.08); color: var(--green); }
+  .pos-head.options-h { background: rgba(155,126,240,0.08); color: var(--purple); }
+  .pos-body { padding: 1.25rem; }
+  .pos-formula {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.75rem;
+    color: var(--text2);
+    line-height: 1.8;
+    margin-bottom: 0.75rem;
+  }
+  .pos-formula .hl { color: var(--gold2); }
+  .pos-body p { font-size: 0.85rem; color: var(--text2); margin-bottom: 0.4rem; }
+  .pos-body p:last-child { margin-bottom: 0; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .flow-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.4rem 0.75rem;
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+  .flow-box.buy-b { color: var(--green); border-color: rgba(45,212,160,0.3); background: rgba(45,212,160,0.06); }
+  .flow-box.sell-b { color: var(--red); border-color: rgba(224,92,92,0.3); background: rgba(224,92,92,0.06); }
+  .flow-box.result-b { color: var(--gold2); border-color: rgba(212,168,67,0.3); background: rgba(212,168,67,0.06); }
+  .flow-arrow { color: var(--text3); font-size: 0.75rem; }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .toc-title { font-family: Consolas, Menlo, monospace; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--text3); text-transform: uppercase; margin-bottom: 1rem; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.4rem; }
+  .toc-item {
+    font-size: 0.82rem;
+    color: var(--text2);
+    padding: 0.35rem 0.6rem;
+    border-radius: 4px;
+    transition: all 0.15s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .toc-item:hover { background: var(--bg2); color: var(--gold2); }
+  .toc-item .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--border2); flex-shrink: 0; }
+
+  /* ── CALL OUTS ── */
+  .callout {
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.875rem;
+  }
+  .callout-warn { background: rgba(212,168,67,0.07); border: 1px solid rgba(212,168,67,0.2); color: var(--text2); border-left: 3px solid var(--gold); }
+  .callout-info { background: rgba(78,158,255,0.07); border: 1px solid rgba(78,158,255,0.2); color: var(--text2); border-left: 3px solid var(--blue); }
+  .callout-danger { background: rgba(224,92,92,0.07); border: 1px solid rgba(224,92,92,0.2); color: var(--text2); border-left: 3px solid var(--red); }
+  .callout strong { color: var(--text); display: block; margin-bottom: 0.3rem; font-weight: 600; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+    color: var(--text3);
+    font-size: 0.78rem;
+    font-family: Consolas, Menlo, monospace;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .strategy-card { animation: fadeUp 0.4s ease both; }
+  .strategy-card:nth-child(1) { animation-delay: 0.05s; }
+  .strategy-card:nth-child(2) { animation-delay: 0.1s; }
+  .strategy-card:nth-child(3) { animation-delay: 0.15s; }
+  .strategy-card:nth-child(4) { animation-delay: 0.2s; }
+  .strategy-card:nth-child(5) { animation-delay: 0.25s; }
+  .strategy-card:nth-child(6) { animation-delay: 0.3s; }
+  .strategy-card:nth-child(7) { animation-delay: 0.35s; }
+
+  .highlight-pill {
+    display: inline-block;
+    background: rgba(212,168,67,0.1);
+    border: 1px solid rgba(212,168,67,0.25);
+    color: var(--gold2);
+    font-family: Consolas, Menlo, monospace;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    margin-left: 0.3rem;
+  }
+
+  .separator { height: 1px; background: linear-gradient(90deg, transparent, var(--border2), transparent); margin: 2rem 0; }
+
+  .big-rule {
+    background: linear-gradient(135deg, var(--card), var(--card2));
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    text-align: center;
+  }
+  .big-rule .rule-text {
+    font-family: 'Poppins', Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold2);
+    line-height: 1.5;
+  }
+  .big-rule .rule-sub { font-size: 0.82rem; color: var(--text2); margin-top: 0.4rem; }
+</style>
+</head>
+<body>
+<div style="background:#141413;padding:10px 24px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;border-bottom:2px solid #d97757;"><span style="font-family: Consolas, Menlo, monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#d97757;margin-right:14px;">Options Suite —</span><a href="a5_options_index.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:transparent;color:inherit;border-color:rgba(217,119,87,.5);">Hub</a><a href="a5_options_foundations.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:transparent;color:#faf9f5;border-color:rgba(232,220,192,.35);">Foundations</a><a href="a5_options_handbook.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:transparent;color:#faf9f5;border-color:rgba(232,220,192,.35);">Handbook</a><a href="a5_options_strategies.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:#d97757;color:#141413;border-color:#d97757;">Strategies</a><a href="../A4_Futures/a4_futures_masterclass.html" style="font-family: Consolas, Menlo, monospace;font-size:11px;letter-spacing:.03em;text-decoration:none;padding:6px 13px;border-radius:999px;border:1px solid;margin-right:8px;display:inline-block;background:transparent;color:#faf9f5;border-color:rgba(232,220,192,.35);">Futures →</a></div>
+
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Refrakt Trading Programme · Module A5</div>
+    <h1>Options Strategies<br><span>Masterclass 2026</span></h1>
+    <p class="hero-sub">All 7 strategies. Every number. Every nuance. From first principles — written for a layman, deployed by a trader.</p>
+    <div class="hero-divider"><span>◆</span></div>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <div class="toc-title">What's Inside</div>
+    <div class="toc-grid">
+      <div class="toc-item"><div class="dot"></div>Q1 — Buy-then-Sell vs Sell-then-Buy</div>
+      <div class="toc-item"><div class="dot"></div>Q2 — The Missing Bull Put Spread</div>
+      <div class="toc-item"><div class="dot"></div>Strategy 1 — Bull Call Spread</div>
+      <div class="toc-item"><div class="dot"></div>Strategy 2 — Bear Put Spread</div>
+      <div class="toc-item"><div class="dot"></div>Strategy 3 — Bear Call Spread</div>
+      <div class="toc-item"><div class="dot"></div>Strategy 4 — Bull Put Spread ✦</div>
+      <div class="toc-item"><div class="dot"></div>Strategy 5 — Long Straddle</div>
+      <div class="toc-item"><div class="dot"></div>Strategy 6 — Long Strangle</div>
+      <div class="toc-item"><div class="dot"></div>Strategy 7 — Iron Condor</div>
+      <div class="toc-item"><div class="dot"></div>Strategy 8 — Covered Call</div>
+      <div class="toc-item"><div class="dot"></div>Memory Cheatsheet — Rapid Recall</div>
+      <div class="toc-item"><div class="dot"></div>Q5 — Greeks + OI for Bearish/Neutral</div>
+      <div class="toc-item"><div class="dot"></div>Q6 — Position Sizing: Stocks vs Options</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- Q1: BUY-SELL ORDER -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="section-block">
+    <div class="section-label">Q1 · Answered</div>
+    <div class="section-title">Is the Order of Buy → Sell Sacrosanct?</div>
+    <div class="section-sub">Short answer: No. But the direction of your first leg determines everything.</div>
+
+    <div class="clarity-grid">
+      <div class="clarity-card gold">
+        <h3>🏦 Debit Spreads — You Pay First</h3>
+        <p>You <strong>BUY first, then SELL</strong> a further-out option to offset cost. Net result: you pay money upfront (a "debit"). You need the market to MOVE in your direction to profit.</p>
+        <div class="flow-row">
+          <div class="flow-box buy-b">BUY closer strike</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box sell-b">SELL farther strike</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box result-b">Net Debit (you pay)</div>
+        </div>
+        <p style="font-size:0.8rem;margin-top:0.5rem;"><em>Examples: Bull Call Spread, Bear Put Spread</em></p>
+      </div>
+
+      <div class="clarity-card green">
+        <h3>💰 Credit Spreads — You Collect First</h3>
+        <p>You <strong>SELL first, then BUY</strong> a further-out option as a safety net. Net result: you collect money upfront (a "credit"). You need the market to STAY STILL or move slightly in your favour.</p>
+        <div class="flow-row">
+          <div class="flow-box sell-b">SELL closer strike</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box buy-b">BUY farther strike</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box result-b">Net Credit (you earn)</div>
+        </div>
+        <p style="font-size:0.8rem;margin-top:0.5rem;"><em>Examples: Bear Call Spread, Bull Put Spread</em></p>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <strong>🎯 The Real Point</strong>
+      In practice on Zerodha Kite — both legs go in simultaneously (or within seconds of each other). There's no strict "first leg" in execution. The conceptual order tells you the strategy's intent: who's the "buyer" and who's the "seller" of the spread. DEBIT = you are the buyer. CREDIT = you are the seller.
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>🚂 The Train Analogy</strong>
+      Debit spread = You buy a train ticket (pay upfront) and hope to reach the destination. If the train doesn't go far enough — you lose the ticket cost.<br><br>
+      Credit spread = You're the RAILWAY selling the ticket. You collect money and hope the passenger doesn't reach the full destination. If they don't — pure profit. If they do — you compensate.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- Q2: BULL PUT SPREAD -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="section-block">
+    <div class="section-label">Q2 · The Missing Strategy</div>
+    <div class="section-title">Yes, Bull Put Spread Exists — And It's Powerful</div>
+    <div class="section-sub">It was in your strategy table but never explained. Here it is in full.</div>
+
+    <div class="clarity-card blue" style="margin-bottom:1.25rem;">
+      <h3>🎯 What Is A Bull Put Spread?</h3>
+      <p>You're <strong>mildly bullish or neutral</strong> on the market. You don't expect a crash. You want to collect premium income while the market stays flat or rises slightly.</p>
+      <p>You SELL an ATM/slightly ITM Put (collect big premium). You BUY a lower Put for protection (pay small premium). Net result: credit in your account. Nifty staying flat or rising = you win.</p>
+      <div class="verdict green-v">✦ This is the CREDIT counterpart to the Bull Call Spread</div>
+    </div>
+
+    <div class="clarity-card purple">
+      <h3>🧠 The 2×2 Matrix That Ties Everything Together</h3>
+      <p>Now that you know all four spread types, here's the master map:</p>
+      <div class="code-block" style="margin-top:0.75rem;">
+        <span class="label">              DEBIT (you pay)       CREDIT (you collect)</span><br>
+        <span class="label">BULLISH  →  </span><span class="buy">Bull Call Spread</span><span class="label">    </span><span class="sell">Bull Put Spread</span><br>
+        <span class="label">BEARISH  →  </span><span class="buy">Bear Put Spread</span><span class="label">     </span><span class="sell">Bear Call Spread</span>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text2);margin-top:0.5rem;">Memory hook: <em>Bull = expect rise. Bear = expect fall. Debit = pay to play. Credit = get paid to wait.</em></p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- ALL STRATEGIES -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="section-block">
+    <div class="section-label">The Complete Playbook</div>
+    <div class="section-title">All 8 Strategies — Full Layman Breakdown</div>
+    <div class="section-sub">Nifty reference price: ₹24,300. Every strategy uses this base. Lot size: 65 units.</div>
+
+    <!-- S1: BULL CALL SPREAD -->
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strat-num">01</div>
+        <div>
+          <div class="strat-title">Bull Call Spread</div>
+          <div class="strat-view">📈 Market View: Moderately Bullish — "Will rise, won't explode"</div>
+        </div>
+        <div class="strat-badge badge-debit">DEBIT</div>
+      </div>
+      <div class="strategy-body">
+
+        <div class="strat-cols">
+          <div class="strat-block">
+            <div class="strat-block-title">What & Why — Plain English</div>
+            <p>You believe Nifty will go up — but only moderately. You want to profit from the rise without spending a fortune. So instead of buying an expensive Call option alone, you also sell a higher-strike Call to recover some of your cost. You're capping your profit in exchange for a cheaper entry. Think of it as getting a discount by agreeing not to go past a certain point.</p>
+          </div>
+          <div class="strat-block">
+            <div class="strat-block-title">The Setup</div>
+            <div class="code-block">
+              <span class="buy">BUY  24,300 CE  @ ₹180</span>  <span class="label">(you pay)</span><br>
+              <span class="sell">SELL 24,700 CE  @ ₹60</span>   <span class="label">(you collect)</span><br>
+              <span class="label">─────────────────────────</span><br>
+              <span class="net">Net Cost = ₹120/unit</span><br>
+              <span class="num">Total Outlay = ₹7,800</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analogy-box">
+          <div class="analogy-head">🎫 The Train Ticket Analogy</div>
+          You want to travel Delhi → Mumbai (Nifty 24,300 → 24,700). Full ticket costs ₹180. You have a coupon giving ₹60 off IF you promise not to travel beyond Mumbai. You agree. Net cost: ₹120. You still reach your destination — just not beyond Mumbai. That promise you made = the 24,700 CE you sold.
+        </div>
+
+        <div class="numbers-grid">
+          <div class="num-box profit"><div class="num-label">Max Profit</div><div class="num-value">₹18,200</div></div>
+          <div class="num-box loss"><div class="num-label">Max Loss</div><div class="num-value">₹7,800</div></div>
+          <div class="num-box neutral"><div class="num-label">Breakeven</div><div class="num-value">24,420</div></div>
+          <div class="num-box rr"><div class="num-label">R:R Ratio</div><div class="num-value">2.3 : 1</div></div>
+          <div class="num-box neutral"><div class="num-label">Move Needed</div><div class="num-value">+120 pts</div></div>
+          <div class="num-box rr"><div class="num-label">Strike Gap</div><div class="num-value">400 pts</div></div>
+        </div>
+
+        <div class="strat-block-title" style="margin-top:1rem;">When To Use</div>
+        <div class="use-tags">
+          <span class="use-tag yes">✅ Mildly bullish bias</span>
+          <span class="use-tag yes">✅ IV is high (offset cost by selling)</span>
+          <span class="use-tag yes">✅ Budget announcement with upward expectation</span>
+          <span class="use-tag yes">✅ Strong support holding below</span>
+          <span class="use-tag no">❌ If you expect a massive 1000pt rocket</span>
+          <span class="use-tag no">❌ If IV is very low (cheaper to just buy the Call)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2: BEAR PUT SPREAD -->
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strat-num">02</div>
+        <div>
+          <div class="strat-title">Bear Put Spread</div>
+          <div class="strat-view">📉 Market View: Moderately Bearish — "Will fall, but won't crash"</div>
+        </div>
+        <div class="strat-badge badge-debit">DEBIT</div>
+      </div>
+      <div class="strategy-body">
+
+        <div class="strat-cols">
+          <div class="strat-block">
+            <div class="strat-block-title">What & Why — Plain English</div>
+            <p>Exact mirror image of the Bull Call Spread — but for falling markets. You think Nifty will decline, so you buy a Put option (which profits when Nifty falls). To reduce cost, you sell a lower Put option. Your profit is capped at the lower strike level — but your entry is much cheaper than buying the Put outright. You're paying for a controlled, targeted downside bet.</p>
+          </div>
+          <div class="strat-block">
+            <div class="strat-block-title">The Setup</div>
+            <div class="code-block">
+              <span class="buy">BUY  24,300 PE  @ ₹175</span>  <span class="label">(you pay)</span><br>
+              <span class="sell">SELL 23,900 PE  @ ₹65</span>   <span class="label">(you collect)</span><br>
+              <span class="label">─────────────────────────</span><br>
+              <span class="net">Net Cost = ₹110/unit</span><br>
+              <span class="num">Total Outlay = ₹7,150</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analogy-box">
+          <div class="analogy-head">🏨 The Hotel Downgrade Analogy</div>
+          You booked a 5-star hotel room when you get to Mumbai (Nifty falling to 24,300). Full booking: ₹175. But you sell your right to a penthouse suite (23,900 level) to someone else for ₹65. Net cost: ₹110. You still check into the hotel — just not the penthouse. Your fall is profitable — just not if it crashes all the way down.
+        </div>
+
+        <div class="numbers-grid">
+          <div class="num-box profit"><div class="num-label">Max Profit</div><div class="num-value">₹18,850</div></div>
+          <div class="num-box loss"><div class="num-label">Max Loss</div><div class="num-value">₹7,150</div></div>
+          <div class="num-box neutral"><div class="num-label">Breakeven</div><div class="num-value">24,190</div></div>
+          <div class="num-box rr"><div class="num-label">R:R Ratio</div><div class="num-value">2.6 : 1</div></div>
+          <div class="num-box neutral"><div class="num-label">Move Needed</div><div class="num-value">−110 pts</div></div>
+          <div class="num-box rr"><div class="num-label">Strike Gap</div><div class="num-value">400 pts</div></div>
+        </div>
+
+        <div class="strat-block-title" style="margin-top:1rem;">When To Use</div>
+        <div class="use-tags">
+          <span class="use-tag yes">✅ Bearish but no crash expected</span>
+          <span class="use-tag yes">✅ India VIX elevated</span>
+          <span class="use-tag yes">✅ Weak earnings or negative policy signal expected</span>
+          <span class="use-tag yes">✅ Strong resistance visible on chart above</span>
+          <span class="use-tag no">❌ If crash is likely — buy Put outright instead</span>
+          <span class="use-tag no">❌ If support below is very strong (bearish thesis weak)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- S3: BEAR CALL SPREAD -->
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strat-num">03</div>
+        <div>
+          <div class="strat-title">Bear Call Spread</div>
+          <div class="strat-view">😐 Market View: Mildly Bearish or Neutral — "Market won't rise much"</div>
+        </div>
+        <div class="strat-badge badge-credit">CREDIT</div>
+      </div>
+      <div class="strategy-body">
+
+        <div class="strat-cols">
+          <div class="strat-block">
+            <div class="strat-block-title">What & Why — Plain English</div>
+            <p>You don't think Nifty will rise above a certain level. Instead of betting on a fall (which requires accuracy), you're betting the market DOESN'T rally past your sold strike. You sell a Call at your resistance level (and collect premium), then buy a higher Call to protect yourself if you're wrong. Time decay works IN YOUR FAVOUR here — every passing day erodes the option you sold.</p>
+          </div>
+          <div class="strat-block">
+            <div class="strat-block-title">The Setup</div>
+            <div class="code-block">
+              <span class="sell">SELL 24,500 CE  @ ₹90</span>   <span class="label">(you collect)</span><br>
+              <span class="buy">BUY  24,800 CE  @ ₹35</span>   <span class="label">(your hedge)</span><br>
+              <span class="label">─────────────────────────</span><br>
+              <span class="net">Net Credit = ₹55/unit</span><br>
+              <span class="num">Total Income = ₹3,575</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analogy-box">
+          <div class="analogy-head">🏪 The Shopkeeper Analogy</div>
+          You run a shop in a market (at 24,500). You're confident customers won't venture to the shop beyond your street (24,800). So you charge an entry fee of ₹90 to anyone trying to enter. But you also rent out a kiosk at 24,800 for ₹35 — just in case the crowd goes all the way. Net income: ₹55. If no one crosses 24,555 — the entry fee is pure profit.
+        </div>
+
+        <div class="numbers-grid">
+          <div class="num-box profit"><div class="num-label">Max Profit</div><div class="num-value">₹3,575</div></div>
+          <div class="num-box loss"><div class="num-label">Max Loss</div><div class="num-value">₹15,925</div></div>
+          <div class="num-box neutral"><div class="num-label">Breakeven</div><div class="num-value">24,555</div></div>
+          <div class="num-box rr"><div class="num-label">R:R Ratio</div><div class="num-value">1 : 4.5</div></div>
+          <div class="num-box neutral"><div class="num-label">Probability Win</div><div class="num-value">~70%</div></div>
+          <div class="num-box rr"><div class="num-label">Delta Sold</div><div class="num-value">~0.30</div></div>
+        </div>
+
+        <div class="callout callout-warn" style="margin-top:1rem;">
+          <strong>🎲 Why the Unfavourable R:R is OK</strong>
+          You're risking ₹15,925 to make ₹3,575. That looks terrible — until you consider probability. The delta of your sold Call (~0.30) means it has only a 30% chance of being profitable for the buyer. You, as the seller, win 70% of the time. Over 10 trades, you collect ₹3,575 × 7 = ₹25,025 and lose ₹15,925 × 3 = ₹47,775. That's why position sizing and knowing when to cut is critical here.
+        </div>
+
+        <div class="strat-block-title" style="margin-top:0.75rem;">When To Use</div>
+        <div class="use-tags">
+          <span class="use-tag yes">✅ Resistance clearly visible on chart</span>
+          <span class="use-tag yes">✅ High OI at 24,500 CE (Option chain shows wall)</span>
+          <span class="use-tag yes">✅ VIX is elevated (premium juicy to sell)</span>
+          <span class="use-tag yes">✅ Range-bound week with no major events</span>
+          <span class="use-tag no">❌ Avoid if market is breaking out above resistance</span>
+          <span class="use-tag no">❌ Never just before RBI/Budget/election results</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- S4: BULL PUT SPREAD (NEW ADDITION) -->
+    <div class="strategy-card" style="border-color: rgba(78,158,255,0.3);">
+      <div class="strategy-header" style="background: rgba(78,158,255,0.04);">
+        <div class="strat-num">04</div>
+        <div>
+          <div class="strat-title">Bull Put Spread <span class="highlight-pill">✦ NEWLY ADDED</span></div>
+          <div class="strat-view">😌 Market View: Mildly Bullish or Neutral — "Market will stay flat or nudge up"</div>
+        </div>
+        <div class="strat-badge badge-credit">CREDIT</div>
+      </div>
+      <div class="strategy-body">
+
+        <div class="strat-cols">
+          <div class="strat-block">
+            <div class="strat-block-title">What & Why — Plain English</div>
+            <p>The credit version of being bullish. You don't need the market to rally — you just need it to NOT FALL below your sold Put level. You sell a Put at (or just below) current market price and collect premium. You buy a lower Put as protection. Every day Nifty stays flat or rises, your sold Put loses value — and you profit. Time is your best friend here.</p>
+          </div>
+          <div class="strat-block">
+            <div class="strat-block-title">The Setup</div>
+            <div class="code-block">
+              <span class="sell">SELL 24,200 PE  @ ₹110</span>  <span class="label">(you collect)</span><br>
+              <span class="buy">BUY  23,900 PE  @ ₹50</span>   <span class="label">(your hedge)</span><br>
+              <span class="label">─────────────────────────</span><br>
+              <span class="net">Net Credit = ₹60/unit</span><br>
+              <span class="num">Total Income = ₹3,900</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analogy-box">
+          <div class="analogy-head">🏗️ The Landlord Analogy</div>
+          You own an apartment in a building at floor 24,200. You're confident the building won't collapse below floor 23,900. So you charge rent upfront (₹110) from a tenant who fears the building might fall. You also buy basement insurance for ₹50. Net rental income: ₹60/unit. If the building stays standing above 24,200 — you pocket the rent. If it falls below 23,900 — your insurance covers the damage.
+        </div>
+
+        <div class="numbers-grid">
+          <div class="num-box profit"><div class="num-label">Max Profit</div><div class="num-value">₹3,900</div></div>
+          <div class="num-box loss"><div class="num-label">Max Loss</div><div class="num-value">₹15,600</div></div>
+          <div class="num-box neutral"><div class="num-label">Breakeven</div><div class="num-value">24,140</div></div>
+          <div class="num-box rr"><div class="num-label">R:R Ratio</div><div class="num-value">1 : 4.0</div></div>
+          <div class="num-box neutral"><div class="num-label">Probability Win</div><div class="num-value">~65%</div></div>
+          <div class="num-box rr"><div class="num-label">Type</div><div class="num-value">Credit</div></div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top:1rem;">
+          <strong>Bear Call vs Bull Put — The Mirror Pair</strong>
+          Bear Call Spread = "Market won't go UP above X." You profit from neutrality/mild bearishness.<br>
+          Bull Put Spread = "Market won't go DOWN below X." You profit from neutrality/mild bullishness.<br><br>
+          Both are CREDIT strategies. Both need the market to cooperate by staying inside a band. Together, combining both = Iron Condor (collect from both sides simultaneously).
+        </div>
+
+        <div class="strat-block-title" style="margin-top:0.75rem;">When To Use</div>
+        <div class="use-tags">
+          <span class="use-tag yes">✅ Support holds firm on chart below</span>
+          <span class="use-tag yes">✅ High OI at Put strikes = market makers protecting support</span>
+          <span class="use-tag yes">✅ After a pullback — bounce likely</span>
+          <span class="use-tag yes">✅ VIX coming down = premium rich before decay</span>
+          <span class="use-tag no">❌ Never if a breakdown looks imminent</span>
+          <span class="use-tag no">❌ Avoid if newsflow is aggressively negative</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- S5: LONG STRADDLE -->
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strat-num">05</div>
+        <div>
+          <div class="strat-title">Long Straddle</div>
+          <div class="strat-view">💥 Market View: Big Move Certain. Direction Unknown.</div>
+        </div>
+        <div class="strat-badge badge-event">EVENT</div>
+      </div>
+      <div class="strategy-body">
+
+        <div class="strat-cols">
+          <div class="strat-block">
+            <div class="strat-block-title">What & Why — Plain English</div>
+            <p>You KNOW something massive is about to happen — RBI policy, election results, US Fed decision — but you have no clue which way the market will go. So instead of guessing direction, you bet on movement itself. You buy BOTH a Call AND a Put at the same strike. Whichever way Nifty moves violently, one leg profits massively. The loser leg is a sunk cost. Your enemy is time decay (Theta) — it's eating your premium every day the big move doesn't arrive.</p>
+          </div>
+          <div class="strat-block">
+            <div class="strat-block-title">The Setup</div>
+            <div class="code-block">
+              <span class="buy">BUY  24,300 CE  @ ₹180</span>  <span class="label">(rise bet)</span><br>
+              <span class="buy">BUY  24,300 PE  @ ₹175</span>  <span class="label">(fall bet)</span><br>
+              <span class="label">─────────────────────────</span><br>
+              <span class="net">Total Cost = ₹355/unit</span><br>
+              <span class="num">Total Outlay = ₹23,075</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analogy-box">
+          <div class="analogy-head">🌦️ Rain OR Sunshine Analogy</div>
+          You're hosting an outdoor event and you genuinely can't predict the weather. So you book BOTH an outdoor venue AND an indoor backup. One booking will be wasted. But the one that's right will save the event. The straddle is the same — you pay for both outcomes because you're certain one will pay off enormously. The cost is the price of certainty without direction.
+        </div>
+
+        <div class="numbers-grid">
+          <div class="num-box profit"><div class="num-label">Max Profit</div><div class="num-value">Unlimited</div></div>
+          <div class="num-box loss"><div class="num-label">Max Loss</div><div class="num-value">₹23,075</div></div>
+          <div class="num-box neutral"><div class="num-label">Upper BE</div><div class="num-value">24,655</div></div>
+          <div class="num-box neutral"><div class="num-label">Lower BE</div><div class="num-value">23,945</div></div>
+          <div class="num-box rr"><div class="num-label">Move Needed</div><div class="num-value">±355 pts</div></div>
+          <div class="num-box rr"><div class="num-label">% Move</div><div class="num-value">±1.46%</div></div>
+        </div>
+
+        <div class="callout callout-danger" style="margin-top:1rem;">
+          <strong>⏱️ The Theta Trap — Do NOT Enter Too Early</strong>
+          You're paying for TWO options. Theta is burning DOUBLE every day. At ~₹25–30/day per leg, you're losing ₹50–60/day in combined decay if Nifty doesn't move. Enter 1–2 days BEFORE the event. Not a week before. The decay will eat you alive waiting for the event to arrive. If the event doesn't cause the expected move — exit quickly. Don't "hope" it recovers.
+        </div>
+
+        <div class="strat-block-title" style="margin-top:0.75rem;">When To Use</div>
+        <div class="use-tags">
+          <span class="use-tag yes">✅ RBI policy 1–2 days away</span>
+          <span class="use-tag yes">✅ Election results tomorrow</span>
+          <span class="use-tag yes">✅ US Fed decision tonight</span>
+          <span class="use-tag yes">✅ Major earnings release</span>
+          <span class="use-tag no">❌ Calm range-bound weeks</span>
+          <span class="use-tag no">❌ When IV is already very high (you'd overpay)</span>
+          <span class="use-tag no">❌ More than 3 days before the event</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- S6: LONG STRANGLE -->
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strat-num">06</div>
+        <div>
+          <div class="strat-title">Long Strangle</div>
+          <div class="strat-view">💥 Market View: Big Extreme Move. Want Cheaper Than Straddle.</div>
+        </div>
+        <div class="strat-badge badge-event">EVENT</div>
+      </div>
+      <div class="strategy-body">
+
+        <div class="strat-cols">
+          <div class="strat-block">
+            <div class="strat-block-title">What & Why — Plain English</div>
+            <p>The budget version of the straddle. Instead of buying both options AT THE MONEY (same strike), you buy them slightly OUT OF THE MONEY — a higher Call and a lower Put. This reduces your cost significantly. BUT the tradeoff: Nifty needs to make an even BIGGER move to hit your breakeven. You're trading lower cost for higher movement requirement. Use this when the event could be truly extreme.</p>
+          </div>
+          <div class="strat-block">
+            <div class="strat-block-title">The Setup</div>
+            <div class="code-block">
+              <span class="buy">BUY  24,600 CE  @ ₹85</span>   <span class="label">(OTM Call)</span><br>
+              <span class="buy">BUY  24,000 PE  @ ₹80</span>   <span class="label">(OTM Put)</span><br>
+              <span class="label">─────────────────────────</span><br>
+              <span class="net">Total Cost = ₹165/unit</span><br>
+              <span class="num">Total Outlay = ₹10,725</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analogy-box">
+          <div class="analogy-head">🛡️ Budget vs Comprehensive Insurance</div>
+          Straddle = Comprehensive insurance. Expensive. Kicks in immediately on any damage. Strangle = Basic insurance with a ₹165 deductible. Cheaper upfront. But you bear the first ₹165 of loss yourself before coverage kicks in. If the disaster is big enough — both pay equally. If it's minor — the strangle leaves you underprotected.
+        </div>
+
+        <div class="numbers-grid">
+          <div class="num-box profit"><div class="num-label">Max Profit</div><div class="num-value">Unlimited</div></div>
+          <div class="num-box loss"><div class="num-label">Max Loss</div><div class="num-value">₹10,725</div></div>
+          <div class="num-box neutral"><div class="num-label">Upper BE</div><div class="num-value">24,765</div></div>
+          <div class="num-box neutral"><div class="num-label">Lower BE</div><div class="num-value">23,835</div></div>
+          <div class="num-box rr"><div class="num-label">Saving vs Straddle</div><div class="num-value">₹12,350</div></div>
+          <div class="num-box rr"><div class="num-label">% Move Needed</div><div class="num-value">±1.9%</div></div>
+        </div>
+
+        <div class="strat-block-title" style="margin-top:1rem;">When To Use</div>
+        <div class="use-tags">
+          <span class="use-tag yes">✅ Same events as straddle</span>
+          <span class="use-tag yes">✅ Straddle premium is too expensive</span>
+          <span class="use-tag yes">✅ Expecting EXTREME move, not moderate</span>
+          <span class="use-tag yes">✅ Budget with ₹20k — Strangle fits, Straddle doesn't</span>
+          <span class="use-tag no">❌ If only a moderate move is expected</span>
+          <span class="use-tag no">❌ OTM options decay faster — don't hold past event day</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- S7: IRON CONDOR -->
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strat-num">07</div>
+        <div>
+          <div class="strat-title">Iron Condor</div>
+          <div class="strat-view">😴 Market View: Range-Bound, Going Nowhere. Collect from Both Sides.</div>
+        </div>
+        <div class="strat-badge badge-credit">CREDIT</div>
+      </div>
+      <div class="strategy-body">
+
+        <div class="strat-cols">
+          <div class="strat-block">
+            <div class="strat-block-title">What & Why — Plain English</div>
+            <p>The most sophisticated income strategy for professionals. Imagine you're running Bear Call Spread + Bull Put Spread simultaneously. You collect premium from BOTH sides. Nifty needs to stay inside your defined range for you to keep everything. Four legs total. Four premiums, two paid and two collected. Net income in your account upfront. Time decay works fully in your favour — the longer market stays still, the more you profit.</p>
+          </div>
+          <div class="strat-block">
+            <div class="strat-block-title">The Setup (4 legs)</div>
+            <div class="code-block">
+              <span class="sell">SELL 24,600 CE  @ ₹90</span>   <span class="label">(upper resistance)</span><br>
+              <span class="buy">BUY  24,900 CE  @ ₹35</span>   <span class="label">(upper protection)</span><br>
+              <span class="sell">SELL 24,000 PE  @ ₹85</span>   <span class="label">(lower support)</span><br>
+              <span class="buy">BUY  23,700 PE  @ ₹40</span>   <span class="label">(lower protection)</span><br>
+              <span class="label">─────────────────────────</span><br>
+              <span class="net">Net Income = ₹100/unit</span><br>
+              <span class="num">Total Income = ₹6,500</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analogy-box">
+          <div class="analogy-head">🛣️ The Highway Toll Booth Analogy</div>
+          You own toll booths on both ends of a highway. Vehicles entering from the north pay toll. Vehicles entering from the south pay toll. As long as traffic flows within your 800-point stretch — you collect from BOTH directions. Only if traffic bypasses your entire highway (Nifty explodes above 24,900 or crashes below 23,700) do you have a problem. In a typical week, traffic stays on the highway. You collect toll sitting at home.
+        </div>
+
+        <div class="numbers-grid">
+          <div class="num-box profit"><div class="num-label">Max Profit</div><div class="num-value">₹6,500</div></div>
+          <div class="num-box loss"><div class="num-label">Max Loss</div><div class="num-value">₹13,000</div></div>
+          <div class="num-box neutral"><div class="num-label">Upper BE</div><div class="num-value">24,700</div></div>
+          <div class="num-box neutral"><div class="num-label">Lower BE</div><div class="num-value">23,900</div></div>
+          <div class="num-box rr"><div class="num-label">Safe Zone</div><div class="num-value">800 pts</div></div>
+          <div class="num-box rr"><div class="num-label">Prob. Win</div><div class="num-value">Very High</div></div>
+        </div>
+
+        <div class="strat-block-title" style="margin-top:1rem;">When To Use</div>
+        <div class="use-tags">
+          <span class="use-tag yes">✅ No major events this week</span>
+          <span class="use-tag yes">✅ Nifty in established consolidation range</span>
+          <span class="use-tag yes">✅ VIX below 15 — stable market</span>
+          <span class="use-tag yes">✅ After a big event resolves — calm returns</span>
+          <span class="use-tag no">❌ Never during Budget, Elections, RBI week</span>
+          <span class="use-tag no">❌ VIX above 18 — too risky</span>
+          <span class="use-tag no">❌ Not yet for ₹20k capital — margin intensive</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- S8: COVERED CALL -->
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strat-num">08</div>
+        <div>
+          <div class="strat-title">Covered Call</div>
+          <div class="strat-view">📊 Market View: You Own Stocks. Want Monthly Income.</div>
+        </div>
+        <div class="strat-badge badge-credit">CREDIT</div>
+      </div>
+      <div class="strategy-body">
+
+        <div class="strat-cols">
+          <div class="strat-block">
+            <div class="strat-block-title">What & Why — Plain English</div>
+            <p>You already own shares or an ETF. You rent out those shares to someone else — temporarily. You sell a Call option against your holding. If the stock rises past your sold Call strike — you sell your shares at that price (still profitable). If it stays below — the Call expires worthless and you keep the premium. Rinse and repeat monthly. Warren Buffett uses this on Berkshire's portfolio to generate income while waiting for higher prices.</p>
+          </div>
+          <div class="strat-block">
+            <div class="strat-block-title">The Setup</div>
+            <div class="code-block">
+              <span class="label">Hold 65 units of Nifty ETF</span><br>
+              <span class="label">Current price: ₹24,300</span><br>
+              <span class="sell">SELL 24,600 CE  @ ₹90</span><br>
+              <span class="label">─────────────────────────</span><br>
+              <span class="net">Monthly Income = ₹5,850</span><br>
+              <span class="num">Yield = ~0.37% per month</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="analogy-box">
+          <div class="analogy-head">🏠 The AirBnB Analogy</div>
+          You own a house (your stocks). Instead of leaving it empty, you rent it out on AirBnB for one month (sell the Call option). If the tenant wants to permanently buy your house at ₹24,600 — you're fine with that (you'd make profit on the shares too). If no one buys at that price by month end — the tenant leaves, you keep the rent, and you can rent it again next month. Monthly income from an asset you already own.
+        </div>
+
+        <div class="strat-block-title" style="margin-top:1rem;">When To Use</div>
+        <div class="use-tags">
+          <span class="use-tag yes">✅ You already hold the underlying stock/ETF</span>
+          <span class="use-tag yes">✅ You're willing to sell at the Call strike (no FOMO)</span>
+          <span class="use-tag yes">✅ Market is flat or mildly bullish</span>
+          <span class="use-tag yes">✅ Generating income on Motilal Oswal midcap holdings</span>
+          <span class="use-tag no">❌ Strongly bullish market — you'll miss the upside above strike</span>
+          <span class="use-tag no">❌ If you're not prepared to let go of your shares</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end strategies -->
+
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- Q4: MEMORY CHEATSHEET -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="section-block">
+    <div class="section-label">Q4 · Rapid Recall System</div>
+    <div class="section-title">The One-Page Memory Map</div>
+    <div class="section-sub">Decode any strategy in 3 seconds. "What do I see? What does it mean? What do I do?"</div>
+
+    <div class="big-rule">
+      <div class="rule-text">Name = Direction + Instrument.<br>Debit/Credit = Who's paying whom.</div>
+      <div class="rule-sub">Bull → market going up &nbsp;|&nbsp; Bear → market going down &nbsp;|&nbsp; Call → right to buy &nbsp;|&nbsp; Put → right to sell</div>
+    </div>
+
+    <div class="memory-grid">
+      <div class="memory-card mc-bull">
+        <span class="mc-emoji">📈</span>
+        <div class="mc-name">Bull Call Spread</div>
+        <div class="mc-hook">BUY CALL + SELL HIGHER CALL</div>
+        <div class="mc-detail"><strong>Bull</strong> = you think market rises. <strong>Call</strong> = you're using Calls. <strong>Spread</strong> = two strikes, defined risk. You PAY. Need market to move UP past your breakeven. Theta works against you.</div>
+      </div>
+
+      <div class="memory-card mc-bear">
+        <span class="mc-emoji">📉</span>
+        <div class="mc-name">Bear Put Spread</div>
+        <div class="mc-hook">BUY PUT + SELL LOWER PUT</div>
+        <div class="mc-detail"><strong>Bear</strong> = market falls. <strong>Put</strong> = using Puts. You PAY. Need market to fall below your breakeven. Exact mirror of Bull Call. Falls = Puts make money. You cap profit to reduce cost.</div>
+      </div>
+
+      <div class="memory-card mc-neutral">
+        <span class="mc-emoji">🧱</span>
+        <div class="mc-name">Bear Call Spread</div>
+        <div class="mc-hook">SELL CALL + BUY HIGHER CALL</div>
+        <div class="mc-detail"><strong>Bear</strong> = market won't go UP. <strong>Call</strong> = using Calls. You COLLECT. Market staying flat = profit. High probability, unfavourable R:R. Theta = your ally. Good with OI resistance visible.</div>
+      </div>
+
+      <div class="memory-card mc-neutral">
+        <span class="mc-emoji">🏗️</span>
+        <div class="mc-name">Bull Put Spread</div>
+        <div class="mc-hook">SELL PUT + BUY LOWER PUT</div>
+        <div class="mc-detail"><strong>Bull</strong> = market won't go DOWN. <strong>Put</strong> = using Puts. You COLLECT. Market staying flat = profit. Mirror of Bear Call on the downside. OI support + VIX falling = ideal setup.</div>
+      </div>
+
+      <div class="memory-card mc-event">
+        <span class="mc-emoji">💣</span>
+        <div class="mc-name">Long Straddle</div>
+        <div class="mc-hook">BUY CALL + BUY PUT (SAME STRIKE)</div>
+        <div class="mc-detail"><strong>Long</strong> = you're buying. <strong>Straddle</strong> = straddling the market (covering both sides). Event play. No view on direction. Theta = enemy. Buy 1–2 days before big event only.</div>
+      </div>
+
+      <div class="memory-card mc-event">
+        <span class="mc-emoji">🎯</span>
+        <div class="mc-name">Long Strangle</div>
+        <div class="mc-hook">BUY OTM CALL + BUY OTM PUT</div>
+        <div class="mc-detail"><strong>Strangle</strong> = like straddle but wider grip (different strikes). Cheaper. Needs bigger move. Budget version of straddle. OTM = out of money, so further to profit. Use when straddle is too expensive.</div>
+      </div>
+
+      <div class="memory-card mc-income">
+        <span class="mc-emoji">🛣️</span>
+        <div class="mc-name">Iron Condor</div>
+        <div class="mc-hook">BEAR CALL + BULL PUT = 4 LEGS</div>
+        <div class="mc-detail"><strong>Iron</strong> = complex structure. <strong>Condor</strong} = wide wingspan (big safe zone). Range-bound play. Collect from BOTH sides. Theta = best friend. Weekly paycheck strategy for pros.</div>
+      </div>
+
+      <div class="memory-card mc-income">
+        <span class="mc-emoji">🏠</span>
+        <div class="mc-name">Covered Call</div>
+        <div class="mc-hook">OWN STOCK + SELL CALL AGAINST IT</div>
+        <div class="mc-detail"><strong>Covered</strong> = you're "covered" by owning the stock. Renting out your shares for monthly income. Warren Buffett strategy. Earn while you hold. Only viable if you already hold underlying.</div>
+      </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <!-- DECISION TREE -->
+    <div class="strat-block-title" style="margin-bottom:1rem;">🌳 The 3-Question Decision Tree</div>
+
+    <div class="clarity-grid">
+      <div class="clarity-card gold">
+        <h3>Step 1: What's My Market View?</h3>
+        <div class="code-block">
+          <span class="buy">Bullish</span>  → Bull Call Spread (debit) or Bull Put Spread (credit)<br>
+          <span class="sell">Bearish</span>  → Bear Put Spread (debit) or Bear Call Spread (credit)<br>
+          <span class="net">Neutral</span>  → Iron Condor or Covered Call<br>
+          <span class="label">No View</span> → Long Straddle or Long Strangle
+        </div>
+      </div>
+      <div class="clarity-card blue">
+        <h3>Step 2: Do I Want to Pay or Collect?</h3>
+        <div class="code-block">
+          <span class="buy">Pay (Debit)</span>  → Need market to MOVE<br>
+          <span class="sell">Collect (Credit)</span> → Need market to STAY<br>
+          <span class="label">────────────────────────</span><br>
+          <span class="label">If event coming → Debit (straddle/strangle)</span><br>
+          <span class="label">If range-bound  → Credit (condor/spreads)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="clarity-card purple" style="margin-top:0;">
+      <h3>Step 3: What Does the Option Chain Say?</h3>
+      <p>High OI at a Call strike = resistance wall → Bear Call Spread at that strike (sell it)</p>
+      <p>High OI at a Put strike = support wall → Bull Put Spread at that strike (sell it)</p>
+      <p>Max Pain level = where most options expire worthless → market gravitates here near expiry</p>
+      <p>VIX above 18 = premium expensive, good to sell. VIX below 14 = premium cheap, better to buy.</p>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- Q5: GREEKS + OI + BEARISH/NEUTRAL PREMISE -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="section-block">
+    <div class="section-label">Q5 · Applied Framework</div>
+    <div class="section-title">Greeks + OI for a Mildly Bearish / Neutral Market</div>
+
+    <div class="premise-box">
+      <div class="premise-text">"I reckon the market is mildly bearish or neutral. I want to make money from this view. What do I look at and what do I do?"</div>
+    </div>
+
+    <p style="color:var(--text2);font-size:0.9rem;margin-bottom:1.5rem;">Your candidate strategies for this premise: <strong>Bear Call Spread</strong> (primary) or <strong>Bull Put Spread</strong> (if support is firm). Here's how each Greek and OI metric informs your decision.</p>
+
+    <div class="greeks-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Factor</th>
+            <th>What It Is</th>
+            <th>What to Look For</th>
+            <th>What It Tells You</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Delta (Δ)</td>
+            <td>How much the option price moves per 1pt move in Nifty</td>
+            <td>Sold Call delta: 0.20–0.30</td>
+            <td class="td-green">You want low delta on your sold strike — means it's OTM enough that there's only a 20–30% chance the buyer profits. Higher win probability for you.</td>
+          </tr>
+          <tr>
+            <td>Theta (Θ)</td>
+            <td>Daily premium decay from time</td>
+            <td>Higher Theta on sold options = better</td>
+            <td class="td-green">For Bear Call Spread (credit), Theta is your rent income. Every day Nifty stays below your sold strike, you earn Theta. It accelerates as expiry approaches.</td>
+          </tr>
+          <tr>
+            <td>Vega (V)</td>
+            <td>Sensitivity to Implied Volatility changes</td>
+            <td>India VIX above 14–16 = Vega is high</td>
+            <td class="td-gold">When VIX is high, premium is inflated. This is IDEAL for selling spreads — you collect richer premiums. VIX falling after you sell = double profit (premium + IV crush).</td>
+          </tr>
+          <tr>
+            <td>Gamma (Γ)</td>
+            <td>Rate of change of Delta</td>
+            <td>Near expiry, Gamma spikes for ATM options</td>
+            <td class="td-red">Gamma risk: if Nifty suddenly approaches your sold strike near expiry, the option value accelerates fast. For Bear Call Spreads — manage your position if Nifty gets within 50 pts of your sold strike.</td>
+          </tr>
+          <tr>
+            <td>Open Interest (OI)</td>
+            <td>Total outstanding contracts at a strike</td>
+            <td>High OI at Call strikes above market</td>
+            <td class="td-blue">High OI at 24,500 CE = big institutional writers are defending that level. This is your WALL. Selling the 24,500 CE (Bear Call) aligns you with institutional momentum. Market makers want it to expire worthless too.</td>
+          </tr>
+          <tr>
+            <td>OI Change</td>
+            <td>Increase/decrease in OI at a strike</td>
+            <td>Rising OI at Call strikes = fresh writing</td>
+            <td class="td-blue">If OI at 24,500 CE is INCREASING day over day — more sellers are piling in. That resistance wall is getting stronger. Confirms Bear Call Spread entry.</td>
+          </tr>
+          <tr>
+            <td>PCR (Put-Call Ratio)</td>
+            <td>Put OI ÷ Call OI</td>
+            <td>PCR below 0.8 = bearish tone in market</td>
+            <td class="td-gold">PCR &lt;0.8 = more Calls being written than Puts = market leans bearish. Confirms mildly bearish premise. PCR &gt;1.2 = more Put writers = market leans bullish — contradicts your view, reconsider.</td>
+          </tr>
+          <tr>
+            <td>India VIX</td>
+            <td>Market's fear/volatility index</td>
+            <td>16–20 = elevated. Great to sell spreads.</td>
+            <td class="td-green">High VIX = expensive premium. You collect more as a seller. But VIX above 22 = market very nervous, potential for gap moves. Be more cautious about credit spread width.</td>
+          </tr>
+          <tr>
+            <td>Max Pain</td>
+            <td>Strike where most options expire worthless</td>
+            <td>Max pain level for current expiry</td>
+            <td class="td-gold">Near expiry (last 5 days), Nifty tends to gravitate toward Max Pain. If Max Pain is at 24,200 and Nifty is at 24,300 — bearish drift possible. Supports your Bear Call setup.</td>
+          </tr>
+          <tr>
+            <td>IV Percentile</td>
+            <td>Current IV vs historical IV range</td>
+            <td>IV &gt;50th percentile = above average</td>
+            <td class="td-green">If current IV is in the top 50% of its historical range — premium is richer than usual. Excellent time to SELL premium. Bear Call + Bull Put both benefit here.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-info" style="margin-top:1.5rem;">
+      <strong>🎯 The Exact Checklist Before Entering a Bear Call Spread in a Mildly Bearish Market</strong>
+      1. Identify resistance on chart (Murphy: prior swing high, gap resistance, 200-DMA above)<br>
+      2. Confirm with OI: is there high OI + rising OI at that Call strike?<br>
+      3. Check VIX: is it above 14? (Richer premium to collect)<br>
+      4. Check PCR: is it below 1? (More Call writing = bearish tone confirmed)<br>
+      5. Check Max Pain: is it below current Nifty level? (Drift toward Max Pain supports your view)<br>
+      6. Confirm Delta of sold Call is 0.20–0.35 (high probability zone)<br>
+      7. Check how many days to expiry: 10–15 DTE is the sweet spot for Theta to work<br>
+      8. Ensure your strikes are 200–300 points above resistance (not inside it)
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>⚖️ Mildly Bearish vs Neutral — The Subtle Difference in Strategy Choice</strong>
+      <em>Mildly Bearish</em> (expecting small decline): Bear Call Spread. Your sold Call is ABOVE current Nifty — market falling helps it stay worthless.<br><br>
+      <em>Neutral</em> (expecting no big move either way): Iron Condor or Bull Put Spread. Market staying flat = both sides profitable. Bull Put gives you downside support; Bear Call gives you upside resistance.
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- Q6: POSITION SIZE CALCULATOR -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="section-block">
+    <div class="section-label">Q6 · Risk Architecture</div>
+    <div class="section-title">Position Sizing: Stocks vs Options</div>
+    <div class="section-sub">Yes — they're fundamentally different. Same principle (risk a fixed % per trade), different mechanics.</div>
+
+    <div class="pos-compare">
+
+      <div class="pos-box">
+        <div class="pos-head stock-h">📊 Stock Trading</div>
+        <div class="pos-body">
+          <p><strong>Your max risk per trade:</strong> A fixed % of capital (typically 1–2%). For ₹60,000 capital → max loss per trade = ₹600–₹1,200.</p>
+          <div class="pos-formula">
+            <span class="hl">Position Size</span> = Max Loss Allowed ÷ (Entry − Stop Loss)<br><br>
+            Example:<br>
+            Capital = ₹60,000<br>
+            Risk % = 1.5% → Max Loss = ₹900<br>
+            Stock: Reliance @ ₹2,400<br>
+            Stop Loss: ₹2,350 (₹50 below)<br><br>
+            Shares = ₹900 ÷ ₹50 = <span class="hl">18 shares</span>
+          </div>
+          <p>You buy exactly 18 shares — not "whatever fits the budget."</p>
+          <p>Stop loss level determines position size. Not capital available.</p>
+        </div>
+      </div>
+
+      <div class="pos-box">
+        <div class="pos-head options-h">🎯 Options Trading</div>
+        <div class="pos-body">
+          <p><strong>Key difference:</strong> For BUYING options, your max loss = premium paid. Stop loss is automatic. For SELLING, max loss = strike width minus premium received.</p>
+          <div class="pos-formula">
+            <span class="hl">For Option Buying:</span><br>
+            Lots = Max Loss Allowed ÷ (Premium × Lot Size)<br><br>
+            Capital = ₹20,000 | Risk = 1.5% = ₹300<br>
+            Strangle cost = ₹165/unit × 65 = ₹10,725<br>
+            ⚠️ One lot already = ₹10,725 risk<br>
+            → Only viable if ₹10,725 &lt; max loss budget<br><br>
+            <span class="hl">For Spreads:</span><br>
+            Max Loss = Net Premium Paid × Lot Size<br>
+            Bull Call @ ₹120 → Max loss = ₹7,800/lot
+          </div>
+          <p>Spreads naturally cap your max loss — built-in position sizing.</p>
+          <p>For ₹20k capital: 1% risk = ₹200. Buy 1 lot only if premium &lt; ₹3/unit.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout callout-warn" style="margin-top:1.25rem;">
+      <strong>⚡ The Key Difference in Philosophy</strong>
+      Stocks: You control risk through STOP LOSS placement. You can fine-tune how many shares.<br><br>
+      Options: You control risk through STRATEGY SELECTION. A spread limits max loss automatically. A naked option buy = your entire premium is at risk. The position size IS the premium you pay.<br><br>
+      For options spreads specifically: treat the entire net premium as your "stop loss trigger." If the trade goes against you immediately and the premium doubles — that's your signal to exit, not hope.
+    </div>
+
+    <div class="big-rule">
+      <div class="rule-text">The golden rule for ₹20,000 options capital:<br>Never risk more than 15–20% of your options capital on a single trade.</div>
+      <div class="rule-sub">₹20,000 × 15% = ₹3,000 max per trade. This points directly to spreads (Bull Call ₹7,800, Bear Put ₹7,150) being sized at 0.5x — or waiting for lower-cost entries.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Refrakt Trading Programme · Module A5 — Options Strategies Masterclass 2026<br>
+    Built for Rachit · Reference: Murphy's Technical Analysis + Indian Market Context
+  </div>
+
+</div><!-- end wrapper -->
+
+</body>
+</html>

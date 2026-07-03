@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Equity Market Structure — Rachit 2026 | Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark:#141413; --light:#faf9f5; --midgray:#b0aea5; --lightgray:#e8e6dc;
+  --orange:#d97757; --orange-dark:#b3603f; --orange-bg:#f5e6df;
+  --blue:#6a9bcc; --blue-dark:#4a7396; --blue-bg:#e9eef4;
+  --green:#788c5d; --green-dark:#5f7049; --green-bg:#eef1e8;
+  --white:#ffffff;
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--light); font-family:'Lora',Georgia,serif; color:var(--dark); line-height:1.68; }
+nav { position:sticky; top:0; z-index:20; background:var(--dark); color:var(--light); display:flex; align-items:center; justify-content:space-between; padding:13px 28px; border-bottom:1px solid var(--orange); }
+.nav-left { display:flex; align-items:center; gap:10px; }
+.nav-left svg { display:block; }
+.brand { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:16px; letter-spacing:.01em; }
+.breadcrumb-pill { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.03em; background:rgba(217,119,87,.18); color:var(--orange); padding:6px 14px; border-radius:999px; }
+.portal-link { color:var(--light); font-size:12px; text-decoration:none; border:1px solid rgba(250,249,245,.25); padding:6px 12px; border-radius:4px; font-family:'Poppins',Arial,sans-serif; }
+.portal-link:hover { border-color:var(--orange); color:var(--orange); }
+header.page-head { background:var(--dark); color:var(--light); padding:34px 32px 28px; }
+.track-label { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); margin:0 0 8px; font-weight:600; }
+h1 { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:32px; margin:0 0 8px; color:var(--light); }
+.page-sub { font-family:'Lora',Georgia,serif; font-size:14px; color:var(--lightgray); max-width:640px; margin:0 0 18px; }
+.meta-row { display:flex; gap:10px; flex-wrap:wrap; }
+.meta-chip { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.02em; color:var(--orange); border:1px solid rgba(217,119,87,.4); padding:5px 11px; border-radius:999px; }
+.suite-nav { max-width:920px; margin:0 auto; padding:16px 24px 0; display:flex; gap:8px; flex-wrap:wrap; }
+.suite-pill { font-family:'Poppins',Arial,sans-serif; font-size:11.5px; text-decoration:none; padding:7px 13px; border-radius:999px; border:1px solid var(--lightgray); color:var(--dark); background:var(--white); }
+.suite-pill.active { background:var(--dark); color:var(--light); border-color:var(--dark); }
+.suite-pill:hover:not(.active) { border-color:var(--orange); color:var(--orange-dark); }
+main { max-width:920px; margin:0 auto; padding:28px 24px 90px; }
+.toc-card { background:var(--white); border:1px solid var(--lightgray); border-radius:4px; padding:22px 26px; margin-bottom:36px; }
+.toc-card h2 { margin:0 0 12px; font-size:13px; text-transform:uppercase; letter-spacing:.12em; font-family:'Poppins',Arial,sans-serif; color:var(--blue-dark); border:none; font-weight:600; }
+.toc-list { columns:2; column-gap:28px; margin:0; padding:0; list-style:none; }
+.toc-list li { break-inside:avoid; margin-bottom:7px; }
+.toc-list a { color:var(--dark); text-decoration:none; font-size:13.5px; font-family:'Lora',Georgia,serif; }
+.toc-list a:hover { color:var(--orange-dark); }
+.toc-list .n { font-family:'Poppins',Arial,sans-serif; color:var(--orange); margin-right:6px; font-size:11px; }
+.part-banner { background:var(--dark); color:var(--light); padding:12px 20px; margin:52px 0 22px; display:flex; align-items:baseline; gap:14px; border-radius:3px; scroll-margin-top:70px; }
+.part-banner:first-of-type { margin-top:0; }
+.part-num { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); white-space:nowrap; font-weight:600; }
+.part-title { font-family:'Poppins',Arial,sans-serif; font-size:17px; font-weight:600; }
+h2 { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:19px; margin:30px 0 12px; color:var(--dark); border-bottom:1px solid var(--lightgray); padding-bottom:8px; }
+h3.inline-head { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:15.5px; margin:22px 0 8px; color:var(--dark); }
+p { font-size:14.5px; margin:0 0 12px; font-family:'Lora',Georgia,serif; }
+p.tagline { font-style:italic; color:var(--midgray); font-size:13px; text-align:center; margin:8px 0; }
+strong { font-weight:700; }
+.callout { border-left:3px solid var(--orange); background:var(--orange-bg); padding:16px 20px; margin:16px 0 22px; border-radius:0 4px 4px 0; }
+.callout p { font-size:13.5px; margin-bottom:10px; font-family:'Lora',Georgia,serif; }
+.callout p:last-child { margin-bottom:0; }
+.callout-lead, .callout p > strong:first-child { color:var(--dark); }
+.callout-warn { border-left-color:var(--orange-dark); background:var(--orange-bg); }
+.callout-rule { border-left-color:var(--green); background:var(--green-bg); }
+.callout-note { border-left-color:var(--blue); background:var(--blue-bg); }
+.table-wrap { overflow-x:auto; margin:16px 0 24px; border:1px solid var(--lightgray); border-radius:4px; }
+table { border-collapse:collapse; width:100%; font-size:13px; }
+thead tr { background:var(--dark); color:var(--light); }
+th { text-align:left; padding:10px 14px; font-family:'Poppins',Arial,sans-serif; font-weight:500; font-size:11.5px; letter-spacing:.02em; text-transform:uppercase; white-space:nowrap; }
+th strong { font-weight:500; }
+td { padding:9px 14px; border-top:1px solid var(--lightgray); vertical-align:top; font-size:13px; font-family:'Lora',Georgia,serif; }
+tbody tr:nth-child(even) { background:var(--lightgray); }
+td strong { font-family:'Poppins',Arial,sans-serif; font-weight:500; color:var(--dark); }
+footer { text-align:center; font-size:12px; color:var(--midgray); padding:28px 24px 40px; font-family:'Poppins',Arial,sans-serif; border-top:1px solid var(--lightgray); margin-top:20px; }
+footer a { color:var(--orange); text-decoration:none; }
+footer .cross-links { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:12px; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12Z" stroke="#d97757" stroke-width="1.5"/><path d="M12 2V22" stroke="#d97757" stroke-width="1"/></svg>
+    <span class="brand">Refrakt</span>
+  </div>
+  <div class="breadcrumb-pill">Finance-OS / 01_Curriculum / A1 · Equities</div>
+  <a class="portal-link" href="../../../02_Tools_Live/master-dashboard/index.html">Portal Home</a>
+</nav>
+<header class="page-head">
+  <p class="track-label">A1 · Asset Classes · Equities</p>
+  <h1>Equity — Market Structure</h1>
+  <p class="page-sub">Indices as a scoreboard, free-float market cap, SEBI's large/mid/small-cap segments, FII/DII flows, and how to read a shareholding pattern before you buy.</p>
+  <div class="meta-row"><span class="meta-chip">Nifty 50 / Sensex</span><span class="meta-chip">SEBI Market-Cap Segments</span><span class="meta-chip">FII/DII Flow Reading</span><span class="meta-chip">2026 Edition</span></div>
+</header>
+<div class="suite-nav"><a class="suite-pill" href="a1_equities_index.html">Equity Hub</a><a class="suite-pill" href="a1_core_mechanics.html">Core Mechanics</a><a class="suite-pill active" href="a1_market_structure.html">Market Structure</a><a class="suite-pill" href="a1_corporate_actions.html">Corporate Actions</a></div>
+<main>
+  <div class="toc-card">
+    <h2>Contents</h2>
+    <ul class="toc-list"><li><a href="#part1"><span class="n">01</span>Indices — The Market's Scoreboard</a></li><li><a href="#part2"><span class="n">02</span>Market Cap Segments — SEBI's Official Buckets</a></li><li><a href="#part3"><span class="n">03</span>FII/DII Flows — Reading the Big Money</a></li><li><a href="#part4"><span class="n">04</span>Shareholding Pattern — Reading the Ownership X-Ray</a></li></ul>
+  </div>
+  <div class="part-banner" id="part1"><span class="part-num">Part 01</span><span class="part-title">Indices — The Market's Scoreboard</span></div>
+<h2>1.1  The Cricket Team Analogy</h2>
+<div class="callout callout-note"><p><strong>THE CRICKET TEAM ANALOGY:</strong> Nifty 50 is not "the market" — it's a hand-picked XI. NSE's index committee selects the 50 largest, most liquid companies by FREE-FLOAT MARKET CAP (more on that below) and re-drafts the squad twice a year (March and September). A stock that shrinks or loses liquidity gets dropped; a rising challenger gets added. When you hear "Nifty is up 1.2% today," you're hearing the WEIGHTED performance of these 50 players, not literally every listed company in India — there are over 5,000 of those. Sensex is BSE's older, 30-stock version of the same idea.</p></div>
+<h2>1.2  Free-Float Market Cap — Why It's Not Just "Company Size"</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>Concept</strong></th><th><strong>Formula</strong></th><th><strong>Why It Matters</strong></th></tr></thead><tbody><tr><td>Total Market Cap</td><td>Share Price × Total Shares Outstanding</td><td>Raw company size — includes promoter-locked shares</td></tr><tr><td>Free-Float Market Cap</td><td>Share Price × (Total Shares − Promoter/Locked Shares)</td><td>What actually TRADES — this is what index weighting uses</td></tr></tbody></table></div>
+<p>A company with ₹5L crore total market cap but 75% promoter holding has only ₹1.25L crore of free-float — a company half its size with low promoter holding could carry similar or greater index weight. Free-float weighting exists because index funds need to actually be able to BUY the shares they're tracking; illiquid promoter-locked stock isn't purchasable at scale.</p>
+<h2>1.3  Index Rebalancing</h2>
+<p>Twice a year, NSE reviews the Nifty 50 constituent list against fresh free-float data. Additions and deletions cause real, mechanical price impact — every index fund and ETF tracking Nifty MUST buy the new entrant and sell the exiting stock on the effective date, regardless of view. This creates a predictable (if modest) flow event worth watching around announcement dates.</p>
+<div class="part-banner" id="part2"><span class="part-num">Part 02</span><span class="part-title">Market Cap Segments — SEBI's Official Buckets</span></div>
+<div class="table-wrap"><table><thead><tr><th><strong>Segment</strong></th><th><strong>SEBI Definition (by rank)</strong></th><th><strong>Character</strong></th></tr></thead><tbody><tr><td>Large-Cap</td><td>Rank 1–100 by full market cap</td><td>Lower volatility, higher liquidity, institutional-heavy ownership, slower compounding</td></tr><tr><td>Mid-Cap</td><td>Rank 101–250</td><td>Higher growth potential, higher volatility, less analyst coverage — more mispricing opportunity</td></tr><tr><td>Small-Cap</td><td>Rank 251 onward</td><td>Highest volatility, thinnest liquidity, highest fraud/governance risk, largest theoretical upside</td></tr></tbody></table></div>
+<div class="callout callout-warn"><p><strong>THE LIQUIDITY TRAP IN SMALL-CAPS:</strong> A small-cap stock can look cheap on paper and still be a bad trade if the daily traded volume is thin. Buying ₹50,000 worth of a stock that trades ₹2L of volume a day means YOU are 25% of the day's activity — getting out later at a fair price becomes difficult, especially in a panic. Always check average daily volume (visible on Kite/TradingView) before sizing a small-cap position, not just the price chart.</p></div>
+<h2>2.1  Where Rachit's Motilal Oswal Midcap Fund Sits</h2>
+<p>An existing holding — this fund's mandate is to hold predominantly rank-101-250 companies. Its return profile should be read against the Nifty Midcap 150 index, not against Nifty 50 — comparing a midcap fund's return to Nifty 50 is an apples-to-oranges benchmark error worth avoiding when reviewing performance.</p>
+<div class="part-banner" id="part3"><span class="part-num">Part 03</span><span class="part-title">FII/DII Flows — Reading the Big Money</span></div>
+<h2>3.1  Who They Are</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>FII (Foreign Institutional Investors)</strong></th><th><strong>DII (Domestic Institutional Investors)</strong></th></tr></thead><tbody><tr><td>Foreign mutual funds, pension funds, sovereign wealth funds investing in Indian markets</td><td>Indian mutual funds, insurance companies (LIC being the largest), banks, pension funds</td></tr><tr><td>Flows driven by global risk appetite, US Fed rate decisions, dollar strength, emerging-market allocation trends</td><td>Flows driven substantially by domestic SIP inflows — a large, sticky, monthly source of buying</td></tr><tr><td>Historically the more volatile, sentiment-driving flow — FII selling has coincided with sharp Nifty corrections</td><td>Acts as a stabilising counterweight — DII buying has repeatedly absorbed FII selling in recent years</td></tr></tbody></table></div>
+<div class="callout callout-note"><p><strong>THE TUG OF WAR ANALOGY:</strong> Picture Nifty as a rope. FIIs pull from one end, DIIs from the other. When FIIs sell aggressively and DIIs aren't buying enough to absorb it, the rope moves sharply down. The rise of India's own SIP culture over the last decade has made the DII end of the rope structurally heavier than it used to be — a genuine change in market character worth understanding, not just a talking point.</p></div>
+<h2>3.2  Where to Check This Daily</h2>
+<p>NSE publishes FII/DII net buy-sell figures after market close daily; the data is also mirrored on most broker terminals and financial news sites. A single day's number is noise — a persistent multi-day directional trend (5+ consecutive sessions of one-sided flow) is the signal worth acting on, particularly when it diverges from what price is doing (e.g., FIIs net-selling hard while Nifty grinds higher on DII support — a fragility worth flagging, not ignoring).</p>
+<div class="part-banner" id="part4"><span class="part-num">Part 04</span><span class="part-title">Shareholding Pattern — Reading the Ownership X-Ray</span></div>
+<p>Every listed company discloses its shareholding pattern quarterly — who owns what percentage. This is a free, public governance and conviction signal, available on NSE's website or any screener tool.</p>
+<div class="table-wrap"><table><thead><tr><th><strong>Category</strong></th><th><strong>What It Tells You</strong></th></tr></thead><tbody><tr><td>Promoter Holding</td><td>Founders/controlling family's stake. Rising promoter holding over time = insider conviction. Falling = worth investigating why.</td></tr><tr><td>Promoter Pledge %</td><td>Shares pledged as loan collateral. High pledge (>20-25%) is a red flag — a stock price crash can trigger forced margin-call selling by the lender, worsening the crash.</td></tr><tr><td>Public / Retail Holding</td><td>Shares held by individual investors like Rachit — highly fragmented, rarely a governance factor on its own.</td></tr><tr><td>FII / DII Holding</td><td>Institutional conviction. Rising institutional holding often precedes broader market recognition of a story.</td></tr></tbody></table></div>
+<div class="callout callout-warn"><p><strong>RACHIT'S RULE:</strong> Before any equity buy, a 30-second shareholding-pattern check is non-negotiable: promoter holding trend (rising/flat/falling) and pledge percentage. A falling promoter stake combined with rising pledge is one of the cleanest early-warning combinations in Indian markets — it has preceded multiple high-profile corporate blow-ups.</p></div>
+</main>
+<footer>
+  <div class="cross-links"><a href="a1_core_mechanics.html">← Core Mechanics</a><a href="a1_corporate_actions.html">Corporate Actions →</a><a href="../../../02_Tools_Live/master-dashboard/index.html">← Portal Home</a></div>
+  Motilal Oswal Midcap Fund (existing holding) sits in the mid-cap segment discussed in Part 2 — benchmark it against Nifty Midcap 150, not Nifty 50.
+</footer>
+</body>
+</html>

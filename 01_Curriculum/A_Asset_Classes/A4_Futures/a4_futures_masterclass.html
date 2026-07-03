@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Futures Masterclass — Rachit 2026 | Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark:#141413; --light:#faf9f5; --midgray:#b0aea5; --lightgray:#e8e6dc;
+  --orange:#d97757; --orange-dark:#b3603f; --orange-bg:#f5e6df;
+  --blue:#6a9bcc; --blue-dark:#4a7396; --blue-bg:#e9eef4;
+  --green:#788c5d; --green-dark:#5f7049; --green-bg:#eef1e8;
+  --white:#ffffff;
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--light); font-family:'Lora',Georgia,serif; color:var(--dark); line-height:1.68; }
+nav { position:sticky; top:0; z-index:20; background:var(--dark); color:var(--light); display:flex; align-items:center; justify-content:space-between; padding:13px 28px; border-bottom:1px solid var(--orange); }
+.nav-left { display:flex; align-items:center; gap:10px; }
+.nav-left svg { display:block; }
+.brand { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:16px; letter-spacing:.01em; }
+.breadcrumb-pill { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.03em; background:rgba(217,119,87,.18); color:var(--orange); padding:6px 14px; border-radius:999px; }
+.portal-link { color:var(--light); font-size:12px; text-decoration:none; border:1px solid rgba(250,249,245,.25); padding:6px 12px; border-radius:4px; font-family:'Poppins',Arial,sans-serif; }
+.portal-link:hover { border-color:var(--orange); color:var(--orange); }
+header.page-head { background:var(--dark); color:var(--light); padding:34px 32px 28px; }
+.track-label { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); margin:0 0 8px; font-weight:600; }
+h1 { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:32px; margin:0 0 8px; color:var(--light); }
+.page-sub { font-family:'Lora',Georgia,serif; font-size:14px; color:var(--lightgray); max-width:640px; margin:0 0 18px; }
+.meta-row { display:flex; gap:10px; flex-wrap:wrap; }
+.meta-chip { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.02em; color:var(--orange); border:1px solid rgba(217,119,87,.4); padding:5px 11px; border-radius:999px; }
+.suite-nav { max-width:920px; margin:0 auto; padding:16px 24px 0; display:flex; gap:8px; flex-wrap:wrap; }
+.suite-pill { font-family:'Poppins',Arial,sans-serif; font-size:11.5px; text-decoration:none; padding:7px 13px; border-radius:999px; border:1px solid var(--lightgray); color:var(--dark); background:var(--white); }
+.suite-pill.active { background:var(--dark); color:var(--light); border-color:var(--dark); }
+.suite-pill:hover:not(.active) { border-color:var(--orange); color:var(--orange-dark); }
+main { max-width:920px; margin:0 auto; padding:28px 24px 90px; }
+.toc-card { background:var(--white); border:1px solid var(--lightgray); border-radius:4px; padding:22px 26px; margin-bottom:36px; }
+.toc-card h2 { margin:0 0 12px; font-size:13px; text-transform:uppercase; letter-spacing:.12em; font-family:'Poppins',Arial,sans-serif; color:var(--blue-dark); border:none; font-weight:600; }
+.toc-list { columns:2; column-gap:28px; margin:0; padding:0; list-style:none; }
+.toc-list li { break-inside:avoid; margin-bottom:7px; }
+.toc-list a { color:var(--dark); text-decoration:none; font-size:13.5px; font-family:'Lora',Georgia,serif; }
+.toc-list a:hover { color:var(--orange-dark); }
+.toc-list .n { font-family:'Poppins',Arial,sans-serif; color:var(--orange); margin-right:6px; font-size:11px; }
+.part-banner { background:var(--dark); color:var(--light); padding:12px 20px; margin:52px 0 22px; display:flex; align-items:baseline; gap:14px; border-radius:3px; scroll-margin-top:70px; }
+.part-banner:first-of-type { margin-top:0; }
+.part-num { font-family:'Poppins',Arial,sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); white-space:nowrap; font-weight:600; }
+.part-title { font-family:'Poppins',Arial,sans-serif; font-size:17px; font-weight:600; }
+h2 { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:19px; margin:30px 0 12px; color:var(--dark); border-bottom:1px solid var(--lightgray); padding-bottom:8px; }
+h3.inline-head { font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:15.5px; margin:22px 0 8px; color:var(--dark); }
+p { font-size:14.5px; margin:0 0 12px; font-family:'Lora',Georgia,serif; }
+p.tagline { font-style:italic; color:var(--midgray); font-size:13px; text-align:center; margin:8px 0; }
+strong { font-weight:700; }
+.callout { border-left:3px solid var(--orange); background:var(--orange-bg); padding:16px 20px; margin:16px 0 22px; border-radius:0 4px 4px 0; }
+.callout p { font-size:13.5px; margin-bottom:10px; font-family:'Lora',Georgia,serif; }
+.callout p:last-child { margin-bottom:0; }
+.callout-lead, .callout p > strong:first-child { color:var(--dark); }
+.callout-warn { border-left-color:var(--orange-dark); background:var(--orange-bg); }
+.callout-rule { border-left-color:var(--green); background:var(--green-bg); }
+.callout-note { border-left-color:var(--blue); background:var(--blue-bg); }
+.table-wrap { overflow-x:auto; margin:16px 0 24px; border:1px solid var(--lightgray); border-radius:4px; }
+table { border-collapse:collapse; width:100%; font-size:13px; }
+thead tr { background:var(--dark); color:var(--light); }
+th { text-align:left; padding:10px 14px; font-family:'Poppins',Arial,sans-serif; font-weight:500; font-size:11.5px; letter-spacing:.02em; text-transform:uppercase; white-space:nowrap; }
+th strong { font-weight:500; }
+td { padding:9px 14px; border-top:1px solid var(--lightgray); vertical-align:top; font-size:13px; font-family:'Lora',Georgia,serif; }
+tbody tr:nth-child(even) { background:var(--lightgray); }
+td strong { font-family:'Poppins',Arial,sans-serif; font-weight:500; color:var(--dark); }
+footer { text-align:center; font-size:12px; color:var(--midgray); padding:28px 24px 40px; font-family:'Poppins',Arial,sans-serif; border-top:1px solid var(--lightgray); margin-top:20px; }
+footer a { color:var(--orange); text-decoration:none; }
+footer .cross-links { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:12px; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12Z" stroke="#d97757" stroke-width="1.5"/><path d="M12 2V22" stroke="#d97757" stroke-width="1"/></svg>
+    <span class="brand">Refrakt</span>
+  </div>
+  <div class="breadcrumb-pill">Finance-OS / 01_Curriculum / A4 · Futures</div>
+  <a class="portal-link" href="../../../02_Tools_Live/master-dashboard/index.html">Portal Home</a>
+</nav>
+<header class="page-head">
+  <p class="track-label">A4 · Asset Classes · Futures</p>
+  <h1>Futures Masterclass</h1>
+  <p class="page-sub">From absolute basics to real-world trading — margin, MTM, cost of carry, rollover, currency futures, and futures as an inter-market signal. Personalised for Rachit.</p>
+  <div class="meta-row"><span class="meta-chip">30% Tax Slab</span><span class="meta-chip">Entry: USD/INR Currency Futures</span><span class="meta-chip">Platform: Zerodha Kite</span><span class="meta-chip">2026 Edition</span></div>
+</header>
+<div class="suite-nav"><a class="suite-pill active" href="a4_futures_masterclass.html">Futures Masterclass</a><a class="suite-pill" href="../A5_Options/a5_options_foundations.html">Options Foundations</a><a class="suite-pill" href="../A5_Options/a5_options_handbook.html">Options Handbook</a><a class="suite-pill" href="../A5_Options/a5_options_strategies.html">Options Strategies</a></div>
+<main>
+  <div class="toc-card">
+    <h2>Contents</h2>
+    <ul class="toc-list"><li><a href="#part1"><span class="n">01</span>What Exactly Is a Futures Contract?</a></li><li><a href="#part2"><span class="n">02</span>The Mechanics of Futures</a></li><li><a href="#part3"><span class="n">03</span>Futures Pricing — Why Is the Futures Price Different from Spot?</a></li><li><a href="#part4"><span class="n">04</span>Futures Trading in India — The Complete Setup</a></li><li><a href="#part5"><span class="n">05</span>Nifty Futures — Your Primary Trading Vehicle</a></li><li><a href="#part6"><span class="n">06</span>Futures Trading Strategies</a></li><li><a href="#part7"><span class="n">07</span>Currency Futures — Your USD/INR Playbook</a></li><li><a href="#part8"><span class="n">08</span>Risk Management for Futures</a></li><li><a href="#part9"><span class="n">09</span>Futures as an Inter-Market Signal</a></li><li><a href="#part10"><span class="n">10</span>Tax Treatment of Futures in India (30% Slab)</a></li><li><a href="#part11"><span class="n">11</span>Ready-to-Trade Checklist</a></li></ul>
+  </div>
+  <div class="part-banner" id="part1"><span class="part-num">Part 01</span><span class="part-title">What Exactly Is a Futures Contract?</span></div>
+<h2>1.1  The Wheat Farmer Analogy — Where Futures Were Born</h2>
+<p>Imagine you are a wheat farmer in Punjab. You are planting wheat today and will harvest it in 3 months. But wheat prices are volatile — if the price crashes before harvest, you lose everything. So you make a deal TODAY with a flour mill in Delhi:</p>
+<div class="callout callout-note"><p>FARMER says: I will sell you 100 quintals of wheat at Rs. 2,000 per quintal, delivered in 3 months. MILL says: Agreed. We will pay Rs. 2,000 per quintal in 3 months, no matter what the market price is. This signed, standardised agreement traded on an exchange = A FUTURES CONTRACT. Farmer = Seller (Short position) — locks in selling price, hedges against price fall Mill = Buyer (Long position) — locks in buying price, hedges against price rise Rs. 2,000/quintal = Futures Price (agreed today for future delivery) 3 months = Contract Expiry (when the deal settles)</p></div>
+<p>In modern markets, the 'wheat' could be a stock index, a company's shares, a currency, crude oil, or gold. The principle is identical: lock in a price today for a transaction that happens in the future.</p>
+<h2>1.2  The Three Core Differences: Futures vs. Stocks</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>FEATURE</strong></th><th><strong>STOCK (EQUITY)</strong></th><th><strong>FUTURES CONTRACT</strong></th></tr></thead><tbody><tr><td>What you buy</td><td>Ownership in a company</td><td>A contract — no ownership</td></tr><tr><td>Leverage</td><td>1x — you pay full price</td><td>Up to 10x — only pay margin</td></tr><tr><td>Expiry</td><td>Never expires</td><td>Fixed expiry every month</td></tr><tr><td>Settlement</td><td>Delivery of shares possible</td><td>Cash settled in India (mostly)</td></tr><tr><td>Obligation</td><td>Voluntary — sell when you want</td><td>Mandatory — must settle at expiry</td></tr><tr><td>Short selling</td><td>Restricted (BTST only)</td><td>Easy — just sell a contract</td></tr></tbody></table></div>
+<h2>1.3  Futures vs. Options — The Critical Distinction</h2>
+<div class="callout callout-rule"><p>FUTURES = Obligation. Both buyer AND seller MUST complete the transaction. OPTIONS = Right without obligation. The BUYER has a choice. Seller is always obligated.</p>
+<p>ANALOGY: Futures = Signing a rental agreement. You MUST pay rent every month. No exit without penalty. Options = Paying token money to book a flat. You have the RIGHT to buy. If the deal sours, you just lose the token money. The seller must still honour if you want to buy.</p>
+<p>PRACTICAL IMPACT: Futures are symmetric — gain Rs. 50,000 if market moves 500 points in your favour. Lose Rs. 50,000 if market moves 500 points against you. Options are asymmetric — maximum loss is premium paid (for buyers).</p></div>
+<div class="part-banner" id="part2"><span class="part-num">Part 02</span><span class="part-title">The Mechanics of Futures</span></div>
+<h2>2.1  The Four Numbers That Define Every Futures Contract</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>PARAMETER</strong></th><th><strong>WHAT IT MEANS</strong></th><th><strong>NIFTY FUTURES EXAMPLE</strong></th><th><strong>WHY IT MATTERS</strong></th></tr></thead><tbody><tr><td>Lot Size</td><td>Minimum quantity in one contract</td><td>50 units of Nifty</td><td>Determines minimum trade value</td></tr><tr><td>Contract Value</td><td>Lot Size x Futures Price</td><td>50 x 23,000 = Rs. 11.5 lakh</td><td>Your actual market exposure</td></tr><tr><td>Margin</td><td>Security deposit to trade</td><td>~Rs. 1.2 lakh (approx 10%)</td><td>What you actually pay</td></tr><tr><td>Expiry</td><td>Last Thursday of every month</td><td>April 24, 2025 (last Thursday)</td><td>When contract settles</td></tr></tbody></table></div>
+<h2>2.2  Margin — The Engine of Futures</h2>
+<p>Margin is what makes futures both powerful and dangerous. You control a large contract by paying only a fraction of its value. This is leverage — the financial equivalent of a lever that amplifies both gains AND losses.</p>
+<div class="callout callout-note"><p>THE LEVER ANALOGY: A 10-foot lever lets you lift a 1,000 kg rock by applying just 100 kg of force. You get 10x the lifting power — but if the rock falls, it falls with 10x the force too. Futures Margin Example (Nifty @ 23,000): Contract Value = 50 x 23,000 = Rs. 11,50,000 SPAN Margin required = ~Rs. 1,20,000 (approx 10.4%) Exposure Margin = ~Rs. 57,500 (additional 5%) Total Margin = ~Rs. 1,77,500 If Nifty moves from 23,000 to 23,500 (+500 points): Your P&L = 500 x 50 = Rs. 25,000 PROFIT Return on margin = 25,000 / 1,77,500 = 14% on ONE 500-point move Return on full contract value = 25,000 / 11,50,000 = 2.2% LEVERAGE AMPLIFIED your return by ~6.5x</p></div>
+<h2>2.3  Types of Margin — You Must Know All Three</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>MARGIN TYPE</strong></th><th><strong>WHAT IT IS</strong></th><th><strong>WHO SETS IT</strong></th><th><strong>WHEN YOU PAY</strong></th></tr></thead><tbody><tr><td>SPAN Margin</td><td>Initial deposit. Calculated using SEBI's Standard Portfolio ANalysis of Risk model.</td><td>NSE/SEBI</td><td>Before you place the trade</td></tr><tr><td>Exposure Margin</td><td>Additional buffer (5% of contract value). Over and above SPAN.</td><td>NSE</td><td>Before you place the trade</td></tr><tr><td>Mark-to-Market (MTM)</td><td>Daily P&L adjustment. If market moves against you, you pay the loss daily.</td><td>Your broker</td><td>Every evening (T+1)</td></tr></tbody></table></div>
+<div class="callout callout-warn"><p><strong>CRITICAL: Mark-to-Market (MTM) is the concept that separates experienced futures traders from beginners.</strong> With stocks: You can ignore paper losses. Your broker does nothing. With futures: Losses are COLLECTED FROM YOU EVERY EVENING. Example: You are LONG 1 Nifty Futures lot at 23,000. Day 1: Nifty closes at 22,700 (-300 points). Your MTM loss = 300 x 50 = Rs. 15,000. Zerodha DEBITS Rs. 15,000 from your account at end of day. Day 2: If your account balance falls below maintenance margin, you get a MARGIN CALL. You must add funds OR your position is SQUARED OFF by the broker. This is why futures require a cash buffer beyond just the initial margin.</p></div>
+<h2>2.4  The MTM P<strong>&</strong>L Formula — Know This Cold</h2>
+<div class="callout callout-rule"><p>For LONG Futures (you bought): P&L = (Current Price - Entry Price) x Lot Size For SHORT Futures (you sold): P&L = (Entry Price - Current Price) x Lot Size Example 1 - LONG Nifty at 23,000, Current price 23,400: P&L = (23,400 - 23,000) x 50 = 400 x 50 = Rs. 20,000 PROFIT Example 2 - SHORT Reliance Futures at 2,800, Current price 2,950: P&L = (2,800 - 2,950) x 250 = -150 x 250 = Rs. 37,500 LOSS Remember: Lot sizes differ per contract. Always check NSE's contract specification.</p></div>
+<div class="part-banner" id="part3"><span class="part-num">Part 03</span><span class="part-title">Futures Pricing — Why Is the Futures Price Different from Spot?</span></div>
+<h2>3.1  The Cost of Carry Model</h2>
+<p>The spot price is what something costs RIGHT NOW. The futures price is what you agree to pay for it LATER. They are almost never the same — and understanding WHY is the foundation of all futures analysis.</p>
+<div class="callout callout-warn"><p>THE HOTEL BOOKING ANALOGY: Room price today (walk-in): Rs. 5,000/night = SPOT PRICE Room price if you book 3 months ahead: Rs. 5,200/night = FUTURES PRICE The Rs. 200 extra = Cost of Carry (the hotel needs to hold the room for you) In futures markets, cost of carry = interest cost of holding the asset + storage/dividend adjustments</p>
+<p>FORMULA: Futures Price = Spot Price x (1 + r)^(T/365) Where r = risk-free rate (approx 6.5% in India, 2026), T = days to expiry Example: Nifty Spot = 23,000, Days to expiry = 30, Risk-free rate = 6.5% Fair Futures Price = 23,000 x (1 + 0.065)^(30/365) = 23,000 x 1.00534 = 23,123</p></div>
+<h2>3.2  Premium, Discount and Basis — The Three States</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>STATE</strong></th><th><strong>WHAT IT MEANS</strong></th><th><strong>SIGNAL</strong></th></tr></thead><tbody><tr><td>Normal (Contango)</td><td>Futures price > Spot price. Futures at PREMIUM.</td><td>Normal market. Carry cost + optimism priced in.</td></tr><tr><td>Backwardation</td><td>Futures price < Spot price. Futures at DISCOUNT.</td><td>Bearish signal. Sellers dominate futures. Watch carefully.</td></tr><tr><td>Fair Value</td><td>Futures = Spot + Carry Cost exactly</td><td>Market in equilibrium — no edge either way.</td></tr></tbody></table></div>
+<div class="callout callout-rule"><p>BASIS = Spot Price - Futures Price Positive basis = Spot > Futures = Backwardation (unusual, watch for distress) Negative basis = Futures > Spot = Normal/Contango (usual state)</p>
+<p>BASIS CONVERGENCE: As expiry approaches, futures price MUST converge to spot. On expiry day: Futures price = Spot price. Always. No exceptions. This convergence is mechanical — built into the settlement process. Murphy's insight: Extreme premium or discount in futures signals institutional imbalance. A sharp rise in futures premium = institutions aggressively buying ahead of a catalyst.</p></div>
+<h2>3.3  Open Interest — The Pulse of the Futures Market</h2>
+<p>Open Interest (OI) is the total number of outstanding futures contracts that have NOT been settled. It is the single most important data point in futures markets — more important than volume.</p>
+<div class="callout callout-note"><p>THE PARTY ANALOGY: Imagine a dance floor. Every pair of dancers = 1 futures contract (1 buyer + 1 seller). Open Interest = Number of pairs currently on the dance floor. Volume = Total number of pairs who danced at any point today. When new people enter and dance = OI increases (new contracts created) When pairs leave = OI decreases (contracts closed) When one dancer swaps partner = Volume increases, OI stays same (position transfer)</p></div>
+<div class="table-wrap"><table><thead><tr><th><strong>PRICE CHANGE</strong></th><th><strong>OI CHANGE</strong></th><th><strong>SIGNAL</strong></th><th><strong>INTERPRETATION</strong></th></tr></thead><tbody><tr><td>Rising</td><td>Rising</td><td>BULLISH (Strong)</td><td>New longs entering. Trend has conviction. Murphy: strong buy signal.</td></tr><tr><td>Rising</td><td>Falling</td><td>CAUTION</td><td>Short sellers covering. Rally may lack conviction.</td></tr><tr><td>Falling</td><td>Rising</td><td>BEARISH (Strong)</td><td>New shorts entering. Downtrend has conviction.</td></tr><tr><td>Falling</td><td>Falling</td><td>WATCH</td><td>Longs exiting. Decline may be overdone — reversal possible.</td></tr></tbody></table></div>
+<div class="part-banner" id="part4"><span class="part-num">Part 04</span><span class="part-title">Futures Trading in India — The Complete Setup</span></div>
+<h2>4.1  Exchanges and Instruments — What You Can Trade</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>EXCHANGE</strong></th><th><strong>WHAT YOU TRADE</strong></th><th><strong>EXAMPLES</strong></th><th><strong>SETTLEMENT</strong></th></tr></thead><tbody><tr><td>NSE F&O</td><td>Index Futures, Stock Futures, Currency Futures</td><td>Nifty, BankNifty, Reliance, HDFC</td><td>Cash settled</td></tr><tr><td>BSE F&O</td><td>Index Futures, Stock Futures</td><td>Sensex Futures, Bankex</td><td>Cash settled</td></tr><tr><td>MCX</td><td>Commodity Futures</td><td>Gold, Silver, Crude Oil, Copper</td><td>Cash + physical delivery</td></tr><tr><td>NSE FX</td><td>Currency Futures</td><td>USD/INR, EUR/INR, GBP/INR, JPY/INR</td><td>Cash settled</td></tr></tbody></table></div>
+<h2>4.2  India<strong>'</strong>s Most Important Futures Contracts</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>CONTRACT</strong></th><th><strong>LOT SIZE</strong></th><th><strong>MARGIN (APPROX)</strong></th><th><strong>EXPIRY</strong></th><th><strong>KEY USE CASE</strong></th></tr></thead><tbody><tr><td>Nifty 50 Futures</td><td>50 units</td><td>~Rs. 1.2L</td><td>Last Thu/month</td><td>Directional index trade, portfolio hedge</td></tr><tr><td>Bank Nifty Futures</td><td>15 units</td><td>~Rs. 55K</td><td>Last Wed/month</td><td>Banking sector exposure</td></tr><tr><td>Nifty Midcap Select</td><td>75 units</td><td>~Rs. 90K</td><td>Last Thu/month</td><td>Midcap directional trade</td></tr><tr><td>Reliance Futures</td><td>250 units</td><td>~Rs. 1.1L</td><td>Last Thu/month</td><td>Single stock directional</td></tr><tr><td>Infosys Futures</td><td>400 units</td><td>~Rs. 60K</td><td>Last Thu/month</td><td>IT sector play</td></tr><tr><td>HDFC Bank Futures</td><td>550 units</td><td>~Rs. 55K</td><td>Last Thu/month</td><td>Banking stock play</td></tr><tr><td>USD/INR Futures</td><td>1,000 USD</td><td>~Rs. 2,500</td><td>Last Wed/month</td><td>Forex hedge or currency trade</td></tr></tbody></table></div>
+<div class="callout callout-rule"><p><strong>IMPORTANT — LOT SIZE CHANGES:</strong> SEBI periodically revises lot sizes based on contract value targets. Always check NSE's current contract specifications at nseindia.com before placing any trade. The lot sizes above are indicative as of early 2026.</p></div>
+<h2>4.3  The Expiry Cycle — India<strong>'</strong>s 3-Series System</h2>
+<p>India's futures market always has THREE contract series live simultaneously: Near Month (current month), Mid Month (next month), Far Month (month after). Each expires on the last Thursday of its respective month.</p>
+<div class="callout callout-rule"><p>EXAMPLE (April 2026 context): Near Month: April 2026 contract (expires last Thursday of April) Mid Month: May 2026 contract Far Month: June 2026 contract On expiry Thursday: Near month expires. Mid becomes Near. Far becomes Mid. A new Far Month contract (July) is launched.</p>
+<p>LIQUIDITY RULE: Near month always has 90%+ of total volume and OI. Trade near month unless you have a specific reason to go to mid or far month.</p></div>
+<h2>4.4  Rollover — Moving Your Position to the Next Month</h2>
+<div class="callout callout-note"><p>WHAT IS ROLLOVER? If you hold a futures position and do NOT want to let it expire, you ROLL it over. This means: Close your near-month position + Open the same position in mid-month.</p>
+<p>ROLLOVER ANALOGY: Like renewing your electricity contract every month instead of letting it lapse. You cancel this month's contract and sign next month's — same deal, different date. ROLLOVER COST = Mid-month price - Near-month price Normal market: Positive rollover cost (mid is at premium to near) Bearish signal: Negative rollover cost (mid is at discount to near)</p>
+<p>ROLLOVER PERIOD: Typically 3-5 days before expiry (3rd week of month). Watch rollover data to understand institutional positioning for next month.</p></div>
+<div class="part-banner" id="part5"><span class="part-num">Part 05</span><span class="part-title">Nifty Futures — Your Primary Trading Vehicle</span></div>
+<h2>5.1  Why Trade Nifty Futures Instead of Stocks?</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>ADVANTAGE</strong></th><th><strong>EXPLANATION</strong></th></tr></thead><tbody><tr><td>Diversification</td><td>One trade = exposure to 50 stocks. Eliminates single-stock risk.</td></tr><tr><td>Highest Liquidity</td><td>Most liquid futures contract in India. Tight spreads, easy execution.</td></tr><tr><td>No Surprise Events</td><td>No earnings, no promoter pledging, no stock-specific news shocks.</td></tr><tr><td>Portfolio Hedge</td><td>Short Nifty futures protects your equity portfolio in downturns.</td></tr><tr><td>24-hr News Context</td><td>Nifty futures trade in SGX (Singapore) before Indian market opens.</td></tr><tr><td>Technical Analysis</td><td>Murphy's entire framework works best on index — no fundamental distortions.</td></tr></tbody></table></div>
+<h2>5.2  Trading Nifty Futures on Zerodha Kite</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>STEP</strong></th><th><strong>ACTION</strong></th><th><strong>WHERE IN KITE</strong></th></tr></thead><tbody><tr><td>1. Search Contract</td><td>Type 'NIFTY' in search bar. Select 'NIFTY [current month] FUT'</td><td>Search bar → F&O tab</td></tr><tr><td>2. Check Margin</td><td>Before buying, check margin in Tools → Margin Calculator</td><td>Tools → F&O Margin</td></tr><tr><td>3. Place Order</td><td>Market or Limit order. Default quantity = 1 lot (50 units)</td><td>Buy/Sell → Product: MIS or NRML</td></tr><tr><td>4. Monitor MTM</td><td>P&L shows live MTM. Position book shows entry price.</td><td>Portfolio → Positions</td></tr><tr><td>5. Exit or Roll</td><td>Square off before 3:20 PM or roll to next month before expiry.</td><td>Positions → Exit</td></tr></tbody></table></div>
+<div class="callout callout-rule"><p>PRODUCT TYPES IN ZERODHA FOR FUTURES: NRML (Normal) = Overnight position. Full SPAN + Exposure margin required. Use this for positional trades you want to hold for days/weeks. MIS (Margin Intraday Square-off) = Intraday only. Lower margin (~40-50% of NRML). AUTO SQUARED OFF at 3:20 PM if you do not exit. Use only for same-day trades. <strong>RULE: Never use MIS if you intend to hold overnight. You will be squared off.</strong></p></div>
+<h2>5.3  Reading the Futures Dashboard — Key Data Points</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>DATA POINT</strong></th><th><strong>WHAT TO LOOK FOR</strong></th></tr></thead><tbody><tr><td>Spot vs Futures Premium</td><td>Futures > Spot by more than fair value = bullish bias</td></tr><tr><td>Open Interest (OI)</td><td>Rising OI + Rising Price = Strong uptrend confirmed</td></tr><tr><td>OI Change %</td><td>> +5% OI change in one session = significant new position</td></tr><tr><td>Put-Call Ratio (PCR)</td><td>> 1.2 = bullish (more puts than calls = floor support)</td></tr><tr><td>Rollover %</td><td>> 80% rollover before expiry = strong continuation signal</td></tr><tr><td>Cost of Carry</td><td>Negative cost of carry = shorts building = bearish</td></tr></tbody></table></div>
+<div class="part-banner" id="part6"><span class="part-num">Part 06</span><span class="part-title">Futures Trading Strategies</span></div>
+<h2>6.1  Directional Strategies — The Basics</h2>
+<h3 class="inline-head">Strategy 1: Trend Following (Murphy Chapter 4 — Primary Trend)</h3>
+<div class="callout callout-warn"><p>WHEN TO USE: Nifty in a clear uptrend (higher highs + higher lows on daily chart)</p>
+<p>ENTRY: Buy Nifty Futures on pullback to key support (50 EMA or prior resistance turned support)</p>
+<p>STOP LOSS: Below the prior swing low (below support level)</p>
+<p>TARGET: Prior resistance level or 1.618 Fibonacci extension EXAMPLE (Illustrative): Nifty in uptrend. Pulls back to 22,500 (50 EMA support). Enter LONG 1 lot. Stop loss: 22,200 (prior swing low). Risk = 300 points x 50 = Rs. 15,000. Target: 23,200 (prior resistance). Reward = 700 points x 50 = Rs. 35,000. Risk-Reward = 1:2.3 — acceptable.</p></div>
+<h3 class="inline-head">Strategy 2: Breakout Trading</h3>
+<div class="callout callout-rule"><p>WHEN TO USE: Nifty breaks above key resistance with high volume AND rising</p>
+<p>OI ENTRY: Buy futures on breakout candle close above resistance (confirmed close, not just wick)</p>
+<p>STOP LOSS: Below the breakout level (if it reverses below, the breakout was false)</p>
+<p>TARGET: Measured move = Height of prior consolidation range added to breakout point</p>
+<p>MURPHY RULE: Volume must confirm the breakout. High volume + OI expansion = genuine break. Low volume breakout = suspect. Wait for retest of breakout level before entering.</p></div>
+<h3 class="inline-head">Strategy 3: Portfolio Hedging with Short Futures</h3>
+<div class="callout callout-note"><p>SCENARIO: You own equity stocks/MFs worth Rs. 10 lakh. Market looks bearish. Instead of selling all holdings, you SHORT Nifty futures.</p>
+<p>CALCULATION: Portfolio value: Rs. 10,00,000 Nifty Futures contract value: 23,000 x 50 = Rs. 11,50,000 Contracts to short = 10,00,000 / 11,50,000 = 0.87 => Short 1 lot (round down) If Nifty falls 1,000 points: Loss on portfolio (approx): ~Rs. 43,500 (if portfolio beta = 1) Gain on short futures: 1,000 x 50 = Rs. 50,000 Net result: Nearly flat. You protected your portfolio. <strong>IMPORTANT: Remove the hedge when bullish signal returns. Hedge costs carry (rollover).</strong></p></div>
+<h2>6.2  Calendar Spread — The Direction-Neutral Strategy</h2>
+<p>A calendar spread involves simultaneously buying one month's futures and selling another month's futures on the SAME underlying. You are betting on the DIFFERENCE between contract prices, not on price direction.</p>
+<div class="callout callout-warn"><p>EXAMPLE: Nifty April futures at 23,100. Nifty May futures at 23,220. Spread = 120 points. If you believe spread will</p>
+<p>WIDEN: Buy May, Sell April If you believe spread will</p>
+<p>NARROW: Buy April, Sell May <strong>KEY POINT: Calendar spreads have LOWER margin requirements because risk is bounded.</strong> NSE recognises the offsetting nature and gives margin relief.</p>
+<p>RACHIT NOTE: This strategy is direction-neutral — you don't need to predict whether Nifty goes up or down. You only need to predict the spread. Useful during uncertain markets. (From our earlier conversation — this is the strategy we discussed as 'calendar spread'.)</p></div>
+<div class="part-banner" id="part7"><span class="part-num">Part 07</span><span class="part-title">Currency Futures — Your USD/INR Playbook</span></div>
+<h2>7.1  Why Currency Futures Matter to You</h2>
+<p>You have a Niyo Global card and IDFC First Wow card for international transactions. Understanding the USD/INR rate directly affects every international payment you make. Currency futures let you hedge or speculate on this rate.</p>
+<h2>7.2  USD/INR Futures Mechanics</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>PARAMETER</strong></th><th><strong>USD/INR FUTURES SPECIFICATION</strong></th></tr></thead><tbody><tr><td>Contract Size</td><td>USD 1,000 per lot</td></tr><tr><td>Quote</td><td>Rupees per USD (e.g., 83.50 means 1 USD = Rs. 83.50)</td></tr><tr><td>Tick Size</td><td>0.25 paise (Rs. 0.0025)</td></tr><tr><td>Lot Value</td><td>1,000 x 83.50 = Rs. 83,500</td></tr><tr><td>Margin</td><td>~Rs. 2,000-2,500 per lot</td></tr><tr><td>Expiry</td><td>Last Wednesday of month</td></tr><tr><td>Settlement</td><td>RBI Reference Rate on expiry day</td></tr><tr><td>Trading Hours</td><td>9:00 AM to 5:00 PM</td></tr></tbody></table></div>
+<h2>7.3  Currency Futures P<strong>&</strong>L Calculation</h2>
+<div class="callout callout-warn"><p>EXAMPLE: You buy 1 lot USD/INR futures at 83.50. Rupee weakens — USD/INR rises to 84.00 (+50 paise = 0.50 Rs.) P&L = Change in rate x Contract size = 0.50 x 1,000 = Rs. 500 profit per lot Margin deployed: ~Rs. 2,500 Return: 500 / 2,500 = 20% on a 0.6% move in USD/INR This is why currency futures are highly leveraged. A 1 paise move = Rs. 10.</p>
+<p>PRACTICAL USE FOR RACHIT: If you are making an international payment of USD 5,000 in 2 months, you can BUY 5 lots of USD/INR futures to lock in today's rate. This is exactly how corporates hedge forex risk.</p></div>
+<h2>7.4  Reading USD/INR — Macro Drivers</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>FACTOR</strong></th><th><strong>EFFECT ON USD/INR</strong></th><th><strong>EQUITY IMPLICATION</strong></th></tr></thead><tbody><tr><td>FII outflows from India</td><td>Rupee weakens (USD/INR rises)</td><td>Bearish for Nifty — FII selling equities</td></tr><tr><td>Crude oil price rise</td><td>Rupee weakens (import bill rises)</td><td>Inflation pressure, negative for markets</td></tr><tr><td>RBI intervention</td><td>Rupee strengthens (RBI sells USD)</td><td>Stability signal — neutral/positive</td></tr><tr><td>Strong US Dollar (DXY rise)</td><td>Rupee weakens vs USD</td><td>FII re-allocation to US — bearish India</td></tr><tr><td>India current account surplus</td><td>Rupee strengthens</td><td>Positive macro signal for India equities</td></tr></tbody></table></div>
+<div class="part-banner" id="part8"><span class="part-num">Part 08</span><span class="part-title">Risk Management for Futures</span></div>
+<h2>8.1  The Non-Negotiable Rules</h2>
+<div class="callout callout-warn"><p><strong>RULE 1 — THE 2% RULE:</strong> Never risk more than 2% of your total capital on a single futures trade. Your capital: Under Rs. 1 lakh. Max risk per trade = Rs. 2,000. If one Nifty futures lot risks Rs. 15,000 per your stop loss — it's too big. Don't trade it. <strong>RULE 2 — ALWAYS USE STOP LOSS ORDERS:</strong> Place your stop loss order IMMEDIATELY after entering. Not 'I will watch and exit manually'. Futures MTM can move against you very fast. Manual watching = emotional decisions. <strong>RULE 3 — MAINTAIN CASH BUFFER:</strong> Keep minimum 20% extra cash beyond your margin requirement in your account. This prevents forced square-offs on temporary adverse moves. <strong>RULE 4 — NEVER AVERAGE LOSING FUTURES:</strong> If your Nifty futures position is down 200 points and you buy another lot — you are doubling into a loss. Futures can go much further against you. Exit and re-evaluate.</p></div>
+<h2>8.2  Position Sizing for Futures with Your Capital</h2>
+<p>With under Rs. 1 lakh of capital, here is the realistic futures position size framework:</p>
+<div class="table-wrap"><table><thead><tr><th><strong>SCENARIO</strong></th><th><strong>ANALYSIS</strong></th></tr></thead><tbody><tr><td>Nifty Futures (1 lot)</td><td>Margin ~Rs. 1.77L. Exceeds total capital. NOT SUITABLE yet.</td></tr><tr><td>Bank Nifty Futures (1 lot)</td><td>Margin ~Rs. 55K. Leaves only Rs. 45K buffer. HIGH RISK.</td></tr><tr><td>USD/INR Futures (1 lot)</td><td>Margin ~Rs. 2,500. Very accessible. Good learning instrument.</td></tr><tr><td>Nifty via SGX (mini)</td><td>Not available for Indian retail directly.</td></tr><tr><td>RECOMMENDATION</td><td>Start with USD/INR futures for learning. Grow capital before Nifty futures.</td></tr></tbody></table></div>
+<div class="callout callout-note"><p>RACHIT'S FUTURES ROADMAP: Month 3-4 (as per your allocation plan): Rs. 5,000 allocated to currency futures This Rs. 5,000 can comfortably trade 2 lots of USD/INR futures with margin buffer. Capital milestone to trade Nifty Futures: Rs. 3-4 lakhs minimum (Rs. 1.77L margin + Rs. 1L buffer + Rs. 50K+ stop-loss cushion) Until then: Study futures mechanics through paper trading or USD/INR small positions. Options buying (with defined Rs. 20K allocation in Month 2) is better suited for your current capital level to get leveraged market exposure.</p></div>
+<div class="part-banner" id="part9"><span class="part-num">Part 09</span><span class="part-title">Futures as an Inter-Market Signal</span></div>
+<h2>9.1  Murphy Chapter 22 — The Futures Market Leads Everything</h2>
+<p>Murphy's most powerful insight: futures markets react to information FASTER than spot markets. Institutional money moves in futures first. Retail follows in the spot market later. If you watch futures, you see institutional intent before it shows up in your stock prices.</p>
+<div class="table-wrap"><table><thead><tr><th><strong>FUTURES SIGNAL</strong></th><th><strong>WHAT IT MEANS</strong></th><th><strong>EQUITY ACTION</strong></th></tr></thead><tbody><tr><td>Nifty Futures at large premium to spot</td><td>Institutions buying aggressively ahead of expected rally</td><td>Bullish — trend likely to continue or accelerate</td></tr><tr><td>Nifty Futures at discount to spot (backwardation)</td><td>Institutional short selling dominant</td><td>Bearish — de-risk equity positions</td></tr><tr><td>Rising OI + Rising Nifty Price</td><td>New longs entering — conviction buying</td><td>Strong bull signal — stay long stocks</td></tr><tr><td>Rising OI + Falling Nifty Price</td><td>New shorts entering — conviction selling</td><td>Strong bear signal — hedge or reduce longs</td></tr><tr><td>FII net short in index futures</td><td>Institutional bearish bet on India</td><td>Major caution — watch for Nifty downside</td></tr><tr><td>SGX Nifty gap up overnight</td><td>Global positive sentiment for India</td><td>Positive opening likely — momentum buy possible</td></tr></tbody></table></div>
+<h2>9.2  How to Monitor Futures Data Daily</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>DATA POINT</strong></th><th><strong>WHERE TO FIND</strong></th></tr></thead><tbody><tr><td>NSE OI Data</td><td>nseindia.com → F&O → Derivatives Statistics</td></tr><tr><td>FII F&O Data</td><td>NSE Bhav Copy → FII Derivatives → Daily report</td></tr><tr><td>Put-Call Ratio</td><td>NSE Options Chain or Sensibull.com</td></tr><tr><td>Nifty Futures Premium</td><td>Zerodha Kite → Compare NIFTY FUT vs NIFTY SPOT</td></tr><tr><td>Rollover Data</td><td>NSE website — Derivatives → EOD Reports → Rollover</td></tr><tr><td>SGX Nifty (now Gift Nifty)</td><td>Trading Economics or Investing.com — GIFT NIFTY</td></tr></tbody></table></div>
+<div class="part-banner" id="part10"><span class="part-num">Part 10</span><span class="part-title">Tax Treatment of Futures in India (30% Slab)</span></div>
+<h2>10.1  The Core Tax Rule — F<strong>&</strong>O is Business Income</h2>
+<div class="callout callout-warn"><p><strong>CRITICAL TAX PRINCIPLE FOR INDIA:</strong> Futures & Options profits are ALWAYS treated as BUSINESS INCOME — NOT capital gains. This applies regardless of how frequently or infrequently you trade. This has profound implications: 1. Taxed at your INCOME TAX SLAB — 30% for Rachit 2. If</p>
+<p>PROFIT: Add to total income. Tax at 30%. 3. If</p>
+<p>LOSS: Can be SET OFF against business income (like freelance/Refrakt income) 4.</p>
+<p>CARRY FORWARD: F&O losses can be carried forward for 8 years 5.</p>
+<p>TAX AUDIT: Required if turnover exceeds Rs. 10 crore (or Rs. 1 crore pre-2024 limit) 6.</p>
+<p>PRESUMPTIVE TAXATION: If turnover below Rs. 2 crore, can declare 6% as presumptive income</p></div>
+<h2>10.2  Calculating Turnover for F<strong>&</strong>O Tax</h2>
+<div class="callout callout-note"><p>F&O TURNOVER DEFINITION (for tax purposes): Turnover = Absolute sum of all profits AND losses on each trade (NOT the contract values, just the net P&L on each transaction) Example: Trade 1: Nifty Long — Profit Rs. 25,000 → Turnover: Rs. 25,000 Trade 2: Nifty Short — Loss Rs. 15,000 → Turnover: Rs. 15,000 Trade 3: USD/INR Long — Profit Rs. 3,000 → Turnover: Rs. 3,000 Total Turnover = 25,000 + 15,000 + 3,000 = Rs. 43,000 For most retail traders at this level, turnover stays well below audit thresholds.</p></div>
+<h2>10.3  What You Can Deduct as F<strong>&</strong>O Trader</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>EXPENSE</strong></th><th><strong>DEDUCTIBLE?</strong></th></tr></thead><tbody><tr><td>Brokerage and STT paid</td><td>YES — fully deductible against F&O income</td></tr><tr><td>Exchange transaction charges</td><td>YES — deductible</td></tr><tr><td>SEBI regulatory fees</td><td>YES — deductible</td></tr><tr><td>Internet/broadband expenses</td><td>YES — proportionate to trading use</td></tr><tr><td>TradingView subscription</td><td>YES — deductible as software expense for trading</td></tr><tr><td>Phone expenses (trading use)</td><td>YES — proportionate</td></tr><tr><td>Education/books for trading</td><td>YES — arguable, keep records</td></tr><tr><td>Home office (trading room)</td><td>Partial — document carefully</td></tr></tbody></table></div>
+<div class="callout callout-note"><p>PRACTICAL TAX STRATEGY FOR RACHIT: Since F&O losses can offset business income — if you have losses from F&O trading, file ITR-3 and set them off against Refrakt Studios income. This reduces your overall tax liability.</p>
+<p>F&O LOSS EXAMPLE: Refrakt business income: Rs. 5,00,000 F&O losses: Rs. 80,000 Net taxable income: Rs. 4,20,000 (saves Rs. 24,000 in tax at 30% slab)</p>
+<p>USE A CA: F&O taxation is complex. Do NOT self-file if you have significant F&O activity. The cost of a CA is itself deductible and saves multiples in tax exposure.</p></div>
+<h2>10.4  STT on Futures — Different from Equities</h2>
+<div class="table-wrap"><table><thead><tr><th><strong>TRANSACTION TYPE</strong></th><th><strong>STT RATE</strong></th></tr></thead><tbody><tr><td>Equity Delivery Buy</td><td>0.1% on buy side</td></tr><tr><td>Equity Intraday</td><td>0.025% on sell side</td></tr><tr><td>Futures (Sell side only)</td><td>0.0125% on sell value</td></tr><tr><td>Options Buy (premium)</td><td>0.0625% on premium</td></tr><tr><td>Options Sell (on notional)</td><td>0.0625% on intrinsic + premium</td></tr></tbody></table></div>
+<div class="part-banner" id="part11"><span class="part-num">Part 11</span><span class="part-title">Ready-to-Trade Checklist</span></div>
+<h2>11.1  Pre-Trade Checklist — Before Every Futures Position</h2>
+<div class="callout callout-warn"><p>CHECK 1: Is the trend clear? (Daily chart — is price above or below 50 EMA?)</p>
+<p>CHECK 2: What does OI data say? (Rising OI confirms trend; falling OI warns of reversal)</p>
+<p>CHECK 3: Is the futures premium/discount making sense? (Extreme discount = warning)</p>
+<p>CHECK 4: What is FII positioning? (FII net long or short in index futures?)</p>
+<p>CHECK 5: Is your stop loss placed? (Before you click buy/sell)</p>
+<p>CHECK 6: Does this trade risk less than 2% of your capital? CHECK 7: Is your margin account funded with 20% buffer above minimum margin? CHECK 8: What product type? MIS (intraday) or NRML (overnight)? Are you clear on this? CHECK 9: Is there an RBI announcement, Budget, or major event this week? CHECK 10: Do you have a specific, written reason for this trade — not just a 'feeling'?</p></div>
+<h2>11.2  Post-Trade Monitoring Checklist</h2>
+<div class="callout callout-note"><p>DAILY (after market close): Check MTM P&L — will there be a margin call tomorrow? Check OI change — is the trend still confirmed by OI? Is your stop loss still valid, or should it be trailed up? WEEKLY: Review rollover data — are institutions rolling positions aggressively? Check Put-Call Ratio — is sentiment shifting? Review FII F&O data — institutional direction changing? PRE-EXPIRY (last 3 trading days of month): Decide: Exit, roll over, or let expire? Check the cost of carry for the next month's contract. Execute rollover before the last day to avoid liquidity issues.</p></div>
+<h2>11.3  The Futures Mental Model — Carry With You Always</h2>
+<div class="callout callout-rule"><p>FUTURES IN ONE PARAGRAPH: A futures contract is a standardised agreement to buy or sell an asset at a fixed price on a fixed future date. You control a large position (Rs. 10 lakh+) by paying only a margin (Rs. 1-2 lakh). Daily MTM ensures losses are collected immediately — you cannot ignore a bad position the way you can with stocks. Price = Spot + Cost of Carry. The futures price converges to spot at expiry. Rising price + Rising OI = Trend confirmed. F&O profits are taxed as business income at 30%. Losses can offset other business income. Start with currency futures (USD/INR) given current capital level. Scale to Nifty futures when capital exceeds Rs. 3-4 lakh. Always. Stop loss. Always.</p></div>
+<p class="tagline">— Refrakt Studios  |  Personal Trading Reference  |  2026 Edition —</p>
+</main>
+<footer>
+  <div class="cross-links"><a href="../A5_Options/a5_options_foundations.html">Options Foundations (Greeks/OI/Jane Street) →</a><a href="../../../02_Tools_Live/master-dashboard/index.html">← Portal Home</a></div>
+  Part 9 (Futures as an Inter-Market Signal) reads OI/PCR data straight off the Options Foundations doc's Part 7 — futures is the vehicle, options OI is the instrument panel.
+</footer>
+</body>
+</html>

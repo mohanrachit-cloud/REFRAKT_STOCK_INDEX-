@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mutual Fund Tracker — Refrakt Finance-OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#FAF7F2; --ink:#1C1917; --gold:#C9A227; --line:#E4DCCB;
+    --sage:#6B8F71; --clay:#B5654A; --slate:#5B6B73; --plum:#6B4C6B;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); }
+  nav { position:sticky; top:0; z-index:10; background:var(--ink); color:var(--cream); display:flex; align-items:center; justify-content:space-between; padding:13px 28px; border-bottom:1px solid var(--gold); }
+  .nav-left { display:flex; align-items:center; gap:10px; }
+  .brand { font-family:'Playfair Display',serif; font-weight:700; font-size:16px; }
+  .breadcrumb-pill { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.04em; background:rgba(201,162,39,.15); color:var(--gold); padding:6px 14px; border-radius:999px; }
+  .portal-link { color:var(--cream); font-size:12px; text-decoration:none; border:1px solid rgba(255,255,255,.25); padding:6px 12px; border-radius:4px; }
+  .portal-link:hover { border-color:var(--gold); color:var(--gold); }
+  header.page-head { background:var(--ink); color:var(--cream); padding:26px 32px; }
+  .track-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin:0 0 6px; }
+  h1 { font-family:'Playfair Display',serif; font-weight:700; font-size:28px; margin:0; }
+  main { max-width:920px; margin:0 auto; padding:40px 24px 80px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:4px; padding:24px; margin-bottom:24px; transition:box-shadow .15s; }
+  .card:hover { box-shadow:0 4px 14px rgba(0,0,0,.06); }
+  .form-row { display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; gap:10px; align-items:end; }
+  label { display:block; font-size:11px; font-weight:500; margin-bottom:4px; color:#666; }
+  input { width:100%; padding:9px 10px; font-family:'DM Mono',monospace; font-size:14px; border:1px solid var(--line); border-radius:3px; background:var(--cream); }
+  button { padding:9px 14px; background:var(--ink); color:var(--cream); border:none; border-radius:3px; font-size:13px; cursor:pointer; }
+  button:hover { background:#000; }
+  table { width:100%; border-collapse:collapse; margin-top:20px; font-family:'DM Mono',monospace; font-size:13px; }
+  th, td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); }
+  th { font-family:'DM Sans',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#888; }
+  td.gain { color:var(--sage); } td.loss { color:var(--clay); }
+  .del { cursor:pointer; color:#aaa; font-size:12px; }
+  .del:hover { color:var(--clay); }
+  .totals { font-weight:500; }
+  footer { text-align:center; font-size:12px; color:#999; padding:28px 24px 40px; font-family:'DM Mono',monospace; border-top:1px solid var(--line); margin-top:20px; }
+  footer a { color:var(--gold); text-decoration:none; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-left">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 12L12 22L2 12Z" stroke="#C9A227" stroke-width="1.5"/><path d="M12 2V22" stroke="#C9A227" stroke-width="1"/></svg>
+    <span class="brand">Refrakt</span>
+  </div>
+  <div class="breadcrumb-pill">Finance-OS / 02_Tools_Live / MF Tracker</div>
+  <a class="portal-link" href="../master-dashboard/index.html">Portal Home</a>
+</nav>
+<header class="page-head">
+  <p class="track-label">D8 · Tool</p>
+  <h1>Mutual Fund Tracker</h1>
+</header>
+<main>
+  <div class="card">
+    <div class="form-row">
+      <div><label>Fund Name</label><input type="text" id="fname" placeholder="e.g. Parag Parikh Flexi Cap"></div>
+      <div><label>Invested (₹)</label><input type="number" id="invested"></div>
+      <div><label>Current Value (₹)</label><input type="number" id="current"></div>
+      <div><label>Units</label><input type="number" id="units"></div>
+      <div><button onclick="addFund()">Add</button></div>
+    </div>
+    <table>
+      <thead><tr><th>Fund</th><th>Invested</th><th>Current</th><th>Units</th><th>Gain/Loss</th><th>%</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+      <tfoot><tr class="totals"><td>Total</td><td id="tInv">—</td><td id="tCur">—</td><td></td><td id="tGain">—</td><td id="tPct">—</td><td></td></tr></tfoot>
+    </table>
+  </div>
+</main>
+<footer>Dummy template — persists locally in this browser only (localStorage). Real tracker is already live on GitHub Pages. · <a href="../master-dashboard/index.html">← Portal Home</a></footer>
+<script>
+let funds = JSON.parse(localStorage.getItem('mfTrackerFunds') || '[]');
+
+function save() { localStorage.setItem('mfTrackerFunds', JSON.stringify(funds)); render(); }
+
+function addFund() {
+  const name = document.getElementById('fname').value.trim();
+  const invested = parseFloat(document.getElementById('invested').value) || 0;
+  const current = parseFloat(document.getElementById('current').value) || 0;
+  const units = parseFloat(document.getElementById('units').value) || 0;
+  if (!name) return;
+  funds.push({ name, invested, current, units });
+  document.getElementById('fname').value = '';
+  document.getElementById('invested').value = '';
+  document.getElementById('current').value = '';
+  document.getElementById('units').value = '';
+  save();
+}
+
+function removeFund(i) { funds.splice(i, 1); save(); }
+
+function render() {
+  const rows = document.getElementById('rows');
+  rows.innerHTML = '';
+  let tInv = 0, tCur = 0;
+  funds.forEach((f, i) => {
+    const gain = f.current - f.invested;
+    const pct = f.invested > 0 ? (gain / f.invested) * 100 : 0;
+    tInv += f.invested; tCur += f.current;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${f.name}</td><td>₹${f.invested.toFixed(0)}</td><td>₹${f.current.toFixed(0)}</td><td>${f.units}</td>
+      <td class="${gain>=0?'gain':'loss'}">${gain>=0?'+':''}₹${gain.toFixed(0)}</td>
+      <td class="${gain>=0?'gain':'loss'}">${pct.toFixed(1)}%</td>
+      <td class="del" onclick="removeFund(${i})">remove</td>`;
+    rows.appendChild(tr);
+  });
+  const tGain = tCur - tInv;
+  const tPct = tInv > 0 ? (tGain / tInv) * 100 : 0;
+  document.getElementById('tInv').textContent = '₹' + tInv.toFixed(0);
+  document.getElementById('tCur').textContent = '₹' + tCur.toFixed(0);
+  document.getElementById('tGain').textContent = (tGain>=0?'+':'') + '₹' + tGain.toFixed(0);
+  document.getElementById('tPct').textContent = tPct.toFixed(1) + '%';
+}
+
+render();
+</script>
+</body>
+</html>

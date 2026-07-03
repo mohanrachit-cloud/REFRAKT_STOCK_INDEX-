@@ -1,0 +1,1 @@
+Working source files for every tool deployed live on GitHub Pages (repo: REFRAKT_STOCK_INDEX-). This is the pre-push staging area — edit here, then push to the repo. Do not store curriculum/learning content here, only functional tools (calculators, trackers, dashboards).

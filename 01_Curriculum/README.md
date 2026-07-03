@@ -1,0 +1,1 @@
+Learning material only. Organized by track: A (Asset Classes), B (Analysis), C (Execution), E (Psychology), F (Tax), G (Critical Gaps). Each module file should be named with its module code, e.g. `B5_MACD.html`. Status of each module lives in the master curriculum map, not duplicated here.
